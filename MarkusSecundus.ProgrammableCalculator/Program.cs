@@ -1,5 +1,11 @@
 ﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
+using Antlr4.Runtime.Tree;
+using MarkusSecundus.ProgrammableCalculator.DSL.Parser;
 
 using static System.Console;
 
@@ -7,15 +13,11 @@ namespace MarkusSecundus.ProgrammableCalculator
 {
     class Program
     {
+
         public static void Main()
         {
-            var regex = new Regex(@"((?<f>[^a-z]*)|(?<g>[^0-9]*))");
-            var matches = regex.Matches("BCDEFabcd123");
-            
-            foreach(var match in matches)
-            {
-                WriteLine(match);
-            }
+            ASTBuilder.Run();
         }
+
     }
 }
