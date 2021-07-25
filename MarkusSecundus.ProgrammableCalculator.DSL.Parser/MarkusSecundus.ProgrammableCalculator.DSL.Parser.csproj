@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MarkusSecundus.ProgrammableCalculator.DSL.AST\MarkusSecundus.ProgrammableCalculator.DSL.AST.csproj" />
+    <ProjectReference Include="..\MarkusSecundus.Util\MarkusSecundus.Util.csproj" />
   </ItemGroup>
 
 </Project>

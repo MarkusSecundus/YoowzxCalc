@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser.ParserExceptions
 {
-    public class SyntaxAndLexicalErrorExceptionBase<TToken> : Exception
+    public class SyntaxAndLexicalErrorExceptionBase<TToken> : ParserException
     {
 
         public SyntaxAndLexicalErrorExceptionBase(string message, IRecognizer recognizer, TToken offendingSymbol, int line, int charPositionInLine)

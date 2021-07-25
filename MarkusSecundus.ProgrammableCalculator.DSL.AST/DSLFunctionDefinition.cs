@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarkusSecundus.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,16 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
     {
         public string Name { get; init; }
 
+        public bool IsAnonymous => object.ReferenceEquals(Name, AnonymousFunctionName);
+
         public IReadOnlyList<string> Arguments { get; init; }
 
         public DSLExpression Body { get; init; }
+
+
+        public override string ToString() => $"{Name}({Arguments.Concat()}) := {Body}";
+
+
+        public static readonly string AnonymousFunctionName = new string("<#anonymous>");
     }
 }

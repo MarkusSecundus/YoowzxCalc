@@ -8,6 +8,9 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
     public abstract class DSLBinaryExpression : DSLExpression
     {
+        internal DSLBinaryExpression() { }
+
+
         public DSLExpression LeftChild { get; init; }
         public DSLExpression RightChild { get; init; }
 
@@ -17,5 +20,9 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
             => childIndex == 0 ? LeftChild : 
                childIndex == 1 ? RightChild :
                 throw new IndexOutOfRangeException($"Index {childIndex} not in range <0;{Arity})");
+
+        public abstract string Symbol { get; }
+
+        public override string ToString() => $"({LeftChild} {Symbol} {RightChild})";
     }
 }

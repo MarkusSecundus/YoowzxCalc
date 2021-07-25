@@ -11,5 +11,8 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression
         public override T Accept<T>(IDSLVisitor<T> visitor) => visitor.Accept(this);
 
         public string ArgumentName { get; init; }
+
+
+        public override string ToString() => ArgumentName;
     }
 }

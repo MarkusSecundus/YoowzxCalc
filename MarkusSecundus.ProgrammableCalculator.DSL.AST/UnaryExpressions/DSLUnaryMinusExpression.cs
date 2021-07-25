@@ -9,5 +9,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.UnaryExpressions
     public sealed class DSLUnaryMinusExpression : DSLUnaryExpression
     {
         public override T Accept<T>(IDSLVisitor<T> visitor) => visitor.Accept(this);
+
+        public override string Symbol => "-";
     }
 }

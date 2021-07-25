@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarkusSecundus.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions
     {
         public override T Accept<T>(IDSLVisitor<T> visitor) => visitor.Accept(this);
 
+        public string Name { get; init; }
 
         public IReadOnlyList<DSLExpression> Arguments { get; init; }
 
@@ -17,5 +19,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions
 
         public override int Arity => Arguments.Count;
 
+
+        public override string ToString() => $"{Name}({Arguments.Concat()})";
     }
 }

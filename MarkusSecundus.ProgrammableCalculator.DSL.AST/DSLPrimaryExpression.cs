@@ -8,6 +8,9 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
     public abstract class DSLPrimaryExpression : DSLExpression
     {
+        internal DSLPrimaryExpression() { }
+
+
         public sealed override int Arity => 0;
 
         public sealed override DSLExpression this[int childIndex]

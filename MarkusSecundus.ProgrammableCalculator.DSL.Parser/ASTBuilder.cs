@@ -2,10 +2,15 @@
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using MarkusSecundus.ProgrammableCalculator.DSL.AST;
+using MarkusSecundus.ProgrammableCalculator.DSL.AST.BinaryExpressions;
+using MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions;
 using MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression;
+using MarkusSecundus.ProgrammableCalculator.DSL.AST.UnaryExpressions;
 using MarkusSecundus.ProgrammableCalculator.DSL.Parser.ParserExceptions;
 using MarkusSecundus.ProgrammableCalculator.DSL.Parser.ParserExceptions.Throwers;
+using MarkusSecundus.Util;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
@@ -22,97 +27,130 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
             CalculatorDSLLexer lexer = new CalculatorDSLLexer(source);
             CalculatorDSLParser parser = new CalculatorDSLParser(new CommonTokenStream(lexer));
 
-            lexer.AddErrorListener(LexicalErrorListener.Instance);
-            parser.AddErrorListener(SyntaxErrorListener.Instance);
+            AggregateParserException.Builder e = new();
 
+            lexer.AddErrorListener(e.LexicalErrorListener);
+            parser.AddErrorListener(e.SyntaxErrorListener);
 
-            var tree = parser.unit().ToStringTree();
-            Console.WriteLine(tree);
-            return null;
+            var l = new ParserListener();
+
+            parser.AddParseListener(l);
+
+            parser.unit();
+
+            if (!e.IsEmpty)
+                throw e.Build();
+
+            if (l.ReturnValue == null)
+                throw new ParserException("Parsing failed for some reason!");
+
+            return l.ReturnValue;
         }
 
 
     }
 
 
-    class ASTBuilderVisitor : CalculatorDSLBaseVisitor<DSLExpression>
+
+    sealed class ParserListener : CalculatorDSLBaseListener
     {
-        public override DSLExpression VisitAdd_expression([NotNull] CalculatorDSLParser.Add_expressionContext context)
-        {
-            return null;
-        }
+        public DSLFunctionDefinition ReturnValue { get; private set; }
 
-        public override DSLExpression VisitArgs_list([NotNull] CalculatorDSLParser.Args_listContext context)
-        {
-            return base.VisitArgs_list(context);
-        }
+        private List<List<string>> argsStack = new();
+        private List<List<DSLExpression>> invokeArgsStack = new();
+        private List<DSLExpression> stack = new();
 
-        public override DSLExpression VisitBracketed_args_list__opt([NotNull] CalculatorDSLParser.Bracketed_args_list__optContext context)
-        {
-            return base.VisitBracketed_args_list__opt(context);
-        }
 
-        public override DSLExpression VisitBracketed_invoke_list__opt([NotNull] CalculatorDSLParser.Bracketed_invoke_list__optContext context)
-        {
-            return base.VisitBracketed_invoke_list__opt(context);
-        }
+        private void pushBinary<T>() where T: DSLBinaryExpression, new()
+            => stack.Push(new T { RightChild = stack.Pop(), LeftChild = stack.Pop() });
 
-        public override DSLExpression VisitErrorNode([NotNull] IErrorNode node)
-        {
-            return base.VisitErrorNode(node);
-        }
+        private void pushUnary<T>() where T : DSLUnaryExpression, new()
+            => stack.Push(new T { Child = stack.Pop() });
 
-        public override DSLExpression VisitExpression([NotNull] CalculatorDSLParser.ExpressionContext context)
-        {
-            return context.add_expression().Accept(this);
-        }
 
-        public override DSLExpression VisitFunction_call([NotNull] CalculatorDSLParser.Function_callContext context)
-        {
-            return base.VisitFunction_call(context);
-        }
 
-        public override DSLExpression VisitFunction_definition([NotNull] CalculatorDSLParser.Function_definitionContext context)
-        {
-            return base.VisitFunction_definition(context);
-        }
 
-        public override DSLExpression VisitInvoke_list([NotNull] CalculatorDSLParser.Invoke_listContext context)
-        {
-            return base.VisitInvoke_list(context);
-        }
 
-        public override DSLExpression VisitLiteral([NotNull] CalculatorDSLParser.LiteralContext context)
-        {
 
-            return base.VisitLiteral(context);
-        }
 
-        public override DSLExpression VisitMult_expression([NotNull] CalculatorDSLParser.Mult_expressionContext context)
-        {
-            return base.VisitMult_expression(context);
-        }
+        public override void ExitConstant_expr([NotNull] CalculatorDSLParser.Constant_exprContext context)
+            => stack.Push(new DSLConstantExpression { Value = context.NUMBER().Symbol.Text });
 
-        public override DSLExpression VisitPow_expression([NotNull] CalculatorDSLParser.Pow_expressionContext context)
-        {
-            return base.VisitPow_expression(context);
-        }
+        public override void ExitIdentifier_expr([NotNull] CalculatorDSLParser.Identifier_exprContext context)
+            => stack.Push(new DSLConstantExpression { Value = context.IDENTIFIER().Symbol.Text });
 
-        public override DSLExpression VisitTerminal([NotNull] ITerminalNode node)
-        {
-            switch (node.Symbol.Type)
-            {
-                case CalculatorDSLLexer.IDENTIFIER:
-                    return new DSLArgumentExpression { ArgumentName = node.Symbol.Text };
-                case CalculatorDSLLexer.NUMBER:
-                    return new DSLConstantExpression { Value = node.Symbol.Text };
-            }
-            return null;
-        }
 
-        public override DSLExpression VisitUnit([NotNull] CalculatorDSLParser.UnitContext context)
-        {
-            return base.VisitUnit(context);
-        }
+
+        public override void ExitUnary_minus_expr([NotNull] CalculatorDSLParser.Unary_minus_exprContext context)
+        => pushUnary<DSLUnaryMinusExpression>();
+
+        public override void ExitUnary_plus_expr([NotNull] CalculatorDSLParser.Unary_plus_exprContext context)
+        => pushUnary<DSLUnaryPlusExpression>();
+
+
+
+        public override void ExitAdd_expr([NotNull] CalculatorDSLParser.Add_exprContext context)
+            => pushBinary<DSLAddExpression>();
+
+        public override void ExitSubtract_expr([NotNull] CalculatorDSLParser.Subtract_exprContext context)
+            => pushBinary<DSLSubtractExpression>();
+
+        public override void ExitMult_expr([NotNull] CalculatorDSLParser.Mult_exprContext context)
+            => pushBinary<DSLMultiplyExpression>();
+
+        public override void ExitDiv_expr([NotNull] CalculatorDSLParser.Div_exprContext context)
+            => pushBinary<DSLDivideExpression>();
+
+        public override void ExitMod_expr([NotNull] CalculatorDSLParser.Mod_exprContext context)
+            => pushBinary<DSLModuloExpression>();
+
+        public override void ExitExponent_expr([NotNull] CalculatorDSLParser.Exponent_exprContext context)
+            => pushBinary<DSLExponentialExpression>();
+
+
+
+
+
+        public override void ExitFunctioncall_expr([NotNull] CalculatorDSLParser.Functioncall_exprContext context)
+            => stack.Push(new DSLFunctioncallExpression { Name = context.IDENTIFIER().Symbol.Text, Arguments = invokeArgsStack.Pop() });
+
+
+        public override void ExitInvoke_list_create([NotNull] CalculatorDSLParser.Invoke_list_createContext context)
+            => invokeArgsStack.Push(new List<DSLExpression> { stack.Pop() });
+
+        public override void ExitInvoke_list_add([NotNull] CalculatorDSLParser.Invoke_list_addContext context)
+            => invokeArgsStack.Peek().Add(stack.Pop());
+
+        public override void ExitBracketed_invoke_list_empty([NotNull] CalculatorDSLParser.Bracketed_invoke_list_emptyContext context)
+            => invokeArgsStack.Push(new List<DSLExpression>());
+
+
+
+
+
+        public override void ExitFunction_definition([NotNull] CalculatorDSLParser.Function_definitionContext context)
+            => ReturnValue = new DSLFunctionDefinition { Name = context.IDENTIFIER().Symbol.Text, Arguments = argsStack.Pop(), Body = stack.Pop() };
+
+        public override void ExitAnonymous_function_definition([NotNull] CalculatorDSLParser.Anonymous_function_definitionContext context)
+            => ReturnValue = new DSLFunctionDefinition { Name = DSLFunctionDefinition.AnonymousFunctionName, Arguments = new string[0], Body = stack.Pop() };
+
+
+        public override void ExitArgs_list_create([NotNull] CalculatorDSLParser.Args_list_createContext context)
+            => argsStack.Push(new List<string> { context.IDENTIFIER().Symbol.Text });
+
+        public override void ExitArgs_list_add([NotNull] CalculatorDSLParser.Args_list_addContext context)
+            => argsStack.Peek().Add(context.IDENTIFIER().Symbol.Text);
+
+        public override void ExitBracketed_args_list_empty([NotNull] CalculatorDSLParser.Bracketed_args_list_emptyContext context)
+            => argsStack.Push(new List<string>());
+
+
+
+
+
+        public override string ToString() => ""+ReturnValue;
     }
+
+
+
 }

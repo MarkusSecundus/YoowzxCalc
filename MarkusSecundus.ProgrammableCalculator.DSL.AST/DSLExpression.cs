@@ -8,6 +8,8 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
     public abstract class DSLExpression
     {
+        internal DSLExpression() { }
+
         public abstract T Accept<T>(IDSLVisitor<T> visitor);
 
         public abstract int Arity { get; }
