@@ -14,5 +14,21 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 
         public abstract int Arity { get; }
         public abstract DSLExpression this[int childIndex] { get; }
+
+
+
+
+
+
+
+
+        private int? _hashCode;
+
+        public override int GetHashCode() => _hashCode ??= ComputeHashCode();
+
+        public sealed override bool Equals(object obj) => Equals_impl(obj);
+
+        protected abstract bool Equals_impl(object o);
+        protected abstract int ComputeHashCode();
     }
 }

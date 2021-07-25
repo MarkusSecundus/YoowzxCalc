@@ -23,6 +23,13 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 
         public abstract string Symbol { get; }
 
+
+
+
         public override string ToString() => $"({LeftChild} {Symbol} {RightChild})";
+
+        protected override bool Equals_impl(object obj) => obj is DSLBinaryExpression b && GetType() == b.GetType() && Equals(LeftChild, b.LeftChild) && Equals(RightChild, b.RightChild);
+
+        protected override int ComputeHashCode() => (LeftChild, RightChild).GetHashCode();
     }
 }

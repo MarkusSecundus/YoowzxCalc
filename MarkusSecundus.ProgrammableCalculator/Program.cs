@@ -5,6 +5,9 @@ using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
+using MarkusSecundus.ProgrammableCalculator.DSL.AST;
+using MarkusSecundus.ProgrammableCalculator.DSL.AST.BinaryExpressions;
+using MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression;
 using MarkusSecundus.ProgrammableCalculator.DSL.Parser;
 
 using static System.Console;

@@ -107,7 +107,7 @@ COMPARE_LT : '<';
 COMPARE_LE : '<=';
 COMPARE_GT : '>';
 COMPARE_GE : '>=';
-COMPARE_EQ : '=' || '==';
+COMPARE_EQ : '=' | '==';
 COMPARE_NE : '!=';
 
 EXCLAM : '!' | '¬';

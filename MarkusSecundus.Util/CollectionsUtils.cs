@@ -49,5 +49,13 @@ namespace MarkusSecundus.Util
 
 
         public static IReadOnlyList<T> EmptyList<T>() => ImmutableList<T>.Empty;
+
+        public static int SequenceHashCode<T>(this IEnumerable<T> self)
+        {
+            int ret = 0;
+            if(self != null) foreach (var t in self)
+                ret = HashCode.Combine(ret, t.GetHashCode());
+            return ret;
+        }
     }
 }

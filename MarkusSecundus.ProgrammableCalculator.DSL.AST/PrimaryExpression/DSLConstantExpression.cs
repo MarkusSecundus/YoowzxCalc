@@ -14,5 +14,9 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression
 
 
         public override string ToString() => Value;
+
+        protected override bool Equals_impl(object obj) => obj is DSLConstantExpression e && Value == e.Value;
+
+        protected override int ComputeHashCode() => Value.GetHashCode();
     }
 }

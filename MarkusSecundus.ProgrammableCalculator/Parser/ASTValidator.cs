@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.ProgrammableCalculator.Parser
 {
-    public class TreeValidator<TNumber> : DSLVisitorBase<object> where TNumber : INumber<TNumber>
+    public class ASTValidator<TNumber> : DSLVisitorBase<object> where TNumber : INumber<TNumber>
     {
         private readonly IConstantParser<TNumber> _parser;
 
         public readonly List<Exception> IssuesFound = new();
 
 
-        public TreeValidator(IConstantParser<TNumber> parser) => _parser = parser;
+        public ASTValidator(IConstantParser<TNumber> parser) => _parser = parser;
 
 
 

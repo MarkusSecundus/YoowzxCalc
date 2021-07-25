@@ -21,5 +21,9 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions
 
 
         public override string ToString() => $"({Condition} ? {IfTrue} : {IfFalse})";
+
+        protected override bool Equals_impl(object obj) => obj is DSLTernaryExpression b && Equals(Condition, b.Condition) && Equals(IfTrue, b.IfTrue) && Equals(IfFalse, b.IfFalse);
+
+        protected override int ComputeHashCode() => (Condition, IfTrue, IfFalse).GetHashCode();
     }
 }

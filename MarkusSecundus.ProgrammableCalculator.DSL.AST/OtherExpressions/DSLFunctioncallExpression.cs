@@ -21,5 +21,9 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions
 
 
         public override string ToString() => $"{Name}({Arguments.Concat()})";
+
+        protected override bool Equals_impl(object obj) => obj is DSLFunctioncallExpression b && Name == b.Name && Arguments.SequenceEqual(b.Arguments);
+
+        protected override int ComputeHashCode() => (Name, Arguments.SequenceHashCode()).GetHashCode();
     }
 }

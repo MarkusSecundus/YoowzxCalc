@@ -14,17 +14,27 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
         
         public string Name { get; init; }
 
-        public bool IsAnonymous => object.ReferenceEquals(Name, AnonymousFunctionName);
-
         public IReadOnlyList<string> Arguments { get; init; }
 
         public DSLExpression Body { get; init; }
 
 
-        public override string ToString() => $"{HeadRepr(this)} := {Body}";
+
+        public bool IsAnonymous => object.ReferenceEquals(Name, AnonymousFunctionName);
+
+        public static readonly string AnonymousFunctionName = new string("<#anonymous>");
+
+
+
+
 
         public static string HeadRepr(DSLFunctionDefinition self) => $"{self.Name}({self.Arguments.Concat()})";
 
-        public static readonly string AnonymousFunctionName = new string("<#anonymous>");
+
+        public override string ToString() => $"{HeadRepr(this)} := {Body}";
+
+        public override bool Equals(object obj) => obj is DSLFunctionDefinition e && Name == e.Name && Arguments.SequenceEqual(e.Arguments) && Equals(Body, e.Body);
+
+        public override int GetHashCode() => (Name, Arguments.SequenceHashCode(), Body).GetHashCode();
     }
 }
