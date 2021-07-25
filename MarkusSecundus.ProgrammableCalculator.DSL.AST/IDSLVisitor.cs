@@ -10,19 +10,21 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
     public interface IDSLVisitor<T>
     {
-        public T Accept(DSLConstantExpression expr);
-        public T Accept(DSLArgumentExpression expr);
+        public T Visit(DSLFunctionDefinition expr);
 
-        public T Accept(DSLUnaryMinusExpression expr);
-        public T Accept(DSLUnaryPlusExpression expr);
+        public T Visit(DSLConstantExpression expr);
+        public T Visit(DSLArgumentExpression expr);
 
-        public T Accept(DSLAddExpression expr);
-        public T Accept(DSLSubtractExpression expr);
-        public T Accept(DSLMultiplyExpression expr);
-        public T Accept(DSLDivideExpression expr);
-        public T Accept(DSLModuloExpression expr);
-        public T Accept(DSLExponentialExpression expr);
+        public T Visit(DSLUnaryMinusExpression expr);
+        public T Visit(DSLUnaryPlusExpression expr);
 
-        public T Accept(DSLFunctioncallExpression expr);
+        public T Visit(DSLAddExpression expr);
+        public T Visit(DSLSubtractExpression expr);
+        public T Visit(DSLMultiplyExpression expr);
+        public T Visit(DSLDivideExpression expr);
+        public T Visit(DSLModuloExpression expr);
+        public T Visit(DSLExponentialExpression expr);
+
+        public T Visit(DSLFunctioncallExpression expr);
     }
 }

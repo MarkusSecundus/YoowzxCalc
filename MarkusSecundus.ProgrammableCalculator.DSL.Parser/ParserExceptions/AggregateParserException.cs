@@ -23,7 +23,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser.ParserExceptions
 
 
 
-
+        public static AggregateParserException Empty { get; } = new(CollectionsUtils.EmptyList<LexicalErrorException>(), CollectionsUtils.EmptyList<SyntaxErrorException>());
 
 
         internal class Builder

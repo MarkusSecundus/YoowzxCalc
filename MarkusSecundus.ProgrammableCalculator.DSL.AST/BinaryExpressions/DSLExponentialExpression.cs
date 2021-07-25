@@ -8,7 +8,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.BinaryExpressions
 {
     public sealed class DSLExponentialExpression : DSLBinaryExpression
     {
-        public override T Accept<T>(IDSLVisitor<T> visitor) => visitor.Accept(this);
+        public override T Accept<T>(IDSLVisitor<T> visitor) => visitor.Visit(this);
 
         public override string Symbol => "^";
     }

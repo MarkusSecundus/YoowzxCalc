@@ -12,41 +12,44 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
     public abstract class DSLVisitorBase<T> : IDSLVisitor<T>
     {
-        public T Accept(DSLConstantExpression expr) => Accept((DSLPrimaryExpression)expr);
-
-        public T Accept(DSLArgumentExpression expr) => Accept((DSLPrimaryExpression)expr);
+        public virtual T Visit(DSLFunctionDefinition expr) => throw new NotImplementedException();
 
 
-        public T Accept(DSLUnaryMinusExpression expr) => Accept((DSLUnaryExpression)expr);
+        public virtual T Visit(DSLConstantExpression expr) => Visit((DSLPrimaryExpression)expr);
 
-        public T Accept(DSLUnaryPlusExpression expr) => Accept((DSLUnaryExpression)expr);
-
-
-        public T Accept(DSLAddExpression expr) => Accept((DSLBinaryExpression)expr);
-
-        public T Accept(DSLSubtractExpression expr) => Accept((DSLBinaryExpression)expr);
-
-        public T Accept(DSLMultiplyExpression expr) => Accept((DSLBinaryExpression)expr);
-
-        public T Accept(DSLDivideExpression expr) => Accept((DSLBinaryExpression)expr);
-
-        public T Accept(DSLModuloExpression expr) => Accept((DSLBinaryExpression)expr);
-
-        public T Accept(DSLExponentialExpression expr) => Accept((DSLBinaryExpression)expr);
+        public virtual T Visit(DSLArgumentExpression expr) => Visit((DSLPrimaryExpression)expr);
 
 
+        public virtual T Visit(DSLUnaryMinusExpression expr) => Visit((DSLUnaryExpression)expr);
 
-        public T Accept(DSLFunctioncallExpression expr) => Accept((DSLExpression)expr);
-
-
-        public T Accept(DSLPrimaryExpression expr) => Accept((DSLExpression)expr);
-
-        public T Accept(DSLUnaryExpression expr) => Accept((DSLExpression)expr);
+        public virtual T Visit(DSLUnaryPlusExpression expr) => Visit((DSLUnaryExpression)expr);
 
 
-        public T Accept(DSLBinaryExpression expr) => Accept((DSLExpression)expr);
+        public virtual T Visit(DSLAddExpression expr) => Visit((DSLBinaryExpression)expr);
+
+        public virtual T Visit(DSLSubtractExpression expr) => Visit((DSLBinaryExpression)expr);
+
+        public virtual T Visit(DSLMultiplyExpression expr) => Visit((DSLBinaryExpression)expr);
+
+        public virtual T Visit(DSLDivideExpression expr) => Visit((DSLBinaryExpression)expr);
+
+        public virtual T Visit(DSLModuloExpression expr) => Visit((DSLBinaryExpression)expr);
+
+        public virtual T Visit(DSLExponentialExpression expr) => Visit((DSLBinaryExpression)expr);
 
 
-        public T Accept(DSLExpression expr) => throw new NotImplementedException();
+
+        public virtual T Visit(DSLFunctioncallExpression expr) => Visit((DSLExpression)expr);
+
+
+        public virtual T Visit(DSLPrimaryExpression expr) => Visit((DSLExpression)expr);
+
+        public virtual T Visit(DSLUnaryExpression expr) => Visit((DSLExpression)expr);
+
+
+        public virtual T Visit(DSLBinaryExpression expr) => Visit((DSLExpression)expr);
+
+
+        public virtual T Visit(DSLExpression expr) => throw new NotImplementedException();
     }
 }

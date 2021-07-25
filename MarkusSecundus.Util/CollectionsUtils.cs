@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Text;
 
 namespace MarkusSecundus.Util
@@ -22,6 +23,8 @@ namespace MarkusSecundus.Util
         public static T Peek<T>(this IList<T> self)
             => self[^1];
 
+
+
         public static string Concat<T>(this IEnumerable<T> self, string separator=", ")
         {
             var ret = new StringBuilder();
@@ -42,5 +45,9 @@ namespace MarkusSecundus.Util
             foreach (var t in self) yield return t;
             foreach (var t in other) yield return t;
         }
+
+
+
+        public static IReadOnlyList<T> EmptyList<T>() => ImmutableList<T>.Empty;
     }
 }

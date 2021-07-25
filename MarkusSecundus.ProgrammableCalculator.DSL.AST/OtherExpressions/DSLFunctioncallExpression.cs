@@ -9,7 +9,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions
 {
     public sealed class DSLFunctioncallExpression : DSLExpression
     {
-        public override T Accept<T>(IDSLVisitor<T> visitor) => visitor.Accept(this);
+        public override T Accept<T>(IDSLVisitor<T> visitor) => visitor.Visit(this);
 
         public string Name { get; init; }
 

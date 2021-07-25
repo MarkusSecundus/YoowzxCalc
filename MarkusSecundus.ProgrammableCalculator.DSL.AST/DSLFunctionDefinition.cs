@@ -9,6 +9,9 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
     public sealed class DSLFunctionDefinition
     {
+        public T Accept<T>(IDSLVisitor<T> visitor) => visitor.Visit(this);
+        
+        
         public string Name { get; init; }
 
         public bool IsAnonymous => object.ReferenceEquals(Name, AnonymousFunctionName);

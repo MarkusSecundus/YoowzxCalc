@@ -16,7 +16,7 @@ namespace MarkusSecundus.ProgrammableCalculator
 
         public static void Main()
         {
-            var tree = IASTBuilder.Instance.Build("f(x, y, z):= 12.3e0 ");
+            var tree = IASTBuilder.Instance.Build("f(x):= 12.3e0 +5");
 
             Console.WriteLine(tree);
         }
