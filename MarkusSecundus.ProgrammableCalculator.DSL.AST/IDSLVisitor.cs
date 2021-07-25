@@ -24,7 +24,25 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
         public T Visit(DSLDivideExpression expr);
         public T Visit(DSLModuloExpression expr);
         public T Visit(DSLExponentialExpression expr);
+        
 
         public T Visit(DSLFunctioncallExpression expr);
+
+
+
+        public T Visit(DSLCompareGreaterOrEqualExpression expr);
+        public T Visit(DSLCompareGreaterThanExpression expr);
+        public T Visit(DSLCompareLessOrEqualExpression expr);
+        public T Visit(DSLCompareLessThanExpression expr);
+
+        public T Visit(DSLCompareIsEqualExpression expr);
+        public T Visit(DSLCompareIsNotEqualExpression expr);
+
+
+        public T Visit(DSLLogicalAndExpression expr);
+        public T Visit(DSLLogicalOrExpression expr);
+
+        public T Visit(DSLTernaryOperator expr);
+
     }
 }

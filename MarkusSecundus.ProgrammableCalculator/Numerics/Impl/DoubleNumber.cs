@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarkusSecundus.ProgrammableCalculator.Parser;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -30,5 +31,15 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics.Impl
 
         public static implicit operator DoubleNumber(double i) => new DoubleNumber(i);
         public static implicit operator double(DoubleNumber i) => i.Value;
+
+
+        public class ConstantParser : IConstantParser<DoubleNumber>
+        {
+            public bool IsValid(string repr)
+                => double.TryParse(repr, out var _);
+
+            public DoubleNumber Parse(string repr)
+                => double.Parse(repr);
+        }
     }
 }

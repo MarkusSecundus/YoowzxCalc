@@ -19,5 +19,19 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
         public TSelf Neg();
 
         public TSelf Pow(TSelf power);
+
+
+        public bool IsZero { get; }
+
+        public TSelf NegLogical();
+
+        public TSelf Lt(TSelf other);
+        public TSelf Le(TSelf other);
+        public TSelf Gt(TSelf other) => Le(other).NegLogical();
+        public TSelf Ge(TSelf other) => Lt(other).NegLogical();
+
+        public TSelf Eq(TSelf other);
+        public TSelf Ne(TSelf other) => Eq(other).NegLogical();
+
     }
 }
