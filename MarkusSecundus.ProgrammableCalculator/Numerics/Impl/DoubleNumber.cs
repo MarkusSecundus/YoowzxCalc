@@ -8,10 +8,11 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics.Impl
     public struct DoubleNumber : INumber<DoubleNumber>
     {
         public DoubleNumber(double value) => Value = value;
+        public DoubleNumber(bool value) => Value = value?1:0;
 
         public double Value { get; init; }
 
-
+        public bool IsZero => Value == 0;
 
         public DoubleNumber Abs() => Value >= 0 ? Value : -Value;
 
@@ -28,9 +29,20 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics.Impl
         public DoubleNumber Pow(DoubleNumber power) => Math.Pow(Value, power);
 
 
+        public DoubleNumber NegLogical() => IsZero;
+
+        public DoubleNumber Lt(DoubleNumber other) => Value < other.Value;
+
+        public DoubleNumber Le(DoubleNumber other) => Value <= other.Value;
+
+        public DoubleNumber Eq(DoubleNumber other) => Value == other.Value;
+
 
         public static implicit operator DoubleNumber(double i) => new DoubleNumber(i);
         public static implicit operator double(DoubleNumber i) => i.Value;
+        
+        public static implicit operator DoubleNumber(bool b) => new DoubleNumber(b);
+        public static implicit operator bool(DoubleNumber i) => !i.IsZero;
 
 
         public class ConstantParser : IConstantParser<DoubleNumber>

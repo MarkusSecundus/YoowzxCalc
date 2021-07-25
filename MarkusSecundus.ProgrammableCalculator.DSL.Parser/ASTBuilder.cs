@@ -36,7 +36,11 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
 
             parser.AddParseListener(l);
 
-            parser.unit();
+            try
+            {
+                parser.unit();
+            }
+            catch { }
 
             if (!e.IsEmpty)
                 throw e.Build();
@@ -82,10 +86,13 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
 
 
         public override void ExitUnary_minus_expr([NotNull] CalculatorDSLParser.Unary_minus_exprContext context)
-        => pushUnary<DSLUnaryMinusExpression>();
+            => pushUnary<DSLUnaryMinusExpression>();
 
         public override void ExitUnary_plus_expr([NotNull] CalculatorDSLParser.Unary_plus_exprContext context)
-        => pushUnary<DSLUnaryPlusExpression>();
+            => pushUnary<DSLUnaryPlusExpression>();
+
+        public override void ExitLogical_not_expr([NotNull] CalculatorDSLParser.Logical_not_exprContext context)
+            => pushUnary<DSLUnaryLogicalNotExpression>();
 
 
 
@@ -106,6 +113,50 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
 
         public override void ExitExponent_expr([NotNull] CalculatorDSLParser.Exponent_exprContext context)
             => pushBinary<DSLExponentialExpression>();
+
+
+
+
+
+        public override void ExitLt_expr([NotNull] CalculatorDSLParser.Lt_exprContext context)
+            => pushBinary<DSLCompareLessThanExpression>();
+
+        public override void ExitLe_expr([NotNull] CalculatorDSLParser.Le_exprContext context)
+            => pushBinary<DSLCompareLessOrEqualExpression>();
+
+        public override void ExitGt_expr([NotNull] CalculatorDSLParser.Gt_exprContext context)
+            => pushBinary<DSLCompareGreaterThanExpression>();
+
+        public override void ExitGe_expr([NotNull] CalculatorDSLParser.Ge_exprContext context)
+            => pushBinary<DSLCompareGreaterOrEqualExpression>();
+
+
+        public override void ExitEq_expr([NotNull] CalculatorDSLParser.Eq_exprContext context)
+            => pushBinary<DSLCompareIsEqualExpression>();
+
+        public override void ExitNe_expr([NotNull] CalculatorDSLParser.Ne_exprContext context)
+            => pushBinary<DSLCompareIsNotEqualExpression>();
+
+
+
+        public override void ExitAnd_expression([NotNull] CalculatorDSLParser.And_expressionContext context)
+            => pushBinary<DSLLogicalAndExpression>();
+
+        public override void ExitOr_expression([NotNull] CalculatorDSLParser.Or_expressionContext context)
+            => pushBinary<DSLLogicalOrExpression>();
+
+        public override void ExitTernary_expr([NotNull] CalculatorDSLParser.Ternary_exprContext context)
+            => stack.Push(new DSLTernaryExpression { IfFalse = stack.Pop(), IfTrue = stack.Pop(), Condition = stack.Pop() });
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -149,6 +200,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
 
 
         public override string ToString() => ""+ReturnValue;
+
     }
 
 

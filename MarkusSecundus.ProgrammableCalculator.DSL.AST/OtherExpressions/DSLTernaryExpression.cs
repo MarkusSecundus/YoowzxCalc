@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions
 {
-    public sealed class DSLTernaryOperator : DSLExpression
+    public sealed class DSLTernaryExpression : DSLExpression
     {
         public override T Accept<T>(IDSLVisitor<T> visitor) => visitor.Visit(this);
 
@@ -20,6 +20,6 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions
         public override int Arity => 3;
 
 
-        public override string ToString() => $"{Condition} ? {IfTrue} : {IfFalse}";
+        public override string ToString() => $"({Condition} ? {IfTrue} : {IfFalse})";
     }
 }

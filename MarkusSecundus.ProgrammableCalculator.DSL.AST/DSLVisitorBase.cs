@@ -45,6 +45,9 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 
 
 
+        public virtual T Visit(DSLUnaryLogicalNotExpression expr) => Visit((DSLUnaryExpression)expr);
+
+
         public virtual T Visit(DSLCompareGreaterOrEqualExpression expr) => Visit((DSLBinaryExpression)expr);
 
         public virtual T Visit(DSLCompareGreaterThanExpression expr) => Visit((DSLBinaryExpression)expr);
@@ -66,7 +69,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 
 
 
-        public virtual T Visit(DSLTernaryOperator expr) => Visit((DSLExpression)expr);
+        public virtual T Visit(DSLTernaryExpression expr) => Visit((DSLExpression)expr);
 
 
 
