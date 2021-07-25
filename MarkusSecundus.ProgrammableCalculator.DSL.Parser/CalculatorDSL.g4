@@ -110,10 +110,10 @@ COMPARE_GE : '>=';
 COMPARE_EQ : '=' || '==';
 COMPARE_NE : '!=';
 
-EXCLAM : '!';
+EXCLAM : '!' | '¬';
 
-AND : '&';
-OR : '|';
+AND : '&' | '∧';
+OR : '|' | '∨';
 
 QUESTION : '?';
 COLON : ':' ;

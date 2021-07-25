@@ -139,10 +139,10 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
 
 
 
-        public override void ExitAnd_expression([NotNull] CalculatorDSLParser.And_expressionContext context)
+        public override void ExitAnd_expr([NotNull] CalculatorDSLParser.And_exprContext context)
             => pushBinary<DSLLogicalAndExpression>();
 
-        public override void ExitOr_expression([NotNull] CalculatorDSLParser.Or_expressionContext context)
+        public override void ExitOr_expr([NotNull] CalculatorDSLParser.Or_exprContext context)
             => pushBinary<DSLLogicalOrExpression>();
 
         public override void ExitTernary_expr([NotNull] CalculatorDSLParser.Ternary_exprContext context)

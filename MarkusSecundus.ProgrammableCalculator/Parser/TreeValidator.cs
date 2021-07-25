@@ -16,24 +16,36 @@ namespace MarkusSecundus.ProgrammableCalculator.Parser
     {
         private readonly IConstantParser<TNumber> _parser;
 
+        public readonly List<Exception> IssuesFound = new();
 
 
-        public TreeValidator(IConstantParser<TNumber> parser)
-        {
-            _parser = parser;
-        }
+        public TreeValidator(IConstantParser<TNumber> parser) => _parser = parser;
+
+
 
         public override object Visit(DSLFunctionDefinition expr)
         {
-
+            var argumentsSet = expr.Arguments.ToHashSet();
+            if(argumentsSet.Count != expr.Arguments.Count)
+            {
+                IssuesFound.Add(new Exception($"Duplicit argument names found in {DSLFunctionDefinition.HeadRepr(expr)}"));
+            }
             return null;
         }
 
         public override object Visit(DSLConstantExpression expr)
         {
-
+            try
+            {
+                _parser.Parse(expr.Value);
+            }
+            catch(Exception e)
+            {
+                IssuesFound.Add(e);
+            }
             return null;
         }
+
 
         public override object Visit(DSLExpression expr) => null;
     }

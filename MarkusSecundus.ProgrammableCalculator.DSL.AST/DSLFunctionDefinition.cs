@@ -21,8 +21,9 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
         public DSLExpression Body { get; init; }
 
 
-        public override string ToString() => $"{Name}({Arguments.Concat()}) := {Body}";
+        public override string ToString() => $"{HeadRepr(this)} := {Body}";
 
+        public static string HeadRepr(DSLFunctionDefinition self) => $"{self.Name}({self.Arguments.Concat()})";
 
         public static readonly string AnonymousFunctionName = new string("<#anonymous>");
     }
