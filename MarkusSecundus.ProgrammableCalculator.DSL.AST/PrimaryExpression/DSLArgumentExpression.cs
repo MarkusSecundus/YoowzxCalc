@@ -13,7 +13,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression
         public string ArgumentName { get; init; }
 
 
-        public override string ToString() => ArgumentName;
+        public override string ToString() => $"`{ArgumentName}`";
 
         protected override bool Equals_impl(object obj) => obj is DSLArgumentExpression e && ArgumentName == e.ArgumentName;
 

@@ -81,7 +81,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
             => stack.Push(new DSLConstantExpression { Value = context.NUMBER().Symbol.Text });
 
         public override void ExitIdentifier_expr([NotNull] CalculatorDSLParser.Identifier_exprContext context)
-            => stack.Push(new DSLConstantExpression { Value = context.IDENTIFIER().Symbol.Text });
+            => stack.Push(new DSLArgumentExpression { ArgumentName = context.IDENTIFIER().Symbol.Text });
 
 
 

@@ -11,14 +11,26 @@ using MarkusSecundus.ProgrammableCalculator.DSL.AST.BinaryExpressions;
 using MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression;
 using MarkusSecundus.ProgrammableCalculator.DSL.Parser;
 using MarkusSecundus.ProgrammableCalculator.Numerics.Impl;
+using MarkusSecundus.ProgrammableCalculator.Parser;
 using static System.Console;
 
 namespace MarkusSecundus.ProgrammableCalculator
 {
     class Program
     {
-
+        
         public static void Main()
+        {
+            var ast = IASTBuilder.Instance.Build(@"f(x, y) := x **2");
+            Console.WriteLine(ast);
+            var parser = new ASTParser<DoubleNumber>(DoubleNumber.ConstantParser.Instance);
+
+            var result = ast.Accept(parser, default);
+
+            Console.WriteLine((result as Expression<Func<DoubleNumber, DoubleNumber, DoubleNumber>>).Compile()(10, 12).ToString());
+        }
+
+        public static void tst()
         {
             Expression<Func<int, int, int>> eee = (x, y) => x + y;
 
@@ -27,7 +39,6 @@ namespace MarkusSecundus.ProgrammableCalculator
             Console.WriteLine(Expression.Parameter(typeof(int), "q"));
 
 
-            return;
             DoubleNumber a = 32.32, b = 123.1;
             Func<DoubleNumber, DoubleNumber > add = default(DoubleNumber).Sub;
             var variable = Expression.RuntimeVariables(Expression.Parameter(typeof(DoubleNumber), "dsa"));

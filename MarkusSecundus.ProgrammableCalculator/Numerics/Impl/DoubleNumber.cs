@@ -1,6 +1,7 @@
 ﻿using MarkusSecundus.ProgrammableCalculator.Parser;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace MarkusSecundus.ProgrammableCalculator.Numerics.Impl
@@ -54,11 +55,14 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics.Impl
 
         public class ConstantParser : IConstantParser<DoubleNumber>
         {
+            protected ConstantParser() { }
+            public static ConstantParser Instance { get; } = new();
+
             public bool IsValid(string repr)
                 => double.TryParse(repr, out var _);
 
             public DoubleNumber Parse(string repr)
-                => double.Parse(repr);
+                => double.Parse(repr, CultureInfo.InvariantCulture);
         }
     }
 }

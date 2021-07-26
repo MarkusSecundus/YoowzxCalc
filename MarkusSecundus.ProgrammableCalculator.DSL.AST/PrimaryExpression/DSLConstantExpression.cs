@@ -13,7 +13,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression
         public string Value { get; init; }
 
 
-        public override string ToString() => Value;
+        public override string ToString() => $"|{Value}|";
 
         protected override bool Equals_impl(object obj) => obj is DSLConstantExpression e && Value == e.Value;
 
