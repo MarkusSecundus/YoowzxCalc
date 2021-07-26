@@ -146,7 +146,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
             => pushBinary<DSLLogicalOrExpression>();
 
         public override void ExitTernary_expr([NotNull] CalculatorDSLParser.Ternary_exprContext context)
-            => stack.Push(new DSLTernaryExpression { IfFalse = stack.Pop(), IfTrue = stack.Pop(), Condition = stack.Pop() });
+            => stack.Push(new DSLConditionalExpression { IfFalse = stack.Pop(), IfTrue = stack.Pop(), Condition = stack.Pop() });
 
 
 

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.ProgrammableCalculator.Parser
 {
-    public class ASTValidator<TNumber> : DSLVisitorBase<object> where TNumber : INumber<TNumber>
+    class ASTValidator<TNumber> : DSLVisitorBaseNoRetValNoContext<object, object> where TNumber : INumber<TNumber>
     {
         private readonly IConstantParser<TNumber> _parser;
 
@@ -23,17 +23,16 @@ namespace MarkusSecundus.ProgrammableCalculator.Parser
 
 
 
-        public override object Visit(DSLFunctionDefinition expr)
+        public override void Visit(DSLFunctionDefinition expr)
         {
             var argumentsSet = expr.Arguments.ToHashSet();
             if(argumentsSet.Count != expr.Arguments.Count)
             {
                 IssuesFound.Add(new Exception($"Duplicit argument names found in {DSLFunctionDefinition.HeadRepr(expr)}"));
             }
-            return null;
         }
 
-        public override object Visit(DSLConstantExpression expr)
+        public override void Visit(DSLConstantExpression expr)
         {
             try
             {
@@ -43,10 +42,9 @@ namespace MarkusSecundus.ProgrammableCalculator.Parser
             {
                 IssuesFound.Add(e);
             }
-            return null;
         }
 
 
-        public override object Visit(DSLExpression expr) => null;
+        public override void Visit(DSLExpression expr) { }
     }
 }

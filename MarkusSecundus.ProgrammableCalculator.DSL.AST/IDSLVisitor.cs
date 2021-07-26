@@ -8,43 +8,43 @@ using System.Text;
 
 namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
-    public interface IDSLVisitor<T>
+    public interface IDSLVisitor<out TRet, in TContext>
     {
-        public T Visit(DSLFunctionDefinition expr);
+        public TRet Visit(DSLFunctionDefinition expr, TContext ctx);
 
-        public T Visit(DSLConstantExpression expr);
-        public T Visit(DSLArgumentExpression expr);
+        public TRet Visit(DSLConstantExpression expr, TContext ctx);
+        public TRet Visit(DSLArgumentExpression expr, TContext ctx);
 
-        public T Visit(DSLUnaryMinusExpression expr);
-        public T Visit(DSLUnaryPlusExpression expr);
+        public TRet Visit(DSLUnaryMinusExpression expr, TContext ctx);
+        public TRet Visit(DSLUnaryPlusExpression expr, TContext ctx);
 
-        public T Visit(DSLAddExpression expr);
-        public T Visit(DSLSubtractExpression expr);
-        public T Visit(DSLMultiplyExpression expr);
-        public T Visit(DSLDivideExpression expr);
-        public T Visit(DSLModuloExpression expr);
-        public T Visit(DSLExponentialExpression expr);
+        public TRet Visit(DSLAddExpression expr, TContext ctx);
+        public TRet Visit(DSLSubtractExpression expr, TContext ctx);
+        public TRet Visit(DSLMultiplyExpression expr, TContext ctx);
+        public TRet Visit(DSLDivideExpression expr, TContext ctx);
+        public TRet Visit(DSLModuloExpression expr, TContext ctx);
+        public TRet Visit(DSLExponentialExpression expr, TContext ctx);
         
 
-        public T Visit(DSLFunctioncallExpression expr);
+        public TRet Visit(DSLFunctioncallExpression expr, TContext ctx);
 
 
 
-        public T Visit(DSLUnaryLogicalNotExpression expr);
+        public TRet Visit(DSLUnaryLogicalNotExpression expr, TContext ctx);
 
-        public T Visit(DSLCompareGreaterOrEqualExpression expr);
-        public T Visit(DSLCompareGreaterThanExpression expr);
-        public T Visit(DSLCompareLessOrEqualExpression expr);
-        public T Visit(DSLCompareLessThanExpression expr);
+        public TRet Visit(DSLCompareGreaterOrEqualExpression expr, TContext ctx);
+        public TRet Visit(DSLCompareGreaterThanExpression expr, TContext ctx);
+        public TRet Visit(DSLCompareLessOrEqualExpression expr, TContext ctx);
+        public TRet Visit(DSLCompareLessThanExpression expr, TContext ctx);
 
-        public T Visit(DSLCompareIsEqualExpression expr);
-        public T Visit(DSLCompareIsNotEqualExpression expr);
+        public TRet Visit(DSLCompareIsEqualExpression expr, TContext ctx);
+        public TRet Visit(DSLCompareIsNotEqualExpression expr, TContext ctx);
 
 
-        public T Visit(DSLLogicalAndExpression expr);
-        public T Visit(DSLLogicalOrExpression expr);
+        public TRet Visit(DSLLogicalAndExpression expr, TContext ctx);
+        public TRet Visit(DSLLogicalOrExpression expr, TContext ctx);
 
-        public T Visit(DSLTernaryExpression expr);
+        public TRet Visit(DSLConditionalExpression expr, TContext ctx);
 
     }
 }

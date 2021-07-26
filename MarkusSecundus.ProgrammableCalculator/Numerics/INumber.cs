@@ -14,6 +14,8 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
 
         public TSelf Div(TSelf other);
 
+        public TSelf Mod(TSelf other);
+
         public TSelf Abs();
 
         public TSelf Neg();
@@ -21,7 +23,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
         public TSelf Pow(TSelf power);
 
 
-        public bool IsZero { get; }
+        public bool IsZero();
 
         public TSelf NegLogical();
 
