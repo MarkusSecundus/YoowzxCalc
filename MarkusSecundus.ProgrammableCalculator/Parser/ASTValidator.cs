@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.ProgrammableCalculator.Parser
 {
-    class ASTValidator<TNumber> : DSLVisitorBaseNoRetValNoContext<object, object> where TNumber : INumber<TNumber>
+    class ASTValidator<TNumber> : DSLVisitorBaseNoReturnNoContext<object, object> where TNumber : INumber<TNumber>
     {
         private readonly IConstantParser<TNumber> _parser;
 
@@ -45,6 +45,10 @@ namespace MarkusSecundus.ProgrammableCalculator.Parser
         }
 
 
-        public override void Visit(DSLExpression expr) { }
+        public override void Visit(DSLExpression expr)
+        {
+            foreach (var e in expr)
+                e.Accept(this);
+        }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
-    public sealed class DSLFunctionDefinition
+    public sealed class DSLFunctionDefinition : IDSLVisitable
     {
         public T Accept<T, TContext>(IDSLVisitor<T, TContext> visitor, TContext ctx) => visitor.Visit(this, ctx);
         

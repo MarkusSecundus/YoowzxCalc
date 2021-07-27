@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
-    public abstract class DSLVisitorBaseNoRetValNoContext<TRet, TContext> : IDSLVisitor<TRet, TContext>
+    public abstract class DSLVisitorBaseNoReturnNoContext<TRet, TContext> : IDSLVisitor<TRet, TContext>
     {
 
         public virtual void Visit(DSLFunctionDefinition expr) => throw new NotImplementedException();

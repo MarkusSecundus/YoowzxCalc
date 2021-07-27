@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
@@ -56,6 +57,19 @@ namespace MarkusSecundus.Util
             if(self != null) foreach (var t in self)
                 ret = HashCode.Combine(ret, t.GetHashCode());
             return ret;
+        }
+
+
+        public interface IReadOnlyList_PreimplementedEnumerator<T> : IReadOnlyList<T>
+        {
+            IEnumerator<T> IEnumerable<T>.GetEnumerator()
+            {
+                for (int t = 0; t < this.Count; ++t)
+                    yield return this[t];
+            }
+
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }
 }
