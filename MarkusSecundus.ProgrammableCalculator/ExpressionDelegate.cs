@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.ProgrammableCalculator
 {
-    public delegate TNumber ExpressionDelegate<TNumber>(Span<TNumber> args) where TNumber : INumber<TNumber>;
+    public delegate TNumber ExpressionDelegate<TNumber>(params TNumber[] args) where TNumber : INumber<TNumber>;
 }

@@ -7,13 +7,13 @@ namespace MarkusSecundus.ProgrammableCalculator
 {
     public interface IExpressionEvaluator<TNumber> where TNumber: INumber<TNumber>
     {
-        public IReadOnlyDictionary<string, IExpression<TNumber>> Context { get; }
+        public IReadOnlyDictionary<string, Delegate> Context { get; }
 
-        public IExpression<TNumber> Parse(string expression);
+        public Delegate Parse(string expression);
 
 
 
-        public IExpressionEvaluator<TNumber> WithFunction(string expression) => WithFunctions(new[] { expression });
+        public IExpressionEvaluator<TNumber> WithFunctions(params string[] expressions) => WithFunctions((IEnumerable<string>)expressions);
 
         public IExpressionEvaluator<TNumber> WithFunctions(IEnumerable<string> expressions);
     }

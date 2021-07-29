@@ -41,12 +41,34 @@ namespace MarkusSecundus.Util
         }
 
 
+        public static IEnumerable<T> Enumerate<T>(this T self)
+        {
+            yield return self;
+        }
+
+
         public static IEnumerable<T> Chain<T>(this IEnumerable<T> self, IEnumerable<T> other)
         {
             foreach (var t in self) yield return t;
             foreach (var t in other) yield return t;
         }
 
+        public static IEnumerable<T> Repeat<T>(this T self, int count)
+        {
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count), $"Count must be non-negative but is {count}");
+
+            IEnumerable<T> impl(T self, int count)
+            {
+                while (--count >= 0)
+                    yield return self;
+            }
+            return impl(self, count);
+        }
+
+
+        public static KeyValuePair<TKey, TValue> AsKV<TKey, TValue>(this (TKey Key, TValue Value) pair)
+            => new KeyValuePair<TKey, TValue>(pair.Key, pair.Value);
 
 
         public static IReadOnlyList<T> EmptyList<T>() => ImmutableList<T>.Empty;
