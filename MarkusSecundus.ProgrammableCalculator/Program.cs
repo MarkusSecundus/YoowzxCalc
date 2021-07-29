@@ -17,12 +17,58 @@ using static System.Console;
 
 namespace MarkusSecundus.ProgrammableCalculator
 {
-    class Program
+    public class Program
     {
 
-        public static void Main() => test8();
+        public static IExpressionEvaluator<DoubleNumber> MakeExpressionEvaluator() => new ASTInvocationContext<DoubleNumber>(IASTBuilder.Instance, DoubleNumber.ConstantParser.Instance);
+        static ASTInvocationContext<DoubleNumber> makeExpressionEvaluator() => new ASTInvocationContext<DoubleNumber>(IASTBuilder.Instance, DoubleNumber.ConstantParser.Instance);
 
 
+        public static void Main() => test12();
+
+        public static void test12()
+        {
+            var tree = IASTBuilder.Instance.Build(@"f(x) := f(y) + c");
+            Console.WriteLine(tree.Accept(ASTRecursionDetector.Instance, default));
+        }
+
+        public static void test11()
+        {
+            var parseCtx = makeExpressionEvaluator();
+
+            DoubleNumber num1 = 10;
+            Func<DoubleNumber, DoubleNumber> aa = null;
+            Expression<Func<DoubleNumber, DoubleNumber>> a = x => x.Lt(10).IsZero() ? x.Neg() : aa(x-1);
+            var b = parseCtx.ParseToTree(@"b(x) := x < 10 ? b(x-1) : -x");
+
+            WriteLine(a);
+            WriteLine();
+            WriteLine(b.ExpressionTree);
+        }
+
+        public static void test10()
+        {
+            var parseCtx = makeExpressionEvaluator();
+
+            Expression<Func<DoubleNumber, DoubleNumber>> a = x => x * x + 10;
+            var b = parseCtx.Parse(@"b(x) :=10");
+
+            Console.WriteLine(a.Compile()(1).ToString()); 
+            Console.WriteLine(b.Wrap<DoubleNumber>()(1));
+        }
+
+        public static void test9()
+        {
+            IExpressionEvaluator<DoubleNumber> parseCtx = new ASTInvocationContext<DoubleNumber>(IASTBuilder.Instance, DoubleNumber.ConstantParser.Instance);
+
+            Func<int> b = () => 1243;
+            Delegate c = parseCtx.Parse(@"456+78");
+
+            Delegate a = c;
+
+            Console.WriteLine(a.ArgumentsCount() + ": "+ a.Method.GetParameters().Concat());
+
+        }
         public static void test8()
         {
             IExpressionEvaluator<DoubleNumber> parseCtx = new ASTInvocationContext<DoubleNumber>(IASTBuilder.Instance, DoubleNumber.ConstantParser.Instance);
@@ -36,10 +82,12 @@ namespace MarkusSecundus.ProgrammableCalculator
 
             var result = parseCtx.Context["circ"];
 
-            Delegate del = parseCtx.Parse(@"g(x) := x > 10 ? x : g(x+1)");
+            Delegate del = parseCtx.Parse(@"g(x, y) := x > 10 ? x + y : g(x+1, y)");
 
             //Console.WriteLine((result as Func<DoubleNumber, DoubleNumber>)(5).ToString());
-            WriteLine(((Func <DoubleNumber, DoubleNumber>) del)(13).ToString());
+            WriteLine(del.Wrap<DoubleNumber>()(13, 100).ToString());
+
+            
         }
 
         public static void test7()

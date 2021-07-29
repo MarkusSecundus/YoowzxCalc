@@ -31,7 +31,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Parser
         {
             _builder = astBuilder;
             _parser = new ASTParser<TNumber>(constantParser);
-            FunctionsRaw = ImmutableDictionary<string, MutableWrapper<LambdaExpression>>.Empty;
+            FunctionsRaw = ImmutableDictionary<string, MutableWrapper<Delegate>>.Empty;
             FunctionsFuncTypes = ImmutableDictionary<string, Type>.Empty;
             Context = makeContext();
         }
@@ -43,36 +43,51 @@ namespace MarkusSecundus.ProgrammableCalculator.Parser
 
             var toAdd = expressions.Select(_builder.Build).ToArray();
 
-            FunctionsRaw = father.FunctionsRaw.Chain(toAdd.Select(f => (f.Name, new MutableWrapper<LambdaExpression>()).AsKV())).ToImmutableDictionary();
-            FunctionsFuncTypes = father.FunctionsFuncTypes.Chain(toAdd.Select(f => (f.Name, f.GetExpressionFuncType<TNumber>()).AsKV())).ToImmutableDictionary();
+            FunctionsRaw = father.FunctionsRaw.Chain(toAdd.Select(f => (f.Name, new MutableWrapper<Delegate>()).AsKV())).ToImmutableDictionary();
+            FunctionsFuncTypes = father.FunctionsFuncTypes.Chain(toAdd.Select(f => (f.Name, f.GetFuncType<TNumber>()).AsKV())).ToImmutableDictionary();
 
             foreach(var f in toAdd)
             {
-                FunctionsRaw[f.Name].Value = (LambdaExpression)f.Accept(_parser, new ASTParseContext<TNumber>(this));
+                var ctx = new ASTParseContext<TNumber>(this);
+                FunctionsRaw[f.Name].Value = ctx.ThisFunctionWrapper.Value = (f.Accept(_parser, ctx) as LambdaExpression).Compile();
+
             }
             Context = makeContext();
         }
 
-        private DefaultValDict<string, Delegate> makeContext() => new(key => FunctionsRaw[key].Value.Compile());
+        private Dictionary<string, Delegate> makeContext() => new(FunctionsRaw.Select(p=>(p.Key, p.Value.Value).AsKV() ));
 
-        internal ImmutableDictionary<string, MutableWrapper<LambdaExpression>> FunctionsRaw { get; }
+        internal ImmutableDictionary<string, MutableWrapper<Delegate>> FunctionsRaw { get; }
         internal ImmutableDictionary<string, Type> FunctionsFuncTypes { get; }
 
         public IReadOnlyDictionary<string, Delegate> Context { get; }
 
 
 
-
-
-        public Delegate Parse(string expression)
+        public TreeContainer ParseToTree(string expression)
         {
             var ast = _builder.Build(expression);
-            var expr = (LambdaExpression)ast.Accept(_parser, new ASTParseContext<TNumber>(this));
-            return expr.Compile();
+            var ctx = new ASTParseContext<TNumber>(this);
+            return new TreeContainer( ast.Accept(_parser, ctx) as LambdaExpression , ctx.ThisFunctionWrapper);
         }
+
+        public Delegate Parse(string expression) => ParseToTree(expression).Compile();
 
         public IExpressionEvaluator<TNumber> WithFunctions(IEnumerable<string> expressions)
             => new ASTInvocationContext<TNumber>(this, expressions);
+
+
+        public struct TreeContainer
+        {
+            internal TreeContainer(LambdaExpression tree, MutableWrapper<Delegate> thisWrapper)
+                => (ExpressionTree, ThisWrapper) = (tree, thisWrapper);
+
+            public LambdaExpression ExpressionTree { get; }
+            private MutableWrapper<Delegate> ThisWrapper { get; }
+
+            public Delegate Compile() => ThisWrapper.Value = ExpressionTree.Compile();
+            public Delegate Compile<TFunc>() where TFunc : Delegate => ThisWrapper.Value = (ExpressionTree as Expression<TFunc>).Compile();
+        }
     }
 
 
@@ -86,7 +101,8 @@ namespace MarkusSecundus.ProgrammableCalculator.Parser
         public ImmutableDictionary<string, ParameterExpression> Parameters { get; init; }
 
         public string ThisFunctionName { get; init; }
-        public ParameterExpression ThisFunction { get; init; }
+        public MutableWrapper<Delegate> ThisFunctionWrapper { get; init; } = new();
+        public Type ThisFunctionType { get; init; }
         
         public ASTInvocationContext<TNumber> InvocationContext { get; init; }
     }
@@ -97,6 +113,11 @@ namespace MarkusSecundus.ProgrammableCalculator.Parser
 
     class ASTParser<TNumber> : DSLVisitorBase<Expression, ASTParseContext<TNumber>> where TNumber : INumber<TNumber>
     {
+
+
+
+
+
         private readonly IConstantParser<TNumber> _constantParser;
 
         public ASTParser(IConstantParser<TNumber> constantParser) => _constantParser = constantParser;
@@ -116,38 +137,29 @@ namespace MarkusSecundus.ProgrammableCalculator.Parser
         private static readonly Func<TNumber, TNumber> _Le = T.Le, _Lt = T.Lt, _Ge = T.Ge, _Gt = T.Gt, _Eq = T.Eq, _Ne = T.Ne;
 
 
-        public override Expression Visit(DSLConstantExpression expr, ASTParseContext<TNumber> ctx)
-        {
-            return Expression.Constant(_constantParser.Parse(expr.Value));
-        }
 
         public override Expression Visit(DSLFunctionDefinition expr, ASTParseContext<TNumber> ctx)
         {
             var parameters = expr.Arguments.Select(p => Expression.Parameter(typeof(TNumber), p)).ToArray();
-            var parametersDict = parameters.Select(p => new KeyValuePair<string, ParameterExpression>(p.Name, p)).ToImmutableDictionary();
+            var parametersDict = parameters.Select(p => (p.Name, p).AsKV() ).ToImmutableDictionary();
+            var thisFunctionType = expr.GetFuncType<TNumber>();
 
             ctx = new(ctx.InvocationContext)
             {
                 Parameters = parametersDict,
                 ThisFunctionName = expr.Name,
-                ThisFunction = Expression.Parameter(expr.GetFuncType<TNumber>(), expr.Name)
+                ThisFunctionType = thisFunctionType,
+                ThisFunctionWrapper = ctx.ThisFunctionWrapper
             };
 
-            var body = v(expr.Body, ctx);
-
-            return Expression.Lambda(
-                Expression.Block(
-                    ctx.ThisFunction.Enumerate(),
-                    Expression.Invoke(
-                        Expression.Assign(
-                            ctx.ThisFunction, 
-                            Expression.Lambda(body, parameters)
-                        ),
-                        parameters)
-                ), 
-                parameters);
+            return Expression.Lambda(v(expr.Body, ctx), true, parameters);
         }
 
+
+        public override Expression Visit(DSLConstantExpression expr, ASTParseContext<TNumber> ctx)
+        {
+            return Expression.Constant(_constantParser.Parse(expr.Value));
+        }
         public override Expression Visit(DSLArgumentExpression expr, ASTParseContext<TNumber> ctx)
         {
             if (ctx.Parameters.TryGetValue(expr.ArgumentName, out var ret))
@@ -200,7 +212,8 @@ namespace MarkusSecundus.ProgrammableCalculator.Parser
             Expression functionPointer;
             if (expr.Name == ctx.ThisFunctionName)
             {
-                functionPointer = ctx.ThisFunction;
+                var functionPointerRaw = Expression.PropertyOrField(Expression.Constant(ctx.ThisFunctionWrapper), nameof(ctx.ThisFunctionWrapper.Value));
+                functionPointer = Expression.Convert(functionPointerRaw, ctx.ThisFunctionType);
             }
             else if (!ctx.InvocationContext.FunctionsRaw.TryGetValue(expr.Name, out var functionWrapper))
             {
