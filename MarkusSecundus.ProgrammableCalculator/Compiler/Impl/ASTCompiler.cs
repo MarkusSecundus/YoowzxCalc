@@ -54,7 +54,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
             ImmutableDictionary<string, ParameterExpression> Args
         )
         {
-            public readonly Settable<Delegate> ThisFunctionWrapper = new();
+            public readonly SettableOnce<Delegate> ThisFunctionWrapper = new();
 
             public Expression OpE { get; }  = Expression.Constant(Father.Op);
 
@@ -72,7 +72,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 
             private static MethodInfo f(Func<TNumber, TNumber, TNumber> binaryOp) => binaryOp.Method;
             private static MethodInfo f(Func<TNumber, TNumber> unaryOp) => unaryOp.Method;
-            private MethodInfo f(Func<TNumber, bool> unaryOp) => unaryOp.Method;
+            private static MethodInfo f(Func<TNumber, bool> unaryOp) => unaryOp.Method;
 
             private Expression visitUnary(DSLUnaryExpression expr, VisitContext ctx, Func<TNumber, TNumber> i)
                 => Expression.Call(ctx.OpE, f(i), v(expr.Child, ctx));
@@ -89,7 +89,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 
 
             public override Expression Visit(DSLUnaryMinusExpression expr, VisitContext ctx)
-                => visitUnary(expr, ctx, ctx.Op.Neg);
+                => visitUnary(expr, ctx, ctx.Op.UnaryMinus);
 
             public override Expression Visit(DSLUnaryPlusExpression expr, VisitContext ctx)
                 => v(expr.Child, ctx);
@@ -101,19 +101,19 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
                 => visitBinary(expr, ctx, ctx.Op.Add);
 
             public override Expression Visit(DSLSubtractExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Sub);
+                => visitBinary(expr, ctx, ctx.Op.Subtract);
 
             public override Expression Visit(DSLMultiplyExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Mul);
+                => visitBinary(expr, ctx, ctx.Op.Multiply);
 
             public override Expression Visit(DSLDivideExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Div);
+                => visitBinary(expr, ctx, ctx.Op.Divide);
 
             public override Expression Visit(DSLModuloExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Mod);
+                => visitBinary(expr, ctx, ctx.Op.Modulo);
 
             public override Expression Visit(DSLExponentialExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Pow);
+                => visitBinary(expr, ctx, ctx.Op.Power);
 
 
 
@@ -124,25 +124,25 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 
 
             public override Expression Visit(DSLUnaryLogicalNotExpression expr, VisitContext ctx)
-                => visitUnary(expr, ctx, ctx.Op.NegLogical);
+                => visitUnary(expr, ctx, ctx.Op.NegateLogical);
 
             public override Expression Visit(DSLCompareGreaterOrEqualExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Ge);
+                => visitBinary(expr, ctx, ctx.Op.IsGreaterOrEqual);
 
             public override Expression Visit(DSLCompareGreaterThanExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Gt);
+                => visitBinary(expr, ctx, ctx.Op.IsGreater);
 
             public override Expression Visit(DSLCompareLessOrEqualExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Le);
+                => visitBinary(expr, ctx, ctx.Op.IsLessOrEqual);
 
             public override Expression Visit(DSLCompareLessThanExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Lt);
+                => visitBinary(expr, ctx, ctx.Op.IsLess);
 
             public override Expression Visit(DSLCompareIsEqualExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Eq);
+                => visitBinary(expr, ctx, ctx.Op.IsEqual);
 
             public override Expression Visit(DSLCompareIsNotEqualExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Ne);
+                => visitBinary(expr, ctx, ctx.Op.IsNotEqual);
 
 
 
@@ -214,9 +214,9 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 
 
 
-            private Expression getFunction(FunctionSignature<TNumber> func, VisitContext ctx)
+            private static Expression getFunction(FunctionSignature<TNumber> func, VisitContext ctx)
             {
-                Settable<Delegate> wrap;
+                SettableOnce<Delegate> wrap;
 
                 if (func == ctx.ThisFunctionSignature)
                 {

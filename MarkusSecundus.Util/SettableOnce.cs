@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.Util
 {
-    public sealed class Settable<T>
+    public sealed class SettableOnce<T>
     {
         private T _value;
 
@@ -26,7 +26,7 @@ namespace MarkusSecundus.Util
 
 
 
-        public override bool Equals(object obj) => obj is Settable<T> w && IsSet == w.IsSet && (!IsSet || Equals(Value, w.Value));
+        public override bool Equals(object obj) => obj is SettableOnce<T> w && IsSet == w.IsSet && (!IsSet || Equals(Value, w.Value));
 
         public override int GetHashCode() => IsSet ? Value.GetHashCode() : 0;
 

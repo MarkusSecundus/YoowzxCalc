@@ -22,7 +22,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
         public DSLFunctionDefinition Build(TextReader source) => Build(new AntlrInputStream(source));
 
 
-        private DSLFunctionDefinition Build(AntlrInputStream source)
+        private static DSLFunctionDefinition Build(AntlrInputStream source)
         {
             CalculatorDSLLexer lexer = new CalculatorDSLLexer(source);
             CalculatorDSLParser parser = new CalculatorDSLParser(new CommonTokenStream(lexer));
@@ -60,9 +60,9 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
     {
         public DSLFunctionDefinition ReturnValue { get; private set; }
 
-        private List<List<string>> argsStack = new();
-        private List<List<DSLExpression>> invokeArgsStack = new();
-        private List<DSLExpression> stack = new();
+        private readonly List<List<string>> argsStack = new();
+        private readonly List<List<DSLExpression>> invokeArgsStack = new();
+        private readonly List<DSLExpression> stack = new();
 
 
         private void pushBinary<T>() where T: DSLBinaryExpression, new()
@@ -183,7 +183,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
             => ReturnValue = new DSLFunctionDefinition { Name = context.IDENTIFIER().Symbol.Text, Arguments = argsStack.Pop(), Body = stack.Pop() };
 
         public override void ExitAnonymous_function_definition([NotNull] CalculatorDSLParser.Anonymous_function_definitionContext context)
-            => ReturnValue = new DSLFunctionDefinition { Name = DSLFunctionDefinition.AnonymousFunctionName, Arguments = new string[0], Body = stack.Pop() };
+            => ReturnValue = new DSLFunctionDefinition { Name = DSLFunctionDefinition.AnonymousFunctionName, Arguments = Array.Empty<string>(), Body = stack.Pop() };
 
 
         public override void ExitArgs_list_create([NotNull] CalculatorDSLParser.Args_list_createContext context)

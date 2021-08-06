@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
 
+[assembly: CLSCompliant(true)]
+
 namespace MarkusSecundus.Util
 {
     public static class CollectionsUtils
@@ -58,7 +60,7 @@ namespace MarkusSecundus.Util
             if (count < 0)
                 throw new ArgumentOutOfRangeException(nameof(count), $"Count must be non-negative but is {count}");
 
-            IEnumerable<T> impl(T self, int count)
+            static IEnumerable<T> impl(T self, int count)
             {
                 while (--count >= 0)
                     yield return self;

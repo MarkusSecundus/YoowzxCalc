@@ -9,6 +9,6 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Contexts
 {
     public interface IASTCompilationContext<TNumber> : IASTInterpretationContext<TNumber>
     {
-        public Settable<Delegate> GetUnresolvedFunction(FunctionSignature<TNumber> signature);
+        public SettableOnce<Delegate> GetUnresolvedFunction(FunctionSignature<TNumber> signature);
     }
 }

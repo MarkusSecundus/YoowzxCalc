@@ -16,29 +16,29 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
             public double Parse(string repr) => double.Parse(repr, CultureInfo.InvariantCulture);
 
 
-            private double toBool(bool d) => d ? 1d : 0d;
+            private static double toBool(bool d) => d ? 1d : 0d;
 
-            public double Abs(double a) => Math.Abs(a);
+            public double AbsoluteValue(double a) => Math.Abs(a);
 
             public double Add(double a, double b) => a + b;
-            public double Sub(double a, double b) => a - b;
-            public double Mul(double a, double b) => a * b;
-            public double Div(double a, double b) => a / b;
-            public double Mod(double a, double b) => a % b;
-            public double Pow(double a, double b) => Math.Pow(a, b);
+            public double Subtract(double a, double b) => a - b;
+            public double Multiply(double a, double b) => a * b;
+            public double Divide(double a, double b) => a / b;
+            public double Modulo(double a, double b) => a % b;
+            public double Power(double a, double b) => Math.Pow(a, b);
 
-            public double Eq(double a, double b) => toBool(a == b);
-            public double Ne(double a, double b) => toBool(a != b);
+            public double IsEqual(double a, double b) => toBool(a == b);
+            public double IsNotEqual(double a, double b) => toBool(a != b);
 
-            public double Le(double a, double b) => toBool(a <= b);
-            public double Lt(double a, double b) => toBool(a < b);
-            public double Ge(double a, double b) => toBool(a >= b);
-            public double Gt(double a, double b) => toBool(a > b);
+            public double IsLessOrEqual(double a, double b) => toBool(a <= b);
+            public double IsLess(double a, double b) => toBool(a < b);
+            public double IsGreaterOrEqual(double a, double b) => toBool(a >= b);
+            public double IsGreater(double a, double b) => toBool(a > b);
 
             public bool IsTrue(double a) => a != 0;
 
-            public double Neg(double a) => -a;
-            public double NegLogical(double a) => toBool(a == 0);
+            public double UnaryMinus(double a) => -a;
+            public double NegateLogical(double a) => toBool(a == 0);
         }
     }
 
@@ -49,32 +49,32 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
 
         public TNumber Add(TNumber a, TNumber b);
 
-        public TNumber Sub(TNumber a, TNumber b);
+        public TNumber Subtract(TNumber a, TNumber b);
 
-        public TNumber Mul(TNumber a, TNumber b);
+        public TNumber Multiply(TNumber a, TNumber b);
 
-        public TNumber Div(TNumber a, TNumber b);
+        public TNumber Divide(TNumber a, TNumber b);
 
-        public TNumber Mod(TNumber a, TNumber b);
+        public TNumber Modulo(TNumber a, TNumber b);
 
-        public TNumber Abs(TNumber a);
+        public TNumber AbsoluteValue(TNumber a);
 
-        public TNumber Neg(TNumber a);
+        public TNumber UnaryMinus(TNumber a);
 
-        public TNumber Pow(TNumber a, TNumber power);
+        public TNumber Power(TNumber a, TNumber power);
 
 
         public bool IsTrue(TNumber a);
 
-        public TNumber NegLogical(TNumber a);
+        public TNumber NegateLogical(TNumber a);
 
-        public TNumber Lt(TNumber a, TNumber b);
-        public TNumber Le(TNumber a, TNumber b);
-        public TNumber Gt(TNumber a, TNumber b) => NegLogical(Gt(a, b));
-        public TNumber Ge(TNumber a, TNumber b) => NegLogical(Lt(a, b));
+        public TNumber IsLess(TNumber a, TNumber b);
+        public TNumber IsLessOrEqual(TNumber a, TNumber b);
+        public TNumber IsGreater(TNumber a, TNumber b) => NegateLogical(IsGreater(a, b));
+        public TNumber IsGreaterOrEqual(TNumber a, TNumber b) => NegateLogical(IsLess(a, b));
 
-        public TNumber Eq(TNumber a, TNumber b);
-        public TNumber Ne(TNumber a, TNumber b) => NegLogical(Eq(a, b));
+        public TNumber IsEqual(TNumber a, TNumber b);
+        public TNumber IsNotEqual(TNumber a, TNumber b) => NegateLogical(IsEqual(a, b));
 
 
 

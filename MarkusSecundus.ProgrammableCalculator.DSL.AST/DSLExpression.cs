@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using static MarkusSecundus.Util.CollectionsUtils;
 
+[assembly: CLSCompliant(true)]
+
 namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
     public abstract class DSLExpression :  IReadOnlyList_PreimplementedEnumerator<DSLExpression>

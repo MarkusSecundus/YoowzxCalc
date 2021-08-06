@@ -19,10 +19,10 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 
         public IReadOnlyDictionary<FunctionSignature<TNumber>, Delegate> Functions { get; }
 
-        private readonly DefaultValDict<FunctionSignature<TNumber>, Settable<Delegate>> unresolved = new(s => new());
+        private readonly DefaultValDict<FunctionSignature<TNumber>, SettableOnce<Delegate>> unresolved = new(s => new());
 
 
-        public Settable<Delegate> GetUnresolvedFunction(FunctionSignature<TNumber> signature)
+        public SettableOnce<Delegate> GetUnresolvedFunction(FunctionSignature<TNumber> signature)
             => unresolved[signature];
 
 
@@ -40,5 +40,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 
             return new ASTFunctioncallContext<TNumber>(newSymbols);
         }
+
+        public IEnumerable<FunctionSignature<TNumber>> GetUnresolvedSymbolsList() => unresolved.Where(s => !s.Value.IsSet).Select(s=>s.Key);
     }
 }

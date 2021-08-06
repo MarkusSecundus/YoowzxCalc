@@ -9,6 +9,9 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler
 {
     public struct FunctionSignature<TNumber> : IEquatable<FunctionSignature<TNumber>>
     {
+        public FunctionSignature(string name, int argumentsCount)
+            => (Name, ArgumentsCount) = (name, argumentsCount);
+
         public string Name { get; init; }
         public int ArgumentsCount { get; init; }
 

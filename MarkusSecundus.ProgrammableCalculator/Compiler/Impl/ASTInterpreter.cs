@@ -71,7 +71,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 
 
             public override TNumber Visit(DSLUnaryMinusExpression expr, VisitContext ctx)
-                => ctx.Op.Neg(v(expr.Child, ctx));
+                => ctx.Op.UnaryMinus(v(expr.Child, ctx));
 
             public override TNumber Visit(DSLUnaryPlusExpression expr, VisitContext ctx)
                 => v(expr.Child, ctx);
@@ -87,19 +87,19 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
                 => visitBinary(expr, ctx, ctx.Op.Add);
 
             public override TNumber Visit(DSLSubtractExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Sub);
+                => visitBinary(expr, ctx, ctx.Op.Subtract);
 
             public override TNumber Visit(DSLMultiplyExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Mul);
+                => visitBinary(expr, ctx, ctx.Op.Multiply);
 
             public override TNumber Visit(DSLDivideExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Div);
+                => visitBinary(expr, ctx, ctx.Op.Divide);
 
             public override TNumber Visit(DSLModuloExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Mod);
+                => visitBinary(expr, ctx, ctx.Op.Modulo);
 
             public override TNumber Visit(DSLExponentialExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Pow);
+                => visitBinary(expr, ctx, ctx.Op.Power);
 
 
 
@@ -110,26 +110,26 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 
 
             public override TNumber Visit(DSLUnaryLogicalNotExpression expr, VisitContext ctx)
-                => ctx.Op.NegLogical(v(expr.Child, ctx));
+                => ctx.Op.NegateLogical(v(expr.Child, ctx));
 
 
             public override TNumber Visit(DSLCompareGreaterOrEqualExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Ge);
+                => visitBinary(expr, ctx, ctx.Op.IsGreaterOrEqual);
 
             public override TNumber Visit(DSLCompareGreaterThanExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Gt);
+                => visitBinary(expr, ctx, ctx.Op.IsGreater);
 
             public override TNumber Visit(DSLCompareLessOrEqualExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Le);
+                => visitBinary(expr, ctx, ctx.Op.IsLessOrEqual);
 
             public override TNumber Visit(DSLCompareLessThanExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Lt);
+                => visitBinary(expr, ctx, ctx.Op.IsLess);
 
             public override TNumber Visit(DSLCompareIsEqualExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Eq);
+                => visitBinary(expr, ctx, ctx.Op.IsEqual);
 
             public override TNumber Visit(DSLCompareIsNotEqualExpression expr, VisitContext ctx)
-                => visitBinary(expr, ctx, ctx.Op.Ne);
+                => visitBinary(expr, ctx, ctx.Op.IsNotEqual);
 
 
 

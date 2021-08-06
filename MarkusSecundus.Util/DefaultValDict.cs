@@ -43,8 +43,7 @@ namespace MarkusSecundus.Util
         {
             get
             {
-                V ret;
-                if (Base.TryGetValue(key, out ret))
+                if (Base.TryGetValue(key, out V ret))
                     return ret;
                 else
                     return Base[key] = _supplier(key);
