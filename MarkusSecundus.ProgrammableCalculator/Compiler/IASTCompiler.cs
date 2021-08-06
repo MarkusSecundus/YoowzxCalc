@@ -13,4 +13,5 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler
     {
         public Delegate Compile(IASTCompilationContext<TNumber> ctx, DSLFunctionDefinition toCompile);
     }
+
 }

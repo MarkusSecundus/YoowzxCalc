@@ -61,5 +61,14 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler
             var parameters = self.Method.GetParameters();
             return parameters.Length - (parameters.Length > 0 && _ClosureType.IsInstanceOfType(parameters[0]) ? 1 : 0);
         }
+
+
+
+
+
+
+
+
+
     }
 }

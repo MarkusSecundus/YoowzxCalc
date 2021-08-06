@@ -17,11 +17,11 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 {
-    class ASTCompiler<TNumber, TOperator> : IASTCompiler<TNumber> where TOperator: INumberOperator<TNumber>
+    class ASTCompiler<TNumber> : IASTCompiler<TNumber>
     {
-        private readonly TOperator Op;
+        private readonly INumberOperator<TNumber> Op;
 
-        public ASTCompiler(TOperator numberOperator)
+        public ASTCompiler(INumberOperator<TNumber> numberOperator)
             => Op = numberOperator;
 
 
@@ -37,19 +37,22 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
                 Args: args
             );
 
-            return compilationContext.ThisFunctionWrapper.Value = Expression.Lambda(
-                toCompile.Body.Accept(CompilerVisitor.Instance, compilationContext),
-                args.Values.ToArray()
-            ).Compile();
+            return compilationContext.ThisFunctionWrapper.Value = generateExpression(compilationContext, toCompile).Compile();
+        }
+
+        protected virtual LambdaExpression generateExpression(VisitContext ctx, DSLFunctionDefinition toCompile)
+        {
+            return Expression.Lambda(
+                toCompile.Body.Accept(CompilerVisitor.Instance, ctx),
+                ctx.Args.Values.ToArray()
+            );
         }
 
 
-
-
-        private record VisitContext
+        protected record VisitContext
         (
             IASTCompilationContext<TNumber> CoreContext,
-            ASTCompiler<TNumber, TOperator> Father,
+            ASTCompiler<TNumber> Father,
             FunctionSignature<TNumber> ThisFunctionSignature,
             ImmutableDictionary<string, ParameterExpression> Args
         )
@@ -58,9 +61,9 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 
             public Expression OpE { get; }  = Expression.Constant(Father.Op);
 
-            public TOperator Op => Father.Op;
-
+            public INumberOperator<TNumber> Op => Father.Op;
         }
+
 
         private class CompilerVisitor : DSLVisitorBase<Expression, VisitContext>
         {

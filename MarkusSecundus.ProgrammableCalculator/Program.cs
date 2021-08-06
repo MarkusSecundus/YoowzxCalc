@@ -27,14 +27,30 @@ namespace MarkusSecundus.ProgrammableCalculator
         static readonly Func<double, double> Sin = Math.Sin, Cos = Math.Cos, F=x=>100*x;
 
 
-        public static void Main() => test1();
+        public static void Main() => test4();
+
+        public static void test4()
+        {
+            WriteLine(default((int, string, int, int, int, int, int, object, double)).GetType());
+            WriteLine(TupleUtils.GetValueTupleType(typeof(int), typeof(string), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(object), typeof(double)));
+        }
 
 
-        public static void test1()
+        public static void test3()
+        {
+            foreach(var (type, i) in TupleUtils.TupleTypesByArgsCount.Zip(CollectionsUtils.InfiniteRange()))
+            {
+                Console.WriteLine($"{i}: {type}");
+            }
+        }
+
+
+
+        public static void test2()
         {
             IASTBuilder builder = IASTBuilder.Instance;
-            IASTInterpreter<double> interpreter = new ASTInterpreter<double>(new INumberOperator.Double());
-            IASTCompiler<double> compiler = new ASTCompiler<double, INumberOperator.Double>(new());
+            IASTInterpreter<double> interpreter = new ASTInterpreter<double>(new BasicNumberOperators.Double());
+            IASTCompiler<double> compiler = new ASTCompiler<double>(new BasicNumberOperators.Double());
             var ctx = IASTFunctioncallContext.Make<double>().ResolveSymbols
             (
                 (new FunctionSignature<double>("sin", 1), Sin),
@@ -43,10 +59,31 @@ namespace MarkusSecundus.ProgrammableCalculator
             );
 
 
-            var tree = builder.Build("f(x) := sin(x)**2 + cos(x)**2");
+            var tree = builder.Build("f(x) := sin(x)**-2 + cos(x)**-2");
 
 
-            for(double x = 0; x < 7; x+=0.1)
+            for (double x = 0; x < 7; x += 0.1)
+            {
+                double a, b;
+                Write("{0} ", a = interpreter.Interpret(ctx, tree, x));
+                Write(b = (double)compiler.Compile(ctx, tree).DynamicInvoke(x));
+                WriteLine(a == b ? "" : " !");
+            }
+        }
+
+
+        public static void test1()
+        {
+            IASTBuilder builder = IASTBuilder.Instance;
+            IASTInterpreter<double> interpreter = new ASTInterpreter<double>(new BasicNumberOperators.Double());
+            IASTCompiler<double> compiler = new ASTCompiler<double>(new BasicNumberOperators.Double());
+            var ctx = IASTFunctioncallContext.Make<double>();
+
+
+            var tree = builder.Build("f(x) := x<= 1 ? x : f(x-1) + f(x-2)");
+
+
+            for(double x = 0; x < 32; x+=1)
             {
                 double a, b;
                 Write("{0} ", a=interpreter.Interpret(ctx, tree, x));
