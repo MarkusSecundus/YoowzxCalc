@@ -20,15 +20,15 @@ namespace MarkusSecundus.ProgrammableCalculator.Parser
             => typeof(Expression<>).MakeGenericType(self.GetFuncType<T>());
 
 
-        public static FunctionSignature<TNumber> GetSignature<TNumber>(this DSLFunctionDefinition self) where TNumber : INumber<TNumber>
+        public static FunctionSignature<TNumber> GetSignature<TNumber>(this DSLFunctionDefinition self)
             => new() { Name = self.Name, ArgsCount = self.Arguments.Count };
-        public static FunctionSignature<TNumber> GetSignature<TNumber>(this DSLFunctioncallExpression self) where TNumber : INumber<TNumber>
+        public static FunctionSignature<TNumber> GetSignature<TNumber>(this DSLFunctioncallExpression self)
             => new() { Name = self.Name, ArgsCount = self.Arguments.Count};
 
 
         public delegate TNumber ExpressionDelegate<TNumber>(params TNumber[] args);
 
-        public static ExpressionDelegate<TNumber> WrapParams<TNumber>(this Delegate self) where TNumber: INumber<TNumber>
+        public static Expression<ExpressionDelegate<TNumber>> WrapParams<TNumber>(this Delegate self)
         {
             var args = Expression.Parameter(typeof(TNumber[]), "#args");
             var argsPassed = new Expression[self.ArgumentsCount()];
@@ -39,12 +39,18 @@ namespace MarkusSecundus.ProgrammableCalculator.Parser
             return Expression.Lambda<ExpressionDelegate<TNumber>>(
                 Expression.Invoke(Expression.Constant(self), argsPassed),
                 args
-            ).Compile();
+            );
         }
 
-        public static LambdaExpression UnwrapParamsExpr<TNumber>(this ExpressionDelegate<TNumber> self, int argsCount) where TNumber : INumber<TNumber>
+        public static Expression<TDelegate> UnwrapParamsExpr<TNumber, TDelegate>(this ExpressionDelegate<TNumber> self, int argsCount)
         {
-            return null;
+            var argParams = new ParameterExpression[argsCount];
+            for (int t = argsCount; --t >= 0;) argParams[t] = Expression.Parameter(typeof(TNumber));
+
+            return Expression.Lambda<TDelegate>(
+                Expression.Invoke(Expression.Constant(self), Expression.NewArrayInit(typeof(TNumber), argParams)),
+                argParams
+            ); 
         }
 
 

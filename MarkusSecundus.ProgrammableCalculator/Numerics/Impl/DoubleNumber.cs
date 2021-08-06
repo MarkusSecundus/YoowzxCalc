@@ -85,16 +85,5 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics.Impl
 
         public override string ToString() => $"{Value}d";
 
-        public class ConstantParser : IConstantParser<DoubleNumber>
-        {
-            protected ConstantParser() { }
-            public static ConstantParser Instance { get; } = new();
-
-            public bool IsValid(string repr)
-                => double.TryParse(repr, out var _);
-
-            public DoubleNumber Parse(string repr)
-                => double.Parse(repr, CultureInfo.InvariantCulture);
-        }
     }
 }

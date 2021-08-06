@@ -66,6 +66,12 @@ namespace MarkusSecundus.Util
             return impl(self, count);
         }
 
+        public static IEnumerable<int> InfiniteRange(int begin = 0, int step = 1)
+        {
+            for(; ;begin += step )
+                yield return begin;
+        }
+
 
         public static KeyValuePair<TKey, TValue> AsKV<TKey, TValue>(this (TKey Key, TValue Value) pair)
             => new KeyValuePair<TKey, TValue>(pair.Key, pair.Value);

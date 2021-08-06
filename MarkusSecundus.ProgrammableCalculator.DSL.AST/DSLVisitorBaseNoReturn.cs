@@ -92,7 +92,6 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
         public virtual void Visit(DSLExpression expr, TContext ctx) => throw new NotImplementedException();
 
 
-        TRet IDSLVisitor<TRet, TContext>.Visit(DSLFunctionDefinition expr, TContext ctx) { Visit(expr, ctx); return default; }
         TRet IDSLVisitor<TRet, TContext>.Visit(DSLConstantExpression expr, TContext ctx) { Visit(expr, ctx); return default; }
         TRet IDSLVisitor<TRet, TContext>.Visit(DSLArgumentExpression expr, TContext ctx) { Visit(expr, ctx); return default; }
         TRet IDSLVisitor<TRet, TContext>.Visit(DSLUnaryMinusExpression expr, TContext ctx) { Visit(expr, ctx); return default; }

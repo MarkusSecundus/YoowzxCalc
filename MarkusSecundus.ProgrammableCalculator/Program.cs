@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -20,7 +21,6 @@ namespace MarkusSecundus.ProgrammableCalculator
     public class Program
     {
         public static void Main() => test1();
-
 
         public static void test1()
         {

@@ -10,8 +10,6 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
     public interface IDSLVisitor<out TRet, in TContext>
     {
-        public TRet Visit(DSLFunctionDefinition expr, TContext ctx);
-
         public TRet Visit(DSLConstantExpression expr, TContext ctx);
         public TRet Visit(DSLArgumentExpression expr, TContext ctx);
 

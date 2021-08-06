@@ -94,7 +94,6 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 
 
 
-        TRet IDSLVisitor<TRet, TContext>.Visit(DSLFunctionDefinition expr, TContext ctx) { Visit(expr); return default; }
         TRet IDSLVisitor<TRet, TContext>.Visit(DSLConstantExpression expr, TContext ctx) { Visit(expr); return default; }
         TRet IDSLVisitor<TRet, TContext>.Visit(DSLArgumentExpression expr, TContext ctx) { Visit(expr); return default; }
         TRet IDSLVisitor<TRet, TContext>.Visit(DSLUnaryMinusExpression expr, TContext ctx) { Visit(expr); return default; }

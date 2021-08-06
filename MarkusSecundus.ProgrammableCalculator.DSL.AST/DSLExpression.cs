@@ -8,7 +8,7 @@ using static MarkusSecundus.Util.CollectionsUtils;
 
 namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
-    public abstract class DSLExpression : IDSLVisitable, IReadOnlyList_PreimplementedEnumerator<DSLExpression>
+    public abstract class DSLExpression :  IReadOnlyList_PreimplementedEnumerator<DSLExpression>
     {
         internal DSLExpression() { }
 
