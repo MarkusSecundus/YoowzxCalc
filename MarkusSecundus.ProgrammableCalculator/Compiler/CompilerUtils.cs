@@ -9,21 +9,21 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarkusSecundus.ProgrammableCalculator.Parser
+namespace MarkusSecundus.ProgrammableCalculator.Compiler
 {
-    static class ParserUtils
+    static class CompilerUtils
     {
-        public static Type GetFuncType<T>(this DSLFunctionDefinition self) 
-            => Expression.GetFuncType(typeof(T).Repeat(self.Arguments.Count + 1).ToArray());
+        public static Type GetFuncType<T>(this FunctionSignature<T> self)
+            => Expression.GetFuncType(typeof(T).Repeat(self.ArgumentsCount + 1).ToArray());
+        public static Type GetExpressionFuncType<T>(this FunctionSignature<T> self)
+            => typeof(Expression<>).MakeGenericType(self.GetFuncType());
 
-        public static Type GetExpressionFuncType<T>(this DSLFunctionDefinition self)
-            => typeof(Expression<>).MakeGenericType(self.GetFuncType<T>());
 
 
         public static FunctionSignature<TNumber> GetSignature<TNumber>(this DSLFunctionDefinition self)
-            => new() { Name = self.Name, ArgsCount = self.Arguments.Count };
+            => new() { Name = self.Name, ArgumentsCount = self.Arguments.Count };
         public static FunctionSignature<TNumber> GetSignature<TNumber>(this DSLFunctioncallExpression self)
-            => new() { Name = self.Name, ArgsCount = self.Arguments.Count};
+            => new() { Name = self.Name, ArgumentsCount = self.Arguments.Count};
 
 
         public delegate TNumber ExpressionDelegate<TNumber>(params TNumber[] args);

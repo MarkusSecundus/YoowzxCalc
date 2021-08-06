@@ -78,6 +78,7 @@ namespace MarkusSecundus.Util
 
 
         public static IReadOnlyList<T> EmptyList<T>() => ImmutableList<T>.Empty;
+        public static IReadOnlyDictionary<TKey, TValue> EmptyDictionary<TKey, TValue>() => ImmutableDictionary<TKey, TValue>.Empty;
 
         public static int SequenceHashCode<T>(this IEnumerable<T> self)
         {

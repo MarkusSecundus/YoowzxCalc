@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+[assembly : CLSCompliant(false)]
+
 namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
 {
     public interface IASTBuilder

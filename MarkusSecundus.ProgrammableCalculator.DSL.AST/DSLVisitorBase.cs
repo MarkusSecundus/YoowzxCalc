@@ -12,9 +12,6 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 {
     public abstract class DSLVisitorBase<T, TContext> : IDSLVisitor<T, TContext>
     {
-        public virtual T Visit(DSLFunctionDefinition expr, TContext ctx) => throw new NotImplementedException();
-
-
         public virtual T Visit(DSLConstantExpression expr, TContext ctx) => Visit((DSLPrimaryExpression)expr, ctx);
 
         public virtual T Visit(DSLArgumentExpression expr, TContext ctx) => Visit((DSLPrimaryExpression)expr, ctx);
