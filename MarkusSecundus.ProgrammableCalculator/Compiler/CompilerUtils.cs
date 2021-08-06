@@ -42,7 +42,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler
             );
         }
 
-        public static Expression<TDelegate> UnwrapParamsExpr<TNumber, TDelegate>(this ExpressionDelegate<TNumber> self, int argsCount)
+        public static Expression<TDelegate> UnwrapArrayParams<TNumber, TDelegate>(this ExpressionDelegate<TNumber> self, int argsCount)
         {
             var argParams = new ParameterExpression[argsCount];
             for (int t = argsCount; --t >= 0;) argParams[t] = Expression.Parameter(typeof(TNumber));
@@ -50,7 +50,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler
             return Expression.Lambda<TDelegate>(
                 Expression.Invoke(Expression.Constant(self), Expression.NewArrayInit(typeof(TNumber), argParams)),
                 argParams
-            ); 
+            );
         }
 
 

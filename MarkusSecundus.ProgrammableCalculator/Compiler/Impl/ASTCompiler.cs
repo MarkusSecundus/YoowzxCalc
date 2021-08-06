@@ -25,7 +25,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
             => Op = numberOperator;
 
 
-        public Delegate Compile(IASTCompilationContext<TNumber> ctx, DSLFunctionDefinition toCompile)
+        public IASTCompilationResult<TNumber> Compile(IASTCompilationContext<TNumber> ctx, DSLFunctionDefinition toCompile)
         {
             var args = toCompile.Arguments.Select(name => (name, Expression.Parameter(typeof(TNumber), name)).AsKV()).ToImmutableDictionary();
 
@@ -37,10 +37,10 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
                 Args: args
             );
 
-            return compilationContext.ThisFunctionWrapper.Value = generateExpression(compilationContext, toCompile).Compile();
+            return new ASTCompilationResult<TNumber>(generateExpression(compilationContext, toCompile), compilationContext.ThisFunctionWrapper);
         }
 
-        protected virtual LambdaExpression generateExpression(VisitContext ctx, DSLFunctionDefinition toCompile)
+        private LambdaExpression generateExpression(VisitContext ctx, DSLFunctionDefinition toCompile)
         {
             return Expression.Lambda(
                 toCompile.Body.Accept(CompilerVisitor.Instance, ctx),
@@ -49,7 +49,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
         }
 
 
-        protected record VisitContext
+        private record VisitContext
         (
             IASTCompilationContext<TNumber> CoreContext,
             ASTCompiler<TNumber> Father,

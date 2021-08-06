@@ -27,7 +27,12 @@ namespace MarkusSecundus.ProgrammableCalculator
         static readonly Func<double, double> Sin = Math.Sin, Cos = Math.Cos, F=x=>100*x;
 
 
-        public static void Main() => test4();
+        public static void Main() => test5();
+
+        public static void test5()
+        {
+            //WriteLine(typeof(ValueTuple<int, double>).GetConstructor());
+        }
 
         public static void test4()
         {
