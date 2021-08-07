@@ -37,7 +37,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
                 Args: args
             );
 
-            return new ASTCompilationResult<TNumber>(generateExpression(compilationContext, toCompile), compilationContext.ThisFunctionWrapper);
+            return new ASTCompilationResult<TNumber>(generateExpression(compilationContext, toCompile).Compile(), compilationContext.ThisFunctionWrapper);
         }
 
         private LambdaExpression generateExpression(VisitContext ctx, DSLFunctionDefinition toCompile)

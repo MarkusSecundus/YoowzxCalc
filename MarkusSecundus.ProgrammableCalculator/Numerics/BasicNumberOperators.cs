@@ -72,5 +72,37 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
             public decimal UnaryMinus(decimal a) => -a;
             public decimal NegateLogical(decimal a) => toBool(a == 0);
         }
+
+        public readonly struct Long : INumberOperator<long>
+        {
+            public static Long Instance => new();
+
+            public long Parse(string repr) => long.Parse(repr, CultureInfo.InvariantCulture);
+
+
+            private static long toBool(bool d) => d ? 1 : 0;
+
+            public long AbsoluteValue(long a) => Math.Abs(a);
+
+            public long Add(long a, long b) => a + b;
+            public long Subtract(long a, long b) => a - b;
+            public long Multiply(long a, long b) => a * b;
+            public long Divide(long a, long b) => a / b;
+            public long Modulo(long a, long b) => a % b;
+            public long Power(long a, long b) => (long)Math.Pow(a, b);
+
+            public long IsEqual(long a, long b) => toBool(a == b);
+            public long IsNotEqual(long a, long b) => toBool(a != b);
+
+            public long IsLessOrEqual(long a, long b) => toBool(a <= b);
+            public long IsLess(long a, long b) => toBool(a < b);
+            public long IsGreaterOrEqual(long a, long b) => toBool(a >= b);
+            public long IsGreater(long a, long b) => toBool(a > b);
+
+            public bool IsTrue(long a) => a != 0;
+
+            public long UnaryMinus(long a) => -a;
+            public long NegateLogical(long a) => toBool(a == 0);
+        }
     }
 }
