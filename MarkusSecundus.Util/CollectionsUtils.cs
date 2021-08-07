@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Text;
 
 [assembly: CLSCompliant(true)]
@@ -26,9 +27,10 @@ namespace MarkusSecundus.Util
         public static T Peek<T>(this IList<T> self)
             => self[^1];
 
+        public static bool IsEmpty<T>(this IReadOnlyCollection<T> self)
+            => self.Count <= 0;
 
-
-        public static string Concat<T>(this IEnumerable<T> self, string separator=", ")
+        public static string MakeString<T>(this IEnumerable<T> self, string separator=", ")
         {
             var ret = new StringBuilder();
             using var it = self.GetEnumerator();
@@ -48,6 +50,8 @@ namespace MarkusSecundus.Util
             yield return self;
         }
 
+        public static T[] Concat<T>(this T[] self, params T[] other)
+            => self.Chain(other).ToArray();
 
         public static IEnumerable<T> Chain<T>(this IEnumerable<T> self, IEnumerable<T> other)
         {

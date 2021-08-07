@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -51,15 +52,6 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler
                 Expression.Invoke(Expression.Constant(self), Expression.NewArrayInit(typeof(TNumber), argParams)),
                 argParams
             );
-        }
-
-
-        private static readonly Type _ClosureType = Expression.Lambda(Expression.Constant(0)).Compile().Method.GetParameters()[0].GetType();
-
-        public static int ArgumentsCount(this Delegate self)
-        {
-            var parameters = self.Method.GetParameters();
-            return parameters.Length - (parameters.Length > 0 && _ClosureType.IsInstanceOfType(parameters[0]) ? 1 : 0);
         }
 
 

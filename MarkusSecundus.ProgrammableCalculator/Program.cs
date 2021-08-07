@@ -22,16 +22,62 @@ using static System.Console;
 namespace MarkusSecundus.ProgrammableCalculator
 {
 
-    public class Program
+    public static class Program
     {
         static readonly Func<double, double> Sin = Math.Sin, Cos = Math.Cos, F=x=>100*x;
 
 
-        public static void Main() => test5();
+        public static void Main() => test9();
+
+
+        class A
+        {
+            public int T { get; set; }
+            public int this[int i] => i;
+            public int this[int i, int j] => i + j;
+        }
+        
+        public static void test10()
+        {
+            foreach (var v in typeof(A).GetProperties())
+                WriteLine(v);
+        }
+
+        public static void test9()
+        {
+            Func<long, long> fib = null;
+            fib = x => x <= 1 ? x : fib(x - 1) + fib(x - 2);
+            fib = fib.Autocached();
+            for (int t = 0; t < 80; ++t)
+                WriteLine(fib(t));
+        }
+        public static void test8()
+        {
+            Func<int, int, int, int, int, int, int, int, int, int, string, string> f = (x, y, z, a, b, c, d, e, f, g, h) => x * 2 + y + z + h;
+            var ff = (Func<(int, int, int, int, int, int, int, int, int, int, string), string>) FunctionUtil.Entuplize(f);
+            WriteLine(ff((1, 10, 100, 1, 1, 1, 1, 1, 1, 1, "a")));
+            WriteLine(ff.GetParameters().MakeString());
+            var fff = (Func<int, int, int, int, int, int, int, int, int, int, string, string>)FunctionUtil.Detuplize(ff);
+            WriteLine(fff(1, 10, 100, 1, 1, 1, 1, 1, 1, 1, "v"));
+        }
+
+        public static void test7()
+        {
+            Console.WriteLine((1, 2, "", 2, "", 2, "", 2, "", 2, "", 2, "", 2, "", 2, "", 2, "").GetType().GetValueTupleElementTypes().MakeString());
+        }
+
+        public static void test6()
+        {
+            Func<int, int> f = x => x*2;
+            var ff = FunctionUtil.Entuplize(f) as Func<ValueTuple<int>, int>;
+            WriteLine(ff(ValueTuple.Create(1)));
+        }
 
         public static void test5()
         {
-            //WriteLine(typeof(ValueTuple<int, double>).GetConstructor());
+            Console.WriteLine(new int[] { 1, 2, 3, 4, 5 }[..^1].MakeString());
+            Console.WriteLine(new int[] { 1, 2, 3, 4, 5 }[1..].MakeString());
+            Console.WriteLine(new int[] { 1, 2, 3, 4, 5 }[^1]);
         }
 
         public static void test4()
@@ -71,7 +117,7 @@ namespace MarkusSecundus.ProgrammableCalculator
             {
                 double a, b;
                 Write("{0} ", a = interpreter.Interpret(ctx, tree, x));
-                Write(b = (double)compiler.Compile(ctx, tree).DynamicInvoke(x));
+                Write(b = (double)compiler.Compile(ctx, tree).Compile().DynamicInvoke(x));
                 WriteLine(a == b ? "" : " !");
             }
         }
@@ -92,7 +138,7 @@ namespace MarkusSecundus.ProgrammableCalculator
             {
                 double a, b;
                 Write("{0} ", a=interpreter.Interpret(ctx, tree, x));
-                Write(b = (double)compiler.Compile(ctx, tree).DynamicInvoke(x));
+                Write(b = (double)compiler.Compile(ctx, tree).Compile().DynamicInvoke(x));
                 WriteLine(a==b?"":" !");
             }
         }

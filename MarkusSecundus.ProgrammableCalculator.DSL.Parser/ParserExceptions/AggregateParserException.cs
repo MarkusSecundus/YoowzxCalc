@@ -12,7 +12,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser.ParserExceptions
     public sealed class AggregateParserException : ParserException
     {
         private AggregateParserException(IReadOnlyList<LexicalErrorException> lexicalErrors, IReadOnlyList<SyntaxErrorException> syntaxErrors)
-            :base(lexicalErrors.Chain<ParserException>(syntaxErrors).Select(e => e.Message).Concat("\n\n"))
+            :base(lexicalErrors.Chain<ParserException>(syntaxErrors).Select(e => e.Message).MakeString("\n\n"))
         {
             (LexicalErrors, SyntaxErrors) = (lexicalErrors, syntaxErrors);
         }

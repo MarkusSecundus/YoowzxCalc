@@ -37,7 +37,6 @@ namespace MarkusSecundus.Util
         }
 
 
-
         /*  Jediný opravdu důležitý řádek na celé této třídě */
         public V this[K key]
         {

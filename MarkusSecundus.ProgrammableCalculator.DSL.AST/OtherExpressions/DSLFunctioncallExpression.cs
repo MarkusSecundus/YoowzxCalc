@@ -20,7 +20,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions
         public override int Arity => Arguments.Count;
 
 
-        public override string ToString() => $"{Name}({Arguments.Concat()})";
+        public override string ToString() => $"{Name}({Arguments.MakeString()})";
 
         protected override bool Equals_impl(object obj) => obj is DSLFunctioncallExpression b && Name == b.Name && Arguments.SequenceEqual(b.Arguments);
 

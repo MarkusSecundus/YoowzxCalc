@@ -17,24 +17,38 @@ namespace MarkusSecundus.Util
 
         public static Type LastTupleType => TupleTypesByArgsCount[^1];
 
+        public static int MaxNormalTupleSize => TupleTypesByArgsCount.Length - 2;
+
         public static Type GetValueTupleType(params Type[] elements)
         {
-            elements = AsValueTupleTypeParameters(elements);
-            return TupleTypesByArgsCount[elements.Length].MakeGenericType(elements);
+            var newElements = AsValueTupleTypeParameters(elements);
+            return TupleTypesByArgsCount[newElements.Length].MakeGenericType(newElements);
         }
 
         public static bool IsValueTupleType(this Type self) => self.Assembly == typeof(ValueTuple).Assembly && self.FullName.StartsWith("System.ValueTuple");
 
         public static Type[] AsValueTupleTypeParameters(params Type[] elements)
         {
-            int max = TupleTypesByArgsCount.Length - 1;
+            int max = MaxNormalTupleSize;
             if (elements.Length <= 0)
                 throw new ArgumentException($"Cannot create an empty tuple type!", nameof(elements));
-            if (elements.Length < max /*|| (elements.Length == max && elements[^1].IsValueTupleType())*/)
+            if (elements.Length <= max /*|| (elements.Length == max && elements[^1].IsValueTupleType())*/)
             {
                 return elements;
             }
-            return elements[..^2].Chain(GetValueTupleType(elements[(max - 1)..]).Enumerate()).ToArray();
+            return elements[..max].Concat(GetValueTupleType(elements[(max)..]));
+        }
+
+        public static Type[] GetValueTupleElementTypes(this Type self)
+        {
+            if (!self.IsValueTupleType())
+                throw new ArgumentException($"Must be ValueTuple", nameof(self));
+
+            var raw = self.GetGenericArguments();
+            if (raw.Length <= MaxNormalTupleSize)
+                return raw;
+            else
+                return raw[..^1].Concat(GetValueTupleElementTypes(raw[^1]));
         }
     }
 }

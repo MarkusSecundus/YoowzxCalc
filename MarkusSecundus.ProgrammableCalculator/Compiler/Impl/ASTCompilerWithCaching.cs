@@ -22,7 +22,6 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
         {
             var product = _base.Compile(ctx, toCompile);
 
-
             if (product is not ASTCompilationResult<TNumber> ret)
                 return product;
 
@@ -35,6 +34,25 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 
             return ret;
         }
+
+
+
+        private object createCache(DSLFunctionDefinition def, LambdaExpression function)
+        {
+            if (def.Arguments.Count >= TupleUtils.TupleTypesByArgsCount.Length)
+                throw new NotImplementedException($"Autocaching not supported for functions with more than {TupleUtils.TupleTypesByArgsCount.Length-1} arguments");
+
+            var typeParameters = typeof(TNumber).Repeat(def.Arguments.Count).ToArray();
+            var tupleType = TupleUtils.GetValueTupleType(typeParameters);
+
+            var cacheTypeParameters = new Type[] { tupleType, typeof(TNumber) };
+            var cacheType = typeof(DefaultValDict<,>).MakeGenericType(cacheTypeParameters);
+            var constructor = cacheType.GetConstructor(new[] { typeof(Func<,>).MakeGenericType(cacheTypeParameters) });
+
+            return null;
+        }
+
+
 
 
         private LambdaExpression doArgumentlessAutocaching(ASTCompilationResult<TNumber> ret)
@@ -51,21 +69,6 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
                         ifFalse: Expression.Assign(wrapParamValue, ret.Expression.Body)
                 )
             );
-        }
-
-        private object createCache(DSLFunctionDefinition def, LambdaExpression function)
-        {
-            if (def.Arguments.Count >= TupleUtils.TupleTypesByArgsCount.Length)
-                throw new NotImplementedException($"Autocaching not supported for functions with more than {TupleUtils.TupleTypesByArgsCount.Length-1} arguments");
-
-            var typeParameters = typeof(TNumber).Repeat(def.Arguments.Count).ToArray();
-            var tupleType = TupleUtils.GetValueTupleType(typeParameters);
-
-            var cacheType = typeof(DefaultValDict<,>).MakeGenericType(tupleType, typeof(TNumber));
-
-            throw new NotImplementedException("!!!!!!!!!!!!!!!!!!!!!!"); //TODO: dokončit
-
-            return false;
         }
     }
 }

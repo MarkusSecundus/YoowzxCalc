@@ -25,7 +25,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
 
 
 
-        public static string HeadRepr(DSLFunctionDefinition self) => $"{self.Name}({self.Arguments.Concat()})";
+        public static string HeadRepr(DSLFunctionDefinition self) => $"{self.Name}({self.Arguments.MakeString()})";
 
 
         public override string ToString() => $"{HeadRepr(this)} := {Body}";
