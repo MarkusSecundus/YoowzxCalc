@@ -11,14 +11,14 @@ namespace MarkusSecundus.Util
     public static class FunctionUtil
     {
 
-        private static readonly Type _ClosureType = Expression.Lambda(Expression.Constant(0)).Compile().Method.GetParameters()[0].GetType();
+        private static bool IsExpressionClosureType(this Type self) => self.FullName == "System.Runtime.CompilerServices.Closure";
 
         public static int ArgumentsCount(this Delegate self) => self.GetParameters().Length;
 
         public static ParameterInfo[] GetParameters(this Delegate self)
         {
             var parameters = self.Method.GetParameters();
-            return (parameters.Length > 0 && parameters[0].ParameterType.FullName == "System.Runtime.CompilerServices.Closure")
+            return (parameters.Length > 0 && parameters[0].ParameterType.IsExpressionClosureType())
                 ? parameters[1..]
                 : parameters;
         }

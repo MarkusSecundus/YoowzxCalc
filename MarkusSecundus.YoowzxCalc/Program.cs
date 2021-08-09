@@ -29,8 +29,6 @@ namespace MarkusSecundus.ProgrammableCalculator
         public static void Main() => test15();
 
 
-
-
         public static void test15()
         {
             IASTBuilder builder = IASTBuilder.Instance;
