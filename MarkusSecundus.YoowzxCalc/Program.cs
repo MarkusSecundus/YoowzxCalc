@@ -31,14 +31,14 @@ namespace MarkusSecundus.ProgrammableCalculator
 
         public static void test15()
         {
-            IASTBuilder builder = IASTBuilder.Instance;
-            IASTCompiler<double> compiler = IASTCompiler<double>.Make(new BasicNumberOperators.Double());
-            IASTCompiler<double> interpreter = IASTInterpreter<double>.Make(new BasicNumberOperators.Double()).AsCompiler();
+            IYCAstBuilder builder = IYCAstBuilder.Instance;
+            IYCCompiler<double> compiler = IYCCompiler<double>.Make(new BasicNumberOperators.Double());
+            IYCCompiler<double> interpreter = IYCInterpreter<double>.Make(new BasicNumberOperators.Double()).AsCompiler();
             var ctx = IASTFunctioncallContext.Make<double>().ResolveSymbols
             (
-                (new FunctionSignature<double>("sin", 1), Sin),
-                (new FunctionSignature<double>("cos", 1), Cos),
-                (new FunctionSignature<double>("f", 1), F)
+                (new YCFunctionSignature<double>("sin", 1), Sin),
+                (new YCFunctionSignature<double>("cos", 1), Cos),
+                (new YCFunctionSignature<double>("f", 1), F)
             );
 
             var tree = builder.Build("[a, b, c, d, e, f] f(x) := 1 + x*3");
@@ -59,8 +59,8 @@ namespace MarkusSecundus.ProgrammableCalculator
 
         public static void test13()
         {
-            IASTBuilder builder = IASTBuilder.Instance;
-            IASTCompiler<double> compiler = IASTCompiler<double>.Make(new BasicNumberOperators.Double());
+            IYCAstBuilder builder = IYCAstBuilder.Instance;
+            IYCCompiler<double> compiler = IYCCompiler<double>.Make(new BasicNumberOperators.Double());
 
             var tree = builder.Build("[a, b, c, d, e, f] f(x) := 1 + 2*3");
 
@@ -78,15 +78,15 @@ namespace MarkusSecundus.ProgrammableCalculator
         }
         public static void test11()
         {
-            IASTBuilder builder = IASTBuilder.Instance;
-            IASTInterpreter<double> interpreter = IASTInterpreter<double>.Make(new BasicNumberOperators.Double());
-            IASTCompiler<double> compiler = IASTCompiler<double>.Make(new BasicNumberOperators.Double());
-            compiler = IASTCompiler<double>.Cached(compiler);
+            IYCAstBuilder builder = IYCAstBuilder.Instance;
+            IYCInterpreter<double> interpreter = IYCInterpreter<double>.Make(new BasicNumberOperators.Double());
+            IYCCompiler<double> compiler = IYCCompiler<double>.Make(new BasicNumberOperators.Double());
+            compiler = IYCCompiler<double>.Cached(compiler);
             var ctx = IASTFunctioncallContext.Make<double>().ResolveSymbols
             (
-                (new FunctionSignature<double>("sin", 1), Sin),
-                (new FunctionSignature<double>("cos", 1), Cos),
-                (new FunctionSignature<double>("f", 1), F)
+                (new YCFunctionSignature<double>("sin", 1), Sin),
+                (new YCFunctionSignature<double>("cos", 1), Cos),
+                (new YCFunctionSignature<double>("f", 1), F)
             );
 
 
@@ -189,14 +189,14 @@ namespace MarkusSecundus.ProgrammableCalculator
 
         public static void test2()
         {
-            IASTBuilder builder = IASTBuilder.Instance;
-            IASTInterpreter<double> interpreter = IASTInterpreter<double>.Make(new BasicNumberOperators.Double());
-            IASTCompiler<double> compiler = IASTCompiler<double>.Make(new BasicNumberOperators.Double());
+            IYCAstBuilder builder = IYCAstBuilder.Instance;
+            IYCInterpreter<double> interpreter = IYCInterpreter<double>.Make(new BasicNumberOperators.Double());
+            IYCCompiler<double> compiler = IYCCompiler<double>.Make(new BasicNumberOperators.Double());
             var ctx = IASTFunctioncallContext.Make<double>().ResolveSymbols
             (
-                (new FunctionSignature<double>("sin", 1), Sin),
-                (new FunctionSignature<double>("cos", 1), Cos),
-                (new FunctionSignature<double>("f", 1), F)
+                (new YCFunctionSignature<double>("sin", 1), Sin),
+                (new YCFunctionSignature<double>("cos", 1), Cos),
+                (new YCFunctionSignature<double>("f", 1), F)
             );
 
 
@@ -215,9 +215,9 @@ namespace MarkusSecundus.ProgrammableCalculator
 
         public static void test1()
         {
-            IASTBuilder builder = IASTBuilder.Instance;
-            IASTInterpreter<double> interpreter = IASTInterpreter<double>.Make(new BasicNumberOperators.Double());
-            IASTCompiler<double> compiler = IASTCompiler<double>.Make(new BasicNumberOperators.Double());
+            IYCAstBuilder builder = IYCAstBuilder.Instance;
+            IYCInterpreter<double> interpreter = IYCInterpreter<double>.Make(new BasicNumberOperators.Double());
+            IYCCompiler<double> compiler = IYCCompiler<double>.Make(new BasicNumberOperators.Double());
             var ctx = IASTFunctioncallContext.Make<double>();
 
 
