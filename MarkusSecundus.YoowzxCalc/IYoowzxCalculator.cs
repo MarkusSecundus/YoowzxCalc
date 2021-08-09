@@ -21,9 +21,13 @@ namespace MarkusSecundus.YoowzxCalc
         
         public TDelegate Compile<TDelegate>(string function) where TDelegate : Delegate;
 
-        IYoowzxCalculator<TNumber> AddFunctions(IEnumerable<string> toAdd);
+        public IYoowzxCalculator<TNumber> AddFunctions(IEnumerable<string> toAdd);
 
-        IYoowzxCalculator<TNumber> AddFunction<TDelegate>(string name, TDelegate toAdd) where TDelegate: Delegate;
+        public IYoowzxCalculator<TNumber> AddFunction(string expression, out YCFunctionSignature<TNumber> signature, out Delegate result);
+        public IYoowzxCalculator<TNumber> AddFunction<TDelegate>(string name, TDelegate toAdd, out YCFunctionSignature<TNumber> signature) where TDelegate: Delegate;
+
+        public IYoowzxCalculator<TNumber> AddFunction<TDelegate>(string name, TDelegate toAdd) where TDelegate : Delegate
+            => AddFunction(name, toAdd, out var _);
 
         public static IYoowzxCalculator<TNumber> Make(IYCAstBuilder astBuilder = default, IYCCompiler<TNumber> compiler = default, IYCInterpretationContext<TNumber> context = default)
             => new YoowzxCalculator<TNumber>() { AstBuilder = astBuilder, Compiler = compiler, Context = context };
@@ -39,5 +43,6 @@ namespace MarkusSecundus.YoowzxCalc
 
         public static IYoowzxCalculator<TNumber> AddFunction<TNumber>(this IYoowzxCalculator<TNumber> self, string name, Delegate toAdd)
             => self.AddFunction(name, toAdd);
+
     }
 }

@@ -51,29 +51,38 @@ namespace MarkusSecundus.YoowzxCalc
 
         public IYoowzxCalculator<TNumber> AddFunctions(IEnumerable<string> toAdd)
         {
-            var symbols = new List<KeyValuePair<YCFunctionSignature<TNumber>, Delegate>>();
             foreach(var function in toAdd)
             {
                 var tree = AstBuilder.Build(function);
                 var signature = tree.GetSignature<TNumber>();
                 var result = Compiler.Compile(Context_impl, tree).Compile();
-                symbols.Add(new KeyValuePair<YCFunctionSignature<TNumber>, Delegate>( signature, result));
+                Context_impl.GetUnresolvedFunction(signature).Value = result;
             }
-            Context_impl = Context_impl.ResolveSymbols(symbols);
+            Context_impl.ResolveSymbols();
 
             return this;
         }
 
 
-        public IYoowzxCalculator<TNumber> AddFunction<TDelegate>(string name, TDelegate toAdd) where TDelegate : Delegate
+        public IYoowzxCalculator<TNumber> AddFunction<TDelegate>(string name, TDelegate toAdd, out YCFunctionSignature<TNumber> signature) where TDelegate : Delegate
         {
-            var signature = toAdd.GetSignature<TNumber, TDelegate>(name);
+            signature = toAdd.GetSignature<TNumber, TDelegate>(name);
 
             Context_impl = Context_impl.ResolveSymbols((signature, toAdd));
             
             return this;
         }
+        
+        public IYoowzxCalculator<TNumber> AddFunction(string expression, out YCFunctionSignature<TNumber> signature, out Delegate result)
+        {
+            var tree = AstBuilder.Build(expression);
+            signature = tree.GetSignature<TNumber>();
+            result = Compiler.Compile(Context_impl, tree).Compile();
 
+            Context_impl = Context_impl.ResolveSymbols((signature, result));
+
+            return this;
+        }
 
         TDelegate IYoowzxCalculator<TNumber>.Compile<TDelegate>(string function) => Compile<TDelegate>(function);
         TDelegate IYoowzxCalculator<TNumber>.Get<TDelegate>(string signature) => Get<TDelegate>(signature);

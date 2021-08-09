@@ -44,7 +44,7 @@ namespace MarkusSecundus.YoowzxCalc
              WriteLine(calc.Compile<Func<double, double>>("f(x) := sin(x)**2 + cos(x)**2")(1));
 
             
-            for (int t = 0; t < 200; ++t)
+            for (double t = 0; t < 20; t+=0.1)
                 WriteLine(calc.Compile<Func<double, double>>("[cache]f(x) := x<=1 ? x : f(x-1)+f(x-2)")(t));
         }
 

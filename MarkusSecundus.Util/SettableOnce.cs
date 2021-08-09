@@ -30,6 +30,6 @@ namespace MarkusSecundus.Util
 
         public override int GetHashCode() => IsSet ? Value.GetHashCode() : 0;
 
-        public override string ToString() => IsSet ? "<nil>" : Value.ToString();
+        public override string ToString() => IsSet ? "<nil>" : ""+Value;
     }
 }

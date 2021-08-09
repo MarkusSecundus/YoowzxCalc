@@ -31,6 +31,10 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
             => self.GetSignature<TNumber, Delegate>(name);
 
 
+        public static bool IsAnonymousExpression<TNumber>(this YCFunctionSignature<TNumber> self)
+            => ReferenceEquals(self.Name, YCFunctionDefinition.AnonymousFunctionName);
+
+
         public static YCFunctionSignature<TNumber> GetSignature<TNumber, TDelegate>(this TDelegate self, string name) where TDelegate : Delegate
         {
             //if (FunctionUtil.IsConcreteDelegateType<TDelegate>())

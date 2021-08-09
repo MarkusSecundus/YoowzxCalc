@@ -46,6 +46,14 @@ namespace MarkusSecundus.Util
             return ret.ToString();
         }
 
+        public static void ForAll<T>(this IEnumerable<T> self, Action<T> action)
+        {
+            foreach (var t in self) action(t);
+        }
+        public static void ForAll<T, TRet>(this IEnumerable<T> self, Func<T, TRet> action)
+        {
+            foreach (var t in self) action(t);
+        }
 
         public static IEnumerable<T> Enumerate<T>(this T self)
         {
