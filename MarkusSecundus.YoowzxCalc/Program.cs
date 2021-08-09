@@ -22,6 +22,7 @@ namespace MarkusSecundus.ProgrammableCalculator
 
     public static class Program
     {
+
         static readonly Func<double, double> Sin = Math.Sin, Cos = Math.Cos, F=x=>100*x;
 
 
