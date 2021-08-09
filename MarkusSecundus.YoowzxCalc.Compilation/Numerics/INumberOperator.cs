@@ -1,6 +1,9 @@
 ﻿namespace MarkusSecundus.ProgrammableCalculator.Numerics
 {
-    public interface INumberOperator<TNumber>
+    public interface INumberOperator { }
+
+
+    public interface INumberOperator<TNumber> : INumberOperator
     {
         public TNumber Parse(string repr);
 

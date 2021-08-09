@@ -15,7 +15,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
         public TNumber Interpret(IYCInterpretationContext<TNumber> ctx, YCFunctionDefinition toInterpret, IEnumerable<TNumber> args);
 
 
-        public static IYCInterpreter<TNumber> Make(INumberOperator<TNumber> op) => new YCInterpreter<TNumber>(op);
+        public static IYCInterpreter<TNumber> Make(INumberOperator<TNumber> op) => new YCInterpreterBase<TNumber>(op);
     }
 
 

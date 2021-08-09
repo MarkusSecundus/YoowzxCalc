@@ -23,28 +23,36 @@ namespace MarkusSecundus.Util
                 : parameters;
         }
 
+        public static bool IsConcreteDelegateType<TDelegate>() where TDelegate : Delegate
+            => typeof(TDelegate) != typeof(Delegate) && typeof(TDelegate) != typeof(MulticastDelegate);
+
+
+        public static IReadOnlyList<ParameterInfo> GetDelegateTypeParameters<TDelegate>() where TDelegate : Delegate
+            => _DelegateTypeParametersContainer<TDelegate>.Value;
+
+            private static class _DelegateTypeParametersContainer<TDelegate> where TDelegate: Delegate
+            {
+                public static IReadOnlyList<ParameterInfo> Value { get; } = GetMethodInfo<TDelegate>().GetParameters();
+            }
 
 
 
+        public static MethodInfo GetMethodInfo<TDelegate>() where TDelegate : Delegate
+            => GetMethodInfo(typeof(TDelegate));
 
-
-
-
-
-
-
-        internal struct FunctionParameters
+        public static MethodInfo GetMethodInfo(Type delegateType)
         {
-            public Type[] Args { get; init; }
-            public Type Ret { get; init; }
+            Func<object> f = default;
+            return delegateType.GetMethod(nameof(f.Invoke));
         }
-        internal static FunctionParameters GetFunctionParameters(this Delegate self)
+
+
+        internal static FunctionParametersInfo GetFunctionParameters(this Delegate self)
         {
             if (self.Method.ReturnType == typeof(void))
                 throw new ArgumentException($"Delegate must have a return value", nameof(self));
             return new() { Ret = self.Method.ReturnType, Args = self.GetParameters().Select(p => p.ParameterType).ToArray() };
         }
-
 
 
 

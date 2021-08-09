@@ -17,7 +17,7 @@ using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
 using MarkusSecundus.YoowzxCalc.DSL.Parser;
 using static System.Console;
 
-namespace MarkusSecundus.ProgrammableCalculator
+namespace MarkusSecundus.YoowzxCalc
 {
 
     public static class Program
@@ -26,7 +26,27 @@ namespace MarkusSecundus.ProgrammableCalculator
         static readonly Func<double, double> Sin = Math.Sin, Cos = Math.Cos, F=x=>100*x;
 
 
-        public static void Main() => test15();
+        public static void Main() => test16();
+
+
+        public static void test16()
+        {
+            var calc = IYoowzxCalculator<double>.Make();
+
+            Func<double, double> ffff = x=> (int)Math.Cos(x);
+
+            calc.AddFunction<Func<double, double>>("sin", Math.Sin)
+                .AddFunction<Func<double, double, double>>("sum", (a, b) => a + b)
+                .AddFunction("cos", ffff);
+
+            WriteLine(calc.Compile<Func<double, double>>("f(x) := x<= 1 ? 1 : x*f(x-1)")(5));
+            WriteLine(calc.Compile<Func<double>>("sum(10, 103) *2")());
+             WriteLine(calc.Compile<Func<double, double>>("f(x) := sin(x)**2 + cos(x)**2")(1));
+
+            
+            for (int t = 0; t < 200; ++t)
+                WriteLine(calc.Compile<Func<double, double>>("[cache]f(x) := x<=1 ? x : f(x-1)+f(x-2)")(t));
+        }
 
 
         public static void test15()
@@ -81,7 +101,7 @@ namespace MarkusSecundus.ProgrammableCalculator
             IYCAstBuilder builder = IYCAstBuilder.Instance;
             IYCInterpreter<double> interpreter = IYCInterpreter<double>.Make(new BasicNumberOperators.Double());
             IYCCompiler<double> compiler = IYCCompiler<double>.Make(new BasicNumberOperators.Double());
-            compiler = IYCCompiler<double>.Cached(compiler);
+            compiler = IYCCompiler<double>.MakeCached(compiler);
             var ctx = IASTFunctioncallContext.Make<double>().ResolveSymbols
             (
                 (new YCFunctionSignature<double>("sin", 1), Sin),

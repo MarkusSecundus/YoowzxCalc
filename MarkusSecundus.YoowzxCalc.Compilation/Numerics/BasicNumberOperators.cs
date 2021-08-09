@@ -1,13 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace MarkusSecundus.ProgrammableCalculator.Numerics
 {
     public static class BasicNumberOperators
     {
-        public readonly struct Double : INumberOperator<double>
+        private static readonly Dictionary<Type, object> _table = new();
+
+        public static void Register<TNumber>(Func<INumberOperator<TNumber>> operatorSupplier)
+            => _table[typeof(TNumber)] = operatorSupplier;
+
+        public static INumberOperator<TNumber> Get<TNumber>() => ((Func<INumberOperator<TNumber>>)_table[typeof(TNumber)])();
+
+        static BasicNumberOperators()
         {
-            public static Double Instance => new();
+            Register(() => new Double());
+            Register(() => new Decimal());
+            Register(() => new Long());
+        }
+
+
+        public class Double : INumberOperator<double>
+        {
+            public static Double Instance { get; } = new();
 
             public double Parse(string repr) => double.Parse(repr, CultureInfo.InvariantCulture);
 
@@ -37,9 +53,9 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
             public double NegateLogical(double a) => toBool(a == 0);
         }
 
-        public readonly struct Decimal : INumberOperator<decimal>
+        public class Decimal : INumberOperator<decimal>
         {
-            public static Double Instance => new();
+            public static Decimal Instance { get; } = new();
 
             public decimal Parse(string repr) => decimal.Parse(repr, CultureInfo.InvariantCulture);
 
@@ -69,9 +85,9 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
             public decimal NegateLogical(decimal a) => toBool(a == 0);
         }
 
-        public readonly struct Long : INumberOperator<long>
+        public class Long : INumberOperator<long>
         {
-            public static Long Instance => new();
+            public static Long Instance { get; } = new();
 
             public long Parse(string repr) => long.Parse(repr, CultureInfo.InvariantCulture);
 

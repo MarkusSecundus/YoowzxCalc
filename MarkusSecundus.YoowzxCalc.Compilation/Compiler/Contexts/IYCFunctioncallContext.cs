@@ -11,6 +11,9 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Contexts
         public IYCFunctioncallContext<TNumber> ResolveSymbols(IEnumerable<KeyValuePair<YCFunctionSignature<TNumber>, Delegate>> symbolDefinitions);
 
         public IEnumerable<YCFunctionSignature<TNumber>> GetUnresolvedSymbolsList();
+
+        public static IYCFunctioncallContext<TNumber> Make() => new YCFunctioncallContext<TNumber>();
+        public static IYCFunctioncallContext<TNumber> Make(IEnumerable<KeyValuePair<YCFunctionSignature<TNumber>, Delegate>> initialFunctions) => Make().ResolveSymbols(initialFunctions);
     }
 
     public static class IASTFunctioncallContext

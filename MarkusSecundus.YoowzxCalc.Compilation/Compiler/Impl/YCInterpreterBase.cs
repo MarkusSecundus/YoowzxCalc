@@ -13,11 +13,11 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
 
 namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
-    class YCInterpreter<TNumber> : IYCInterpreter<TNumber>, IYCCompiler<TNumber>
+    class YCInterpreterBase<TNumber> : IYCInterpreter<TNumber>
     {
         private readonly INumberOperator<TNumber> op;
 
-        public YCInterpreter(INumberOperator<TNumber> numberOperator)
+        public YCInterpreterBase(INumberOperator<TNumber> numberOperator)
             => op = numberOperator;
 
         public TNumber Interpret(IYCInterpretationContext<TNumber> ctx, YCFunctionDefinition toInterpret, IEnumerable<TNumber> args)
@@ -35,22 +35,13 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             ));
         }
 
-        IYCCompilationResult<TNumber> IYCCompiler<TNumber>.Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
-        {
-            Func<TNumber[], TNumber> ret = args => this.Interpret(ctx, toCompile, args);
-            var args = typeof(TNumber).Repeat(toCompile.Arguments.Count).ToArray();
-            return new _CompilationResult(ret.Dearrayize(args));
-        }
-        private record _CompilationResult(Delegate Value) : IYCCompilationResult<TNumber>
-        {
-            TDelegate IYCCompilationResult<TNumber>.Compile<TDelegate>() => (TDelegate)Value;
-        }
+
 
 
         private record VisitContext
         (
             IYCInterpretationContext<TNumber> CoreContext,
-            YCInterpreter<TNumber> Father,
+            YCInterpreterBase<TNumber> Father,
             YCFunctionDefinition ThisFunction,
             ImmutableDictionary<string, TNumber> Args
         )
