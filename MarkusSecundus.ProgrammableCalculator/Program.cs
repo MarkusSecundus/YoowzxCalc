@@ -3,20 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-using MarkusSecundus.ProgrammableCalculator.Compiler;
-using MarkusSecundus.ProgrammableCalculator.Compiler.Contexts;
-using MarkusSecundus.ProgrammableCalculator.Compiler.Impl;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.BinaryExpressions;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression;
 using MarkusSecundus.ProgrammableCalculator.DSL.Parser;
 using MarkusSecundus.ProgrammableCalculator.Numerics;
 using MarkusSecundus.Util;
+using MarkusSecundus.YoowzxCalc.Compiler;
+using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
+using MarkusSecundus.YoowzxCalc.DSL.Parser;
 using static System.Console;
 
 namespace MarkusSecundus.ProgrammableCalculator
@@ -27,15 +25,64 @@ namespace MarkusSecundus.ProgrammableCalculator
         static readonly Func<double, double> Sin = Math.Sin, Cos = Math.Cos, F=x=>100*x;
 
 
-        public static void Main() => test11();
+        public static void Main() => test15();
 
 
+
+
+        public static void test15()
+        {
+            IASTBuilder builder = IASTBuilder.Instance;
+            IASTCompiler<double> compiler = IASTCompiler<double>.Make(new BasicNumberOperators.Double());
+            IASTCompiler<double> interpreter = IASTInterpreter<double>.Make(new BasicNumberOperators.Double()).AsCompiler();
+            var ctx = IASTFunctioncallContext.Make<double>().ResolveSymbols
+            (
+                (new FunctionSignature<double>("sin", 1), Sin),
+                (new FunctionSignature<double>("cos", 1), Cos),
+                (new FunctionSignature<double>("f", 1), F)
+            );
+
+            var tree = builder.Build("[a, b, c, d, e, f] f(x) := 1 + x*3");
+
+            for(int t = 0; t < 10; ++t)
+            {
+                WriteLine("{0} {1}", compiler.Compile(ctx, tree).Compile().DynamicInvoke((double)t), interpreter.Compile(ctx, tree).Compile().DynamicInvoke((double)t));
+            }
+
+        }
+        public static void test14()
+        {
+            Func<object[], string> f = a => ""+ a[0] + a[1];
+            var ff = (Func<string, int, string>)f.Dearrayize(typeof(string), typeof(int));
+            Console.WriteLine(ff("das", 321));
+        }
+
+
+        public static void test13()
+        {
+            IASTBuilder builder = IASTBuilder.Instance;
+            IASTCompiler<double> compiler = IASTCompiler<double>.Make(new BasicNumberOperators.Double());
+
+            var tree = builder.Build("[a, b, c, d, e, f] f(x) := 1 + 2*3");
+
+            WriteLine(tree.Annotations.MakeString());
+        }
+
+
+        public static void test12()
+        {
+            Func<BigDecimal, BigDecimal> fib = null;
+            fib = x => x <= (BigDecimal)1 ? x : fib(x - 1) + fib(x - 2) + (BigDecimal)13e-15m;
+            fib = fib.Autocached();
+            for (int t = 0; t < 58; ++t)
+                WriteLine("{0}\n",fib(t));
+        }
         public static void test11()
         {
             IASTBuilder builder = IASTBuilder.Instance;
-            IASTInterpreter<double> interpreter = new ASTInterpreter<double>(new BasicNumberOperators.Double());
-            IASTCompiler<double> compiler = new ASTCompiler<double>(new BasicNumberOperators.Double());
-            compiler = new ASTCompilerWithCaching<double>(compiler);
+            IASTInterpreter<double> interpreter = IASTInterpreter<double>.Make(new BasicNumberOperators.Double());
+            IASTCompiler<double> compiler = IASTCompiler<double>.Make(new BasicNumberOperators.Double());
+            compiler = IASTCompiler<double>.Cached(compiler);
             var ctx = IASTFunctioncallContext.Make<double>().ResolveSymbols
             (
                 (new FunctionSignature<double>("sin", 1), Sin),
@@ -49,7 +96,7 @@ namespace MarkusSecundus.ProgrammableCalculator
 
             for (double x = 0; x < 250; x += 1)
             {
-                double a, b;
+                double b;
                 //Write("{0} ", a = interpreter.Interpret(ctx, tree, x));
                 Write(b = (double)compiler.Compile(ctx, tree).Compile().DynamicInvoke(x));
                 WriteLine();
@@ -144,8 +191,8 @@ namespace MarkusSecundus.ProgrammableCalculator
         public static void test2()
         {
             IASTBuilder builder = IASTBuilder.Instance;
-            IASTInterpreter<double> interpreter = new ASTInterpreter<double>(new BasicNumberOperators.Double());
-            IASTCompiler<double> compiler = new ASTCompiler<double>(new BasicNumberOperators.Double());
+            IASTInterpreter<double> interpreter = IASTInterpreter<double>.Make(new BasicNumberOperators.Double());
+            IASTCompiler<double> compiler = IASTCompiler<double>.Make(new BasicNumberOperators.Double());
             var ctx = IASTFunctioncallContext.Make<double>().ResolveSymbols
             (
                 (new FunctionSignature<double>("sin", 1), Sin),
@@ -170,8 +217,8 @@ namespace MarkusSecundus.ProgrammableCalculator
         public static void test1()
         {
             IASTBuilder builder = IASTBuilder.Instance;
-            IASTInterpreter<double> interpreter = new ASTInterpreter<double>(new BasicNumberOperators.Double());
-            IASTCompiler<double> compiler = new ASTCompiler<double>(new BasicNumberOperators.Double());
+            IASTInterpreter<double> interpreter = IASTInterpreter<double>.Make(new BasicNumberOperators.Double());
+            IASTCompiler<double> compiler = IASTCompiler<double>.Make(new BasicNumberOperators.Double());
             var ctx = IASTFunctioncallContext.Make<double>();
 
 

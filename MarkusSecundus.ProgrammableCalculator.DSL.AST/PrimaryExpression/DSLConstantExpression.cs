@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression
+﻿namespace MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression
 {
     public sealed class DSLConstantExpression : DSLPrimaryExpression
     {

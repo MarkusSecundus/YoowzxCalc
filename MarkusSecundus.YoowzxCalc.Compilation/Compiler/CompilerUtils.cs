@@ -1,16 +1,11 @@
-﻿using MarkusSecundus.ProgrammableCalculator.DSL.AST;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions;
-using MarkusSecundus.ProgrammableCalculator.Numerics;
-using MarkusSecundus.Util;
+﻿using MarkusSecundus.Util;
+using MarkusSecundus.YoowzxCalc.DSL.AST;
+using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MarkusSecundus.ProgrammableCalculator.Compiler
+namespace MarkusSecundus.YoowzxCalc.Compiler
 {
     static class CompilerUtils
     {
@@ -24,7 +19,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler
         public static FunctionSignature<TNumber> GetSignature<TNumber>(this DSLFunctionDefinition self)
             => new() { Name = self.Name, ArgumentsCount = self.Arguments.Count };
         public static FunctionSignature<TNumber> GetSignature<TNumber>(this DSLFunctioncallExpression self)
-            => new() { Name = self.Name, ArgumentsCount = self.Arguments.Count};
+            => new() { Name = self.Name, ArgumentsCount = self.Arguments.Count };
 
 
         public delegate TNumber ExpressionDelegate<TNumber>(params TNumber[] args);

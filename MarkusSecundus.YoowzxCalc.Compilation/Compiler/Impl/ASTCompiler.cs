@@ -1,21 +1,18 @@
-﻿using MarkusSecundus.ProgrammableCalculator.Compiler.Contexts;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.BinaryExpressions;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.UnaryExpressions;
-using MarkusSecundus.ProgrammableCalculator.Numerics;
+﻿using MarkusSecundus.ProgrammableCalculator.Numerics;
 using MarkusSecundus.Util;
+using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
+using MarkusSecundus.YoowzxCalc.DSL.AST;
+using MarkusSecundus.YoowzxCalc.DSL.AST.BinaryExpressions;
+using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
+using MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression;
+using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
+namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
     class ASTCompiler<TNumber> : IASTCompiler<TNumber>
     {
@@ -59,7 +56,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
         {
             public readonly SettableOnce<Delegate> ThisFunctionWrapper = new();
 
-            public Expression OpE { get; }  = Expression.Constant(Father.Op);
+            public Expression OpE { get; } = Expression.Constant(Father.Op);
 
             public INumberOperator<TNumber> Op => Father.Op;
         }
@@ -67,7 +64,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 
         private class CompilerVisitor : DSLVisitorBase<Expression, VisitContext>
         {
-            private CompilerVisitor() {}
+            private CompilerVisitor() { }
             public static CompilerVisitor Instance { get; } = new();
 
             private Expression v(DSLExpression e, VisitContext ctx)
@@ -187,7 +184,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
 
 
 
-            
+
 
 
 

@@ -1,15 +1,8 @@
-﻿using MarkusSecundus.ProgrammableCalculator.Compiler.Contexts;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST;
-using MarkusSecundus.ProgrammableCalculator.Numerics;
-using MarkusSecundus.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MarkusSecundus.Util;
+using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
+using MarkusSecundus.YoowzxCalc.DSL.AST;
 
-namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
+namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
     class ASTCompilerWithCaching<TNumber> : IASTCompiler<TNumber>
     {

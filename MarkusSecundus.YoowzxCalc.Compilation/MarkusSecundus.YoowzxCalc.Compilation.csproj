@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MarkusSecundus.ProgrammableCalculator.DSL.AST\MarkusSecundus.YoowzxCalc.DSL.AST.csproj" />
+    <ProjectReference Include="..\MarkusSecundus.Util\MarkusSecundus.Util.csproj" />
+  </ItemGroup>
+
+</Project>

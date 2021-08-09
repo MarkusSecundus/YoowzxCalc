@@ -1,8 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using MarkusSecundus.YoowzxCalc.DSL.AST.BinaryExpressions;
+using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
+using MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression;
+using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 
-namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
+
+
+
+namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
     public abstract class DSLUnaryExpression : DSLExpression
     {

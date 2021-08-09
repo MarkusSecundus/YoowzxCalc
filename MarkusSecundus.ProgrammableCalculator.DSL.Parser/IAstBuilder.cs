@@ -1,4 +1,4 @@
-﻿using MarkusSecundus.ProgrammableCalculator.DSL.AST;
+﻿using MarkusSecundus.YoowzxCalc.DSL.AST;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 [assembly : CLSCompliant(false)]
 
-namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
+namespace MarkusSecundus.YoowzxCalc.DSL.Parser
 {
     public interface IASTBuilder
     {

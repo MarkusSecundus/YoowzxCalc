@@ -1,12 +1,7 @@
 ﻿using MarkusSecundus.Util;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
+namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
     class ASTCompilationResult<TNumber> : IASTCompilationResult<TNumber>
     {
@@ -16,7 +11,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
         internal Delegate Expression { get; }
         internal SettableOnce<Delegate> ThisFunctionWrapper { get; }
 
-        public TDelegate Compile<TDelegate>() where TDelegate: Delegate
+        public TDelegate Compile<TDelegate>() where TDelegate : Delegate
             => (ThisFunctionWrapper.Value = Expression) as TDelegate;
 
         public Delegate Compile() => Compile<Delegate>();

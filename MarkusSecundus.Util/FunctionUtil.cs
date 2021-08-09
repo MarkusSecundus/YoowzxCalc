@@ -100,7 +100,25 @@ namespace MarkusSecundus.Util
             ).Compile();
         }
 
-        public static Expression getTupleCreation(Type tupleType, Expression[] elements)
+        public static Delegate Dearrayize(this Delegate self, params Type[] requestedArgTypes)
+        {
+            var parameters = self.GetFunctionParameters();
+            if (!(parameters.Args.Length == 1 && parameters.Args[0].IsArray))
+                throw new ArgumentException($"The function must have only one argument that is array");
+
+            var args = requestedArgTypes.Select(type => Expression.Parameter(type)).ToArray();
+            var arrayType = parameters.Args[0].GetElementType();
+
+            var arrayInit = Expression.NewArrayInit(arrayType, args.Select(e => Expression.Convert(e, arrayType)));
+
+            return Expression.Lambda
+            (
+                Expression.Invoke(Expression.Constant(self), arrayInit),
+                args
+            ).Compile();
+        }
+
+        private static Expression getTupleCreation(Type tupleType, Expression[] elements)
         {
             if (elements.Length >= TupleUtils.MaxNormalTupleSize)
             {

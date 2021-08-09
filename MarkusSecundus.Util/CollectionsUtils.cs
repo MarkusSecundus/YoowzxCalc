@@ -27,6 +27,8 @@ namespace MarkusSecundus.Util
         public static T Peek<T>(this IList<T> self)
             => self[^1];
 
+        
+
         public static bool IsEmpty<T>(this IReadOnlyCollection<T> self)
             => self.Count <= 0;
 

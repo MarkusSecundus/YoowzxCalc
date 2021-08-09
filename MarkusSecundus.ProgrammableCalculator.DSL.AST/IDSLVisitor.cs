@@ -1,12 +1,9 @@
-﻿using MarkusSecundus.ProgrammableCalculator.DSL.AST.BinaryExpressions;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.UnaryExpressions;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MarkusSecundus.YoowzxCalc.DSL.AST.BinaryExpressions;
+using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
+using MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression;
+using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 
-namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
+namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
     public interface IDSLVisitor<out TRet, in TContext>
     {
@@ -22,7 +19,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST
         public TRet Visit(DSLDivideExpression expr, TContext ctx);
         public TRet Visit(DSLModuloExpression expr, TContext ctx);
         public TRet Visit(DSLExponentialExpression expr, TContext ctx);
-        
+
 
         public TRet Visit(DSLFunctioncallExpression expr, TContext ctx);
 

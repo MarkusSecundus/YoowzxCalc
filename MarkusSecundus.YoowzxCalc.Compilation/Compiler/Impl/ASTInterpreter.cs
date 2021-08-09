@@ -1,21 +1,19 @@
-﻿using MarkusSecundus.ProgrammableCalculator.Compiler.Contexts;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.BinaryExpressions;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.UnaryExpressions;
-using MarkusSecundus.ProgrammableCalculator.Numerics;
+﻿using MarkusSecundus.ProgrammableCalculator.Numerics;
 using MarkusSecundus.Util;
+using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
+using MarkusSecundus.YoowzxCalc.DSL.AST;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression;
+using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
+using MarkusSecundus.YoowzxCalc.DSL.AST.BinaryExpressions;
+using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
 
-namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
+namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
-    class ASTInterpreter<TNumber> : IASTInterpreter<TNumber>
+    class ASTInterpreter<TNumber> : IASTInterpreter<TNumber>, IASTCompiler<TNumber>
     {
         private readonly INumberOperator<TNumber> op;
 
@@ -35,6 +33,17 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
                 ThisFunction: toInterpret,
                 Args: argsDict
             ));
+        }
+
+        IASTCompilationResult<TNumber> IASTCompiler<TNumber>.Compile(IASTCompilationContext<TNumber> ctx, DSLFunctionDefinition toCompile)
+        {
+            Func<TNumber[], TNumber> ret = args => this.Interpret(ctx, toCompile, args);
+            var args = typeof(TNumber).Repeat(toCompile.Arguments.Count).ToArray();
+            return new _CompilationResult(ret.Dearrayize(args));
+        }
+        private record _CompilationResult(Delegate Value) : IASTCompilationResult<TNumber>
+        {
+            TDelegate IASTCompilationResult<TNumber>.Compile<TDelegate>() => (TDelegate)Value;
         }
 
 
@@ -165,7 +174,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
                 if (signature == ctx.ThisFunction.GetSignature<TNumber>())
                     return ctx.InterpretRecursively(args);
 
-                return (TNumber) ctx.CoreContext.Functions[signature].DynamicInvoke(args.Select(e => (object)e).ToArray());
+                return (TNumber)ctx.CoreContext.Functions[signature].DynamicInvoke(args.Select(e => (object)e).ToArray());
             }
         }
     }

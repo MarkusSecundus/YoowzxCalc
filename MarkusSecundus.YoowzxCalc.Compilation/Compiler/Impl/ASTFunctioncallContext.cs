@@ -1,13 +1,11 @@
-﻿using MarkusSecundus.ProgrammableCalculator.Compiler.Contexts;
-using MarkusSecundus.Util;
+﻿using MarkusSecundus.Util;
+using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
+namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
     class ASTFunctioncallContext<TNumber> : IASTFunctioncallContext<TNumber>
     {
@@ -41,6 +39,6 @@ namespace MarkusSecundus.ProgrammableCalculator.Compiler.Impl
             return new ASTFunctioncallContext<TNumber>(newSymbols);
         }
 
-        public IEnumerable<FunctionSignature<TNumber>> GetUnresolvedSymbolsList() => unresolved.Where(s => !s.Value.IsSet).Select(s=>s.Key);
+        public IEnumerable<FunctionSignature<TNumber>> GetUnresolvedSymbolsList() => unresolved.Where(s => !s.Value.IsSet).Select(s => s.Key);
     }
 }

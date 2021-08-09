@@ -1,19 +1,20 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.BinaryExpressions;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.PrimaryExpression;
-using MarkusSecundus.ProgrammableCalculator.DSL.AST.UnaryExpressions;
 using MarkusSecundus.ProgrammableCalculator.DSL.Parser.ParserExceptions;
 using MarkusSecundus.ProgrammableCalculator.DSL.Parser.ParserExceptions.Throwers;
 using MarkusSecundus.Util;
+using MarkusSecundus.YoowzxCalc.DSL.AST;
+using MarkusSecundus.YoowzxCalc.DSL.AST.BinaryExpressions;
+using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
+using MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression;
+using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 
-namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
+namespace MarkusSecundus.YoowzxCalc.DSL.Parser
 {
     class ASTBuilder : IASTBuilder
     {
@@ -63,7 +64,8 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
         private readonly List<List<string>> argsStack = new();
         private readonly List<List<DSLExpression>> invokeArgsStack = new();
         private readonly List<DSLExpression> stack = new();
-
+        private readonly List<Dictionary<string, string>> annotationSetsStack = new();
+        private readonly List<(string Key, string Value)> annotationsStack = new();
 
         private void pushBinary<T>() where T: DSLBinaryExpression, new()
             => stack.Push(new T { RightChild = stack.Pop(), LeftChild = stack.Pop() });
@@ -179,8 +181,11 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
 
 
 
-        public override void ExitFunction_definition([NotNull] CalculatorDSLParser.Function_definitionContext context)
+        public override void ExitFunction_definition_has_no_annotations([NotNull] CalculatorDSLParser.Function_definition_has_no_annotationsContext context)
             => ReturnValue = new DSLFunctionDefinition { Name = context.IDENTIFIER().Symbol.Text, Arguments = argsStack.Pop(), Body = stack.Pop() };
+
+        public override void ExitFunction_definition_has_annotations([NotNull] CalculatorDSLParser.Function_definition_has_annotationsContext context)
+            => ReturnValue = new DSLFunctionDefinition { Name = context.IDENTIFIER().Symbol.Text, Arguments = argsStack.Pop(), Body = stack.Pop(), Annotations = annotationSetsStack.Pop() };
 
         public override void ExitAnonymous_function_definition([NotNull] CalculatorDSLParser.Anonymous_function_definitionContext context)
             => ReturnValue = new DSLFunctionDefinition { Name = DSLFunctionDefinition.AnonymousFunctionName, Arguments = Array.Empty<string>(), Body = stack.Pop() };
@@ -197,6 +202,24 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser
 
 
 
+        public override void ExitAnnotation_is_empty([NotNull] CalculatorDSLParser.Annotation_is_emptyContext context)
+            => annotationsStack.Push((context.IDENTIFIER().Symbol.Text, DSLFunctionDefinition.EmptyAnnotationValue));
+
+        public override void ExitAnnotation_has_value([NotNull] CalculatorDSLParser.Annotation_has_valueContext context)
+            => annotationsStack.Push((context.children[0].GetText(), context.children[2].GetText()));
+
+        public override void ExitAnnotation_list_create([NotNull] CalculatorDSLParser.Annotation_list_createContext context)
+        {
+           var toAdd = annotationsStack.Pop(); 
+           annotationSetsStack.Push(new Dictionary<string, string>{ { toAdd.Key, toAdd.Value} });
+        }
+        public override void ExitAnnotation_list_add([NotNull] CalculatorDSLParser.Annotation_list_addContext context)
+        {
+            var toAdd = annotationsStack.Pop();
+            annotationSetsStack.Peek()[toAdd.Key] = toAdd.Value;
+        }
+        public override void ExitBracketed_annotation_list_is_empty([NotNull] CalculatorDSLParser.Bracketed_annotation_list_is_emptyContext context)
+            => annotationSetsStack.Push(new());
 
 
         public override string ToString() => ""+ReturnValue;

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions
+﻿namespace MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions
 {
     public sealed class DSLConditionalExpression : DSLExpression
     {
@@ -15,7 +9,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.AST.OtherExpressions
         public DSLExpression IfFalse { get; init; }
 
 
-        public override DSLExpression this[int childIndex] => new[] { Condition, IfTrue, IfFalse}[childIndex];
+        public override DSLExpression this[int childIndex] => new[] { Condition, IfTrue, IfFalse }[childIndex];
 
         public override int Arity => 3;
 

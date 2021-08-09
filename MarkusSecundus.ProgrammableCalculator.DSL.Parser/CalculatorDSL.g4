@@ -9,7 +9,9 @@ unit: function_definition EOF #upcast_function_definition_to_unit
 	| expression EOF #anonymous_function_definition
 	;
 
-function_definition: IDENTIFIER bracketed_args_list ASSIGN expression ;
+function_definition: IDENTIFIER bracketed_args_list ASSIGN expression #function_definition_has_no_annotations
+	| bracketed_annotation_list IDENTIFIER bracketed_args_list ASSIGN expression #function_definition_has_annotations
+	;
 
 bracketed_args_list: LPAR args_list RPAR #bracketed_args_list_fillled
 	| LPAR RPAR #bracketed_args_list_empty
@@ -20,6 +22,18 @@ args_list: IDENTIFIER #args_list_create
 	;
 
 
+
+bracketed_annotation_list: LBRA annotation_list RBRA #bracketed_annotation_list_is_filled
+	| LBRA RBRA #bracketed_annotation_list_is_empty
+	;
+
+annotation_list: annotation #annotation_list_create
+	| annotation_list COMMA annotation #annotation_list_add
+	;
+
+annotation: IDENTIFIER #annotation_is_empty
+	| IDENTIFIER COLON (NUMBER | IDENTIFIER) #annotation_has_value
+	;
 
 
 literal : IDENTIFIER #identifier_expr
@@ -83,7 +97,6 @@ invoke_list: expression #invoke_list_create
 	| invoke_list COMMA expression  #invoke_list_add
 	;
 
-	
 
 
 fragment DIGIT : [0-9] ;
@@ -100,6 +113,8 @@ MOD : '%' ;
 POW : '^' | '**';
 LPAR : '(' ;
 RPAR : ')' ;
+LBRA : '[' ;
+RBRA : ']' ;
 COMMA : ',' ;
 ASSIGN : ':=' ;
 
