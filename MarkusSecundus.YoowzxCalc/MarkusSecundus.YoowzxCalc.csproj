@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MarkusSecundus.ProgrammableCalculator.DSL.AST\MarkusSecundus.YoowzxCalc.DSL.AST.csproj" />
-    <ProjectReference Include="..\MarkusSecundus.ProgrammableCalculator.DSL.Parser\MarkusSecundus.YoowzxCalc.DSL.Parser.csproj" />
+    <ProjectReference Include="..\MarkusSecundus.YoowzxCalc.DSL.AST\MarkusSecundus.YoowzxCalc.DSL.AST.csproj" />
+    <ProjectReference Include="..\MarkusSecundus.YoowzxCalc.DSL.Parser\MarkusSecundus.YoowzxCalc.DSL.Parser.csproj" />
     <ProjectReference Include="..\MarkusSecundus.Util\MarkusSecundus.Util.csproj" />
     <ProjectReference Include="..\MarkusSecundus.YoowzxCalc.Compilation\MarkusSecundus.YoowzxCalc.Compilation.csproj" />
   </ItemGroup>
