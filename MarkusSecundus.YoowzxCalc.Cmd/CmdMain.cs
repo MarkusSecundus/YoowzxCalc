@@ -69,10 +69,13 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
 
         public void Repl()
         {
-            foreach(var line in In.IterateLines())
+            Out.WriteLine("Welcome to YoowzxCalc!");
+            
+            for(string line; (line = ReadLine.Read(">> "))!= null;)
             {
                 try
                 {
+                    ReadLine.AddHistory(line);
                     RunCommand(line);
                 }catch(Exception e)
                 {
@@ -102,8 +105,9 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
             if (string.IsNullOrWhiteSpace(expression)) return null;
 
             Calc.AddFunction(expression, out var signature, out var result);
-            if (signature.IsAnonymousExpression())
+            if (signature.ArgumentsCount == 0)
                 return "" + ((Func<num>)result)();
+
             return null;
         }
 
