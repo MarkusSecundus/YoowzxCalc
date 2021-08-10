@@ -84,7 +84,9 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
                 => Expression.Constant(ctx.Op.Parse(expr.Value));
 
             public override Expression Visit(YCArgumentExpression expr, VisitContext ctx)
-                => ctx.Args[expr.ArgumentName];
+                => ctx.Args.TryGetValue(expr.ArgumentName, out var ret)
+                    ? ret
+                    : v(new YCFunctioncallExpression { Name = expr.ArgumentName, Arguments = CollectionsUtils.EmptyList<YCExpression>()}, ctx);
 
 
 

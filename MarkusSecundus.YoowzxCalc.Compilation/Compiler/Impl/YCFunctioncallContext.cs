@@ -34,9 +34,11 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
                 if (!symbol.Value.IsSet || symbol.Value == null)
                     throw new ArgumentException($"Symbol left unresolved: {symbol.Value}");
 
-            var newSymbols = Functions.Chain(unresolved.Select(u => (u.Key, u.Value.Value).AsKV())).ToImmutableDictionary();
+            var bld = ImmutableDictionary.CreateBuilder<YCFunctionSignature<TNumber>, Delegate>();
+            foreach (var f in Functions) bld[f.Key] = f.Value;
+            foreach (var f in unresolved) bld[f.Key] = f.Value.Value;
 
-            return new YCFunctioncallContext<TNumber>(newSymbols);
+            return new YCFunctioncallContext<TNumber>(bld.ToImmutable());
         }
 
         public IEnumerable<YCFunctionSignature<TNumber>> GetUnresolvedSymbolsList() => unresolved.Where(s => !s.Value.IsSet).Select(s => s.Key);
