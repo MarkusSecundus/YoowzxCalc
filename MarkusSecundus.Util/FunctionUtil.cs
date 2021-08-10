@@ -154,6 +154,7 @@ namespace MarkusSecundus.Util
                     return doArgumentlessAutocaching(function);
                 }
 
+
                 var tupleType = TupleUtils.GetValueTupleType(parameters.Args);
                 var cache = createCache(function);
 

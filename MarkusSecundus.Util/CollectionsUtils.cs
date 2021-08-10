@@ -29,6 +29,13 @@ namespace MarkusSecundus.Util
 
         
 
+        public static Func<T1, T2, TRet> Autocached<T1, T2, TRet>(this Func<T1, T2, TRet> f)
+        {
+            DefaultValDict<(T1, T2), TRet> cache = new DefaultValDict<(T1, T2), TRet>(args => f(args.Item1, args.Item2));
+            return (x, y) => cache[(x, y)];
+        }
+
+
         public static bool IsEmpty<T>(this IReadOnlyCollection<T> self)
             => self.Count <= 0;
 

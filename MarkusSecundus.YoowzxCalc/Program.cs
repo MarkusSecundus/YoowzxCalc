@@ -42,8 +42,18 @@ namespace MarkusSecundus.YoowzxCalc
             WriteLine(calc.Compile<Func<double, double>>("f(x) := x<= 1 ? 1 : x*f(x-1)")(5));
             WriteLine(calc.Compile<Func<double>>("sum(10, 103) *2")());
              WriteLine(calc.Compile<Func<double, double>>("f(x) := sin(x)**2 + cos(x)**2")(1));
+            var incomplete = calc.Compile<Func<double, double>>("t(x) := dsa + x");
 
-            
+            //calc.AddFunction<MulticastDelegate>("dsa", ((Func<double>)(() => 3.13)));
+            try
+            {
+                WriteLine(incomplete(0.0115));
+            }
+            catch { WriteLine("failed"); }
+
+            calc.AddFunction("dsa() := 3.13", out _, out _);
+            WriteLine(incomplete(0.0115));
+            return;
             for (double t = 0; t < 20; t+=0.1)
                 WriteLine(calc.Compile<Func<double, double>>("[cache]f(x) := x<=1 ? x : f(x-1)+f(x-2)")(t));
         }

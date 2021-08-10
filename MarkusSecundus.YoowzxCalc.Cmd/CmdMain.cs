@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using MarkusSecundus.Util;
 using MarkusSecundus.YoowzxCalc.Compiler;
+using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,11 +36,12 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
         private readonly Dictionary<string, CmdCommand> Commands;
 
         private readonly TextWriter Out;
-        private readonly TextReader In;
 
-        public CmdMain(TextReader input=null, TextWriter output=null)
+        private readonly string Prompt;
+
+        public CmdMain(TextWriter output=null, string prompt = null)
         {
-            In = input ?? Console.In;
+            Prompt = prompt ?? ">>> ";
             Out = output ?? Console.Out;
             Commands = new()
             {
@@ -69,9 +71,7 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
 
         public void Repl()
         {
-            Out.WriteLine("Welcome to YoowzxCalc!");
-            
-            for(string line; (line = ReadLine.Read(">> "))!= null;)
+            for(string line; (line = ReadLine.Read(Prompt))!= null;)
             {
                 try
                 {
@@ -79,7 +79,7 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
                     RunCommand(line);
                 }catch(Exception e)
                 {
-                    Out.WriteLine("! {0}", e.Message);
+                    Out.WriteLine("Error: {1} {0}", e.Message, e.GetType());
                 }
             }
             Exit();
@@ -103,10 +103,13 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
         string Eval(string expression)
         {
             if (string.IsNullOrWhiteSpace(expression)) return null;
-
             Calc.AddFunction(expression, out var signature, out var result);
+            ;
             if (signature.ArgumentsCount == 0)
-                return "" + ((Func<num>)result)();
+            {
+                var f = (Func<num>)result;
+                return "" + f();
+            }
 
             return null;
         }
@@ -128,6 +131,8 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
 
             var f = Calc.Compile<Func<num, num>>(expression);
 
+            var args = CommandLineParser.SplitCommandLineIntoArguments(expression, false);
+
             throw new NotImplementedException("Graph functionality not yet implemented");
 
             //return null;
@@ -135,9 +140,8 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
 
         string Exit(string args = null)
         {
-            Out.WriteLine("*** YoowzxCalc - Exiting! ***");
-
             Environment.Exit(0);
+
 
             return null;
         }

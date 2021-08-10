@@ -39,10 +39,11 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
         private LambdaExpression generateExpression(VisitContext ctx, YCFunctionDefinition toCompile)
         {
-            return Expression.Lambda(
+            var ret = Expression.Lambda(
                 toCompile.Body.Accept(CompilerVisitor.Instance, ctx),
                 ctx.Args.Values.ToArray()
             );
+            return ret;
         }
 
 
@@ -177,7 +178,12 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
                 var args = expr.Arguments.Select(arg => v(arg, ctx));
 
-                return Expression.Invoke(function, args);
+                var signature = expr.GetSignature<TNumber>();
+
+                return ExpressionUtil.SubstituteThrow<NullReferenceException>(
+                        Expression.Invoke(function, args),
+                        e => throw new ArgumentException($"Function {signature} not found!")
+                    );
             }
 
 
@@ -235,8 +241,8 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
                 return wrap.Value != null
                     ? Expression.Constant(wrap)
                     : Expression.Convert(
-                        Expression.PropertyOrField(Expression.Constant(wrap), nameof(wrap.Value)),
-                        func.GetFuncType()
+                            Expression.PropertyOrField(Expression.Constant(wrap), nameof(wrap.Value)),
+                            func.GetFuncType()
                       );
 
             }
