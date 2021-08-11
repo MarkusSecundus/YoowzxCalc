@@ -47,8 +47,10 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
             {
                 ["eval"] = Eval,
                 ["load"] = Load,
+                ["save"] = Save,
+                ["list"] = List,
                 ["graph"] = Graph,
-                ["exit"] = Exit
+                ["exit"] = Exit,
             };
         }
 
@@ -100,11 +102,14 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
                 Out.WriteLine(output);
         }
 
+        private List<string> _definitionsHistory = new();
         string Eval(string expression)
         {
             if (string.IsNullOrWhiteSpace(expression)) return null;
             Calc.AddFunction(expression, out var signature, out var result);
-            ;
+
+            if (!signature.IsAnonymousExpression())
+                _definitionsHistory.Add(expression);
             if (signature.ArgumentsCount == 0)
             {
                 var f = (Func<num>)result;
@@ -123,6 +128,19 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
                 Calc.AddFunction(line, out _, out _);
 
             return null;
+        }
+
+        string Save(string path)
+        {
+            using var wrt = new StreamWriter(path.Trim());
+            foreach (var expr in _definitionsHistory)
+                wrt.WriteLine(expr);
+
+            return null;
+        }
+        string List(string _=null)
+        {
+            return _definitionsHistory.MakeString("\n");
         }
 
         string Graph(string expression)
