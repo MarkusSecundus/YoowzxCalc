@@ -182,7 +182,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
                 return ExpressionUtil.SubstituteThrow<NullReferenceException>(
                         Expression.Invoke(function, args),
-                        e => throw new ArgumentException($"Function {signature} not found!")
+                        e => throw new ArgumentException($"Function {signature.ToStringTypeless()} not found!")
                     );
             }
 

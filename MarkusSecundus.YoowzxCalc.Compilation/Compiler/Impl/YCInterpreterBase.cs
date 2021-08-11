@@ -66,7 +66,9 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
                 => ctx.Op.Parse(expr.Value);
 
             public override TNumber Visit(YCArgumentExpression expr, VisitContext ctx)
-                => ctx.Args[expr.ArgumentName];
+                => ctx.Args.TryGetValue(expr.ArgumentName, out var ret)
+                    ? ret
+                    : v(new YCFunctioncallExpression { Name = expr.ArgumentName, Arguments = CollectionsUtils.EmptyList<YCExpression>()}, ctx);
 
 
 
@@ -165,7 +167,10 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
                 if (signature == ctx.ThisFunction.GetSignature<TNumber>())
                     return ctx.InterpretRecursively(args);
 
-                return (TNumber)ctx.CoreContext.Functions[signature].DynamicInvoke(args.Select(e => (object)e).ToArray());
+                if (!ctx.CoreContext.Functions.TryGetValue(signature, out var ret))
+                    ret = ctx.Op.StandardLibrary[signature];
+
+                return (TNumber) ret.DynamicInvoke(args.Select(e => (object)e).ToArray());
             }
         }
     }

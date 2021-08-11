@@ -21,6 +21,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
 
         public override string ToString() => $"{Name}<{typeof(TNumber).Name}>({ArgumentsCount})";
 
+        public string ToStringTypeless() => $"{Name}({ArgumentsCount})";
 
         public static bool operator ==(YCFunctionSignature<TNumber> a, YCFunctionSignature<TNumber> b) => a.Equals(b);
         public static bool operator !=(YCFunctionSignature<TNumber> a, YCFunctionSignature<TNumber> b) => !(a == b);
