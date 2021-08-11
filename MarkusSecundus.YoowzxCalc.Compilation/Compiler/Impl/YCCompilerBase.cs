@@ -24,27 +24,24 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
         public IYCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
         {
-            var args = toCompile.Arguments.Select(name => (name, Expression.Parameter(typeof(TNumber), name)).AsKV()).ToImmutableDictionary();
+            var args = toCompile.Arguments.Select(name => (name, Expression.Parameter(typeof(TNumber), name)).AsKV()).ToArray();
 
             var compilationContext = new VisitContext
             (
                 CoreContext: ctx,
                 Father: this,
                 ThisFunctionSignature: toCompile.GetSignature<TNumber>(),
-                Args: args
+                Args: args.ToImmutableDictionary()
             );
 
-            return new YCCompilationResult<TNumber>(generateExpression(compilationContext, toCompile).Compile(), compilationContext.ThisFunctionWrapper);
-        }
-
-        private LambdaExpression generateExpression(VisitContext ctx, YCFunctionDefinition toCompile)
-        {
             var ret = Expression.Lambda(
-                toCompile.Body.Accept(CompilerVisitor.Instance, ctx),
-                ctx.Args.Values.ToArray()
+                toCompile.Body.Accept(CompilerVisitor.Instance, compilationContext),
+                args.Select(a => a.Value).ToArray()
             );
-            return ret;
+
+            return new YCCompilationResult<TNumber>(ret.Compile(), compilationContext.ThisFunctionWrapper);
         }
+
 
 
         private record VisitContext
