@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.Util", "Mark
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.Compilation", "MarkusSecundus.YoowzxCalc.Compilation\MarkusSecundus.YoowzxCalc.Compilation.csproj", "{AC41C615-3FE7-4E5A-9269-ECD235FCC5E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkusSecundus.YoowzxCalc.Cmd", "MarkusSecundus.YoowzxCalc.Cmd\MarkusSecundus.YoowzxCalc.Cmd.csproj", "{63B111FD-9F3A-4A9F-98E6-E4AAF956EE55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.Cmd", "MarkusSecundus.YoowzxCalc.Cmd\MarkusSecundus.YoowzxCalc.Cmd.csproj", "{63B111FD-9F3A-4A9F-98E6-E4AAF956EE55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -225,7 +225,6 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             private static Expression getFunction(YCFunctionSignature<TNumber> func, VisitContext ctx)
             {
                 SettableOnce<Delegate> wrap;
-
                 if (func == ctx.ThisFunctionSignature)
                 {
                     wrap = ctx.ThisFunctionWrapper;
@@ -237,7 +236,12 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
                 else
                 {
                     wrap = ctx.CoreContext.GetUnresolvedFunction(func);
+                    if (wrap.Value == null && ctx.Op.StandardLibrary.TryGetValue(func, out var std))
+                    {
+                        return Expression.Constant(std);
+                    }
                 }
+
                 return wrap.Value != null
                     ? Expression.Constant(wrap)
                     : Expression.Convert(

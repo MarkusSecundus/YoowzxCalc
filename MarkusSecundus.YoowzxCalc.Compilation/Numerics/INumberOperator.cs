@@ -1,4 +1,9 @@
-﻿namespace MarkusSecundus.ProgrammableCalculator.Numerics
+﻿using MarkusSecundus.Util;
+using MarkusSecundus.YoowzxCalc.Compiler;
+using System;
+using System.Collections.Generic;
+
+namespace MarkusSecundus.ProgrammableCalculator.Numerics
 {
     public interface INumberOperator { }
 
@@ -7,6 +12,8 @@
     {
         public TNumber Parse(string repr);
 
+        public IReadOnlyDictionary<YCFunctionSignature<TNumber>, Delegate> StandardLibrary
+            => CollectionsUtils.EmptyDictionary<YCFunctionSignature<TNumber>, Delegate>();
 
         public TNumber Add(TNumber a, TNumber b);
 
@@ -17,8 +24,6 @@
         public TNumber Divide(TNumber a, TNumber b);
 
         public TNumber Modulo(TNumber a, TNumber b);
-
-        public TNumber AbsoluteValue(TNumber a);
 
         public TNumber UnaryMinus(TNumber a);
 

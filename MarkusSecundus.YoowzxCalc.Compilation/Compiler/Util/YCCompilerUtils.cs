@@ -2,6 +2,7 @@
 using MarkusSecundus.YoowzxCalc.DSL.AST;
 using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -13,6 +14,22 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
             => Expression.GetFuncType(typeof(T).Repeat(self.ArgumentsCount + 1).ToArray());
         internal static Type GetExpressionFuncType<T>(this YCFunctionSignature<T> self)
             => typeof(Expression<>).MakeGenericType(self.GetFuncType());
+
+        
+        public struct FunctionsAdder<TNumber>
+        {
+            public Dictionary<YCFunctionSignature<TNumber>, Delegate> Value { get; init; }
+
+            public FunctionsAdder<TNumber> Add<TDelegate>(string name, TDelegate toAdd) where TDelegate : Delegate
+            {
+                Value[GetDelegateTypeSignature<TNumber, TDelegate>(name)] = toAdd;
+
+                return this;
+            }
+        }
+
+        public static FunctionsAdder<TNumber> MakeFunctionsAdder<TNumber>(this Dictionary<YCFunctionSignature<TNumber>, Delegate> self)
+            => new() { Value = self };
 
 
         public static YCFunctionSignature<TNumber> GetDelegateTypeSignature<TNumber, TDelegate>(string name) where TDelegate: Delegate

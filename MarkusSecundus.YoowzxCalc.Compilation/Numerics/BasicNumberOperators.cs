@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarkusSecundus.YoowzxCalc.Compiler;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -51,8 +52,52 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
 
             public double UnaryMinus(double a) => -a;
             public double NegateLogical(double a) => toBool(a == 0);
+
+
+
+            public IReadOnlyDictionary<YCFunctionSignature<double>, Delegate> StandardLibrary { get; }
+                = new Dictionary<YCFunctionSignature<double>, Delegate>().MakeFunctionsAdder()
+                    .Add<Func<double>>("PI", () => Math.PI)
+                    .Add<Func<double>>("E", () => Math.E)
+                    .Add<Func<double>>("TAU", () => Math.Tau)
+                    .Add<Func<double, double>>("abs", Math.Abs)
+                    .Add<Func<double, double>>("sin", Math.Sin)
+                    .Add<Func<double, double>>("cos", Math.Cos)
+                    .Add<Func<double, double>>("tan", Math.Tan)
+                    .Add<Func<double, double>>("asin", Math.Asin)
+                    .Add<Func<double, double>>("acos", Math.Acos)
+                    .Add<Func<double, double>>("atan", Math.Atan)
+                    .Add<Func<double, double, double>>("atan", Math.Atan2)
+                    .Add<Func<double, double>>("sinh", Math.Sinh)
+                    .Add<Func<double, double>>("cosh", Math.Cosh)
+                    .Add<Func<double, double>>("tanh", Math.Tanh)
+                    .Add<Func<double, double>>("asinh", Math.Asinh)
+                    .Add<Func<double, double>>("acosh", Math.Acosh)
+                    .Add<Func<double, double>>("atanh", Math.Atanh)
+                    .Add<Func<double, double>>("ceil", Math.Ceiling)
+                    .Add<Func<double, double>>("floor", Math.Floor)
+                    .Add<Func<double, double>>("round", Math.Round)
+                    .Add<Func<double, double>>("trunc", Math.Truncate)
+                    .Add<Func<double, double, double, double>>("clamp", Math.Clamp)
+                    .Add<Func<double, double, double>>("copy_sign", Math.CopySign)
+                    .Add<Func<double, double>>("log2_int", x=>Math.ILogB(x))
+                    .Add<Func<double, double>>("log", Math.Log)
+                    .Add<Func<double, double>>("log10", Math.Log10)
+                    .Add<Func<double, double>>("log2", Math.Log2)
+                    .Add<Func<double, double, double>>("max", Math.Max)
+                    .Add<Func<double, double, double>>("min", Math.Min)
+                    .Add<Func<double, double>>("sign", x=>Math.Sign(x))
+                    .Value;
         }
 
+        
+
+        
+
+        
+
+        
+        
         public class Decimal : INumberOperator<decimal>
         {
             public static Decimal Instance { get; } = new();
