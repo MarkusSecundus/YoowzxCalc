@@ -32,13 +32,12 @@ annotation_list: annotation #annotation_list_create
 	;
 
 annotation: IDENTIFIER #annotation_is_empty
-	| IDENTIFIER COLON (NUMBER | IDENTIFIER) #annotation_has_value
+	| IDENTIFIER COLON IDENTIFIER #annotation_has_value
 	;
 
 
 literal : IDENTIFIER #identifier_expr
 	| function_call #functioncall_to_literal_cast_expr
-	| NUMBER #constant_expr
 	| LPAR expression RPAR #expr_in_parentheses
 	;
 
@@ -119,6 +118,7 @@ fragment DOUBLEQUOTE_STRING : '"' (~('"') | '\\"')* '"' ;
 fragment SINGLEQUOTE_STRING : '\'' (~('\'') | '\\\'')* '\'' ;
 
 fragment STRING : DOUBLEQUOTE_STRING | SINGLEQUOTE_STRING ;
+fragment NUMBER : DIGIT+ ('.' DIGIT*)? (('E' | 'e') '-'? DIGIT+)?;
 
 fragment IDENTIFIER_OLD : LETTER (LETTER | DIGIT)* ;
 
@@ -152,9 +152,8 @@ COLON : ':' ;
 
 
 
-IDENTIFIER : (ANY_NONSPECIAL_SYMBOL+) | STRING  ;
+IDENTIFIER : (ANY_NONSPECIAL_SYMBOL+) | STRING | NUMBER;
 
-NUMBER : DIGIT+ ('.' DIGIT*)? (('E' | 'e') '-'? DIGIT+)?;
 
 
 WHITESPACE : [\u0000- ]+ -> skip;
