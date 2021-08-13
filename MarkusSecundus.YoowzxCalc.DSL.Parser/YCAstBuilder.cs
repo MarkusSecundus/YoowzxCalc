@@ -60,6 +60,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser
     sealed class ParserListener : CalculatorDSLBaseListener
     {
         public YCFunctionDefinition ReturnValue { get; private set; }
+        private (string Name, IReadOnlyList<string> Args, YCExpression Body) returnValueBody;
 
         private readonly List<List<string>> argsStack = new();
         private readonly List<List<YCExpression>> invokeArgsStack = new();
@@ -178,15 +179,17 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser
 
 
 
+        public override void ExitUnit_has_annotations([NotNull] CalculatorDSLParser.Unit_has_annotationsContext context)
+            => ReturnValue = new YCFunctionDefinition { Name = returnValueBody.Name, Arguments = returnValueBody.Args, Body = returnValueBody.Body, Annotations = annotationSetsStack.Pop() };
+        public override void ExitUnit_has_no_annotations([NotNull] CalculatorDSLParser.Unit_has_no_annotationsContext context)
+            => ReturnValue = new YCFunctionDefinition { Name = returnValueBody.Name, Arguments = returnValueBody.Args, Body = returnValueBody.Body};
 
-        public override void ExitFunction_definition_has_no_annotations([NotNull] CalculatorDSLParser.Function_definition_has_no_annotationsContext context)
-            => ReturnValue = new YCFunctionDefinition { Name = context.IDENTIFIER().Symbol.Text, Arguments = argsStack.Pop(), Body = stack.Pop() };
-
-        public override void ExitFunction_definition_has_annotations([NotNull] CalculatorDSLParser.Function_definition_has_annotationsContext context)
-            => ReturnValue = new YCFunctionDefinition { Name = context.IDENTIFIER().Symbol.Text, Arguments = argsStack.Pop(), Body = stack.Pop(), Annotations = annotationSetsStack.Pop() };
+        public override void ExitFunction_definition_rule([NotNull] CalculatorDSLParser.Function_definition_ruleContext context)
+            => returnValueBody =(context.IDENTIFIER().Symbol.Text, argsStack.Pop(), stack.Pop() );
 
         public override void ExitAnonymous_function_definition([NotNull] CalculatorDSLParser.Anonymous_function_definitionContext context)
-            => ReturnValue = new YCFunctionDefinition { Name = YCFunctionDefinition.AnonymousFunctionName, Arguments = Array.Empty<string>(), Body = stack.Pop() };
+            => returnValueBody = ( YCFunctionDefinition.AnonymousFunctionName, Array.Empty<string>(), stack.Pop() );
+
 
 
         public override void ExitArgs_list_create([NotNull] CalculatorDSLParser.Args_list_createContext context)

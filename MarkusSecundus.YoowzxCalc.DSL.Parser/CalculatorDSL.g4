@@ -4,13 +4,15 @@ options
 	language=CSharp;
 }
 
+unit: definition_or_expression #unit_has_no_annotations
+	| bracketed_annotation_list definition_or_expression #unit_has_annotations
+	;
 
-unit: function_definition EOF #upcast_function_definition_to_unit
+definition_or_expression: function_definition EOF #upcast_function_definition_to_unit
 	| expression EOF #anonymous_function_definition
 	;
 
-function_definition: IDENTIFIER bracketed_args_list ASSIGN expression #function_definition_has_no_annotations
-	| bracketed_annotation_list IDENTIFIER bracketed_args_list ASSIGN expression #function_definition_has_annotations
+function_definition: IDENTIFIER bracketed_args_list ASSIGN expression #function_definition_rule
 	;
 
 bracketed_args_list: LPAR args_list RPAR #bracketed_args_list_fillled
@@ -122,6 +124,8 @@ fragment NUMBER : DIGIT+ ('.' DIGIT*)? (('E' | 'e') '-'? DIGIT+)?;
 
 fragment IDENTIFIER_OLD : LETTER (LETTER | DIGIT)* ;
 
+fragment IDENTIFIER_FRAGMENT :  (ANY_NONSPECIAL_SYMBOL+) | STRING | NUMBER;
+
 PLUS : '+' ;
 MINUS : '-' ;
 STAR : '*' ;
@@ -152,7 +156,7 @@ COLON : ':' ;
 
 
 
-IDENTIFIER : (ANY_NONSPECIAL_SYMBOL+) | STRING | NUMBER;
+IDENTIFIER : IDENTIFIER_FRAGMENT+;
 
 
 

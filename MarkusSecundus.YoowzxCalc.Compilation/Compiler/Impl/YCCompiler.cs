@@ -23,6 +23,9 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             IYCCompiler<TNumber> compiler = Base;
             if (toCompile.Annotations.ContainsKey(IYCCompiler<TNumber>.CachingRequestAnnotation))
                 compiler = new YCCompilerWithCaching<TNumber>(compiler);
+
+            if (toCompile.Annotations.TryGetValue("debug_print", out var message))
+                Console.WriteLine($"Compiler: {message}");
             
             return compiler.Compile(ctx, toCompile);
         }
