@@ -62,13 +62,22 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             private TNumber v(YCExpression e, VisitContext ctx)
                 => e.Accept(this, ctx);
 
-            public override TNumber Visit(YCConstantExpression expr, VisitContext ctx)
-                => ctx.Op.Parse(expr.Value);
 
-            public override TNumber Visit(YCArgumentExpression expr, VisitContext ctx)
-                => ctx.Args.TryGetValue(expr.ArgumentName, out var ret)
-                    ? ret
-                    : v(new YCFunctioncallExpression { Name = expr.ArgumentName, Arguments = CollectionsUtils.EmptyList<YCExpression>()}, ctx);
+            public override TNumber Visit(YCLiteralExpression expr, VisitContext ctx)
+            {
+                if(ctx.Op.TryParse(expr.Value, out var constant))
+                    return constant;
+                else
+                {
+                    var formatError = ctx.Op.ValidateIdentifier(expr.Value);
+                    if (formatError != null)
+                        throw formatError;
+
+                    return ctx.Args.TryGetValue(expr.Value, out var ret)
+                        ? ret
+                        : v(new YCFunctioncallExpression { Name = expr.Value, Arguments = CollectionsUtils.EmptyList<YCExpression>() }, ctx);
+                }
+            }
 
 
 

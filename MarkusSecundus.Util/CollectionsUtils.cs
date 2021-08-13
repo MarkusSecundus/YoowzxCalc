@@ -112,6 +112,17 @@ namespace MarkusSecundus.Util
         }
 
 
+        public static bool CheckHasDuplicit<T>(this IReadOnlyCollection<T> self, IEqualityComparer<T> comparer = null)
+        {
+            comparer ??= EqualityComparer<T>.Default;
+
+            return self.Count != self.Distinct(comparer).Count();
+        }
+
+
+
+
+
         public interface IReadOnlyList_PreimplementedEnumerator<T> : IReadOnlyList<T>
         {
             IEnumerator<T> IEnumerable<T>.GetEnumerator()

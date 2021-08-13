@@ -103,7 +103,24 @@ fragment DIGIT : [0-9] ;
 fragment LETTER : [a-zA-Z_] ;
 fragment DOT : [.] ;
 
+fragment ANY_NONSPECIAL_SYMBOL : 
+	 ( ~('+' | '*' | '-' | '/' | '%' | '^' 
+	  | '(' | ')' | '[' | ']' | ',' 
+	  | '=' | '<' | '>' | '!'
+	  | '&' | '|' | '?' | ':'
+	  | '¬' | '∧' | '∨' 
+	  | '"' | '\''
+	  | [\u0000- ] ) 
+	  | '::'
+	  )
+	;
 
+fragment DOUBLEQUOTE_STRING : '"' (~('"') | '\\"')* '"' ;
+fragment SINGLEQUOTE_STRING : '\'' (~('\'') | '\\\'')* '\'' ;
+
+fragment STRING : DOUBLEQUOTE_STRING | SINGLEQUOTE_STRING ;
+
+fragment IDENTIFIER_OLD : LETTER (LETTER | DIGIT)* ;
 
 PLUS : '+' ;
 MINUS : '-' ;
@@ -133,8 +150,11 @@ OR : '|' | '∨';
 QUESTION : '?';
 COLON : ':' ;
 
+
+
+IDENTIFIER : (ANY_NONSPECIAL_SYMBOL+) | STRING  ;
+
 NUMBER : DIGIT+ ('.' DIGIT*)? (('E' | 'e') '-'? DIGIT+)?;
 
-IDENTIFIER : LETTER (LETTER | DIGIT)* ;
 
-WHITESPACE : ( '\u0000' .. ' ' )+ -> skip;
+WHITESPACE : [\u0000- ]+ -> skip;

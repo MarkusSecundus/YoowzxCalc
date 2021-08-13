@@ -80,10 +80,10 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser
 
 
         public override void ExitConstant_expr([NotNull] CalculatorDSLParser.Constant_exprContext context)
-            => stack.Push(new YCConstantExpression { Value = context.NUMBER().Symbol.Text });
+            => stack.Push(new YCLiteralExpression { Value = context.NUMBER().Symbol.Text });
 
         public override void ExitIdentifier_expr([NotNull] CalculatorDSLParser.Identifier_exprContext context)
-            => stack.Push(new YCArgumentExpression { ArgumentName = context.IDENTIFIER().Symbol.Text });
+            => stack.Push(new YCLiteralExpression { Value = context.IDENTIFIER().Symbol.Text });
 
 
 

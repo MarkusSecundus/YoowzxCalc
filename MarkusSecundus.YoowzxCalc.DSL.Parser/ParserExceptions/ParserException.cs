@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser.ParserExceptions
 {
-    public class ParserException : Exception
+    public class ParserException : FormatException
     {
         public ParserException() : base() { }
         public ParserException(string message) : base(message) { }

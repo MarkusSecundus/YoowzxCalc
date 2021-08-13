@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace MarkusSecundus.ProgrammableCalculator.Numerics
 {
@@ -21,13 +22,25 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
             Register(() => new Long());
         }
 
+        public static class Const
+        {
+            public const NumberStyles NonintegerNumberStyle = NumberStyles.Number | NumberStyles.AllowExponent;
+            public const NumberStyles IntegerNumberStyle = NumberStyles.Integer;
+
+            public static readonly Regex IdentifierValidator = new Regex(@"^\p{L}[\p{L}\p{N}]*$", RegexOptions.Compiled);
+        }
+
+        public static FormatException DefaultIdentifierValidation(string identifier)
+            => Const.IdentifierValidator.IsMatch(identifier) ? null : new FormatException($"Invalid identifier: '{identifier}'");
+
 
         public class Double : INumberOperator<double>
         {
             public static Double Instance { get; } = new();
 
-            public double Parse(string repr) => double.Parse(repr, CultureInfo.InvariantCulture);
+            public bool TryParse(string repr, out double value) => double.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
+            public FormatException ValidateIdentifier(string identifier) => DefaultIdentifierValidation(identifier);
 
             private static double toBool(bool d) => d ? 1d : 0d;
 
@@ -102,8 +115,9 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
         {
             public static Decimal Instance { get; } = new();
 
-            public decimal Parse(string repr) => decimal.Parse(repr, CultureInfo.InvariantCulture);
+            public bool TryParse(string repr, out decimal value) => decimal.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
+            public FormatException ValidateIdentifier(string identifier) => DefaultIdentifierValidation(identifier);
 
             private static decimal toBool(bool d) => d ? 1 : 0;
 
@@ -134,8 +148,9 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
         {
             public static Long Instance { get; } = new();
 
-            public long Parse(string repr) => long.Parse(repr, CultureInfo.InvariantCulture);
+            public bool TryParse(string repr, out long value) => long.TryParse(repr, Const.IntegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
+            public FormatException ValidateIdentifier(string identifier) => DefaultIdentifierValidation(identifier);
 
             private static long toBool(bool d) => d ? 1 : 0;
 

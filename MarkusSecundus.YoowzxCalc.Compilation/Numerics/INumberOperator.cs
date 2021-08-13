@@ -10,7 +10,10 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
 
     public interface INumberOperator<TNumber> : INumberOperator
     {
-        public TNumber Parse(string repr);
+        public bool TryParse(string repr, out TNumber value);
+
+        public FormatException ValidateIdentifier(string identifier);
+
 
         public IReadOnlyDictionary<YCFunctionSignature<TNumber>, Delegate> StandardLibrary
             => CollectionsUtils.EmptyDictionary<YCFunctionSignature<TNumber>, Delegate>();

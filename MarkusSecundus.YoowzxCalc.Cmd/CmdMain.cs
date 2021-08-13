@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using num = System.Double;
 
 namespace MarkusSecundus.YoowzxCalc.Cmd
@@ -16,15 +17,6 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
 
         [Option('e', "eval", Required = false, HelpText ="Provide an expression to evaluate directly")]
         public string Eval { get; init; }
-    }
-
-
-    public class GraphDrawer
-    {
-        public class DrawerOptions
-        {
-
-        }
     }
 
     public class CmdMain
@@ -143,17 +135,47 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
             return _definitionsHistory.MakeString("\n");
         }
 
+        const char DrawingSymbol = '#';
+
         string Graph(string expression)
         {
             if (string.IsNullOrWhiteSpace(expression)) return null;
 
             var f = Calc.Compile<Func<num, num>>(expression);
 
-            var args = CommandLineParser.SplitCommandLineIntoArguments(expression, false);
+            int width = 20, height = 20;
 
-            throw new NotImplementedException("Graph functionality not yet implemented");
+            var (first, rest) = expression.SplitByFirstOccurence(" ");
+            if(!string.IsNullOrWhiteSpace(rest) && int.TryParse(first.Trim(), out var w))
+            {
+                width = w;
+                expression = rest;
+                (first, rest) = expression.SplitByFirstOccurence(" ");
+                if(!string.IsNullOrWhiteSpace(rest) && int.TryParse(first.Trim(), out var h))
+                {
+                    height = h;
+                    expression = rest;
+                }
+            }
+            var drawn = drawGraph(width, height, f);
 
-            //return null;
+            return drawn.Select(a=>new string(a)).MakeString("\n");
+        }
+
+        private static char[][] drawGraph(int width, int height, Func<num, num> f, char symbol='#', char whitespace=' ')
+        {
+            var ret = new char[height][];
+            for (int y = height; --y >= 0;)
+            {
+                ret[y] = new char[width];
+                for (int x = width; --x >= 0;)
+                    ret[y][x] = whitespace;
+            }
+            num[] results = new num[width];
+            for (int x = 0; x < width; ++x)
+                results[x] = f(x);
+
+            return ret;
         }
 
         string Exit(string args = null)

@@ -7,8 +7,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
     public interface IYCVisitor<out TRet, in TContext>
     {
-        public TRet Visit(YCConstantExpression expr, TContext ctx);
-        public TRet Visit(YCArgumentExpression expr, TContext ctx);
+        public TRet Visit(YCLiteralExpression expr, TContext ctx);
 
         public TRet Visit(YCUnaryMinusExpression expr, TContext ctx);
         public TRet Visit(YCUnaryPlusExpression expr, TContext ctx);

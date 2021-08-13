@@ -11,9 +11,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
     public abstract class YCVisitorBase<T, TContext> : IYCVisitor<T, TContext>
     {
-        public virtual T Visit(YCConstantExpression expr, TContext ctx) => Visit((YCPrimaryExpression)expr, ctx);
-
-        public virtual T Visit(YCArgumentExpression expr, TContext ctx) => Visit((YCPrimaryExpression)expr, ctx);
+        public virtual T Visit(YCLiteralExpression expr, TContext ctx) => Visit((YCPrimaryExpression)expr, ctx);
 
 
         public virtual T Visit(YCUnaryMinusExpression expr, TContext ctx) => Visit((YCUnaryExpression)expr, ctx);

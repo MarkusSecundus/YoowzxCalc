@@ -9,11 +9,11 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
+    public abstract class YCVisitorBaseNoReturn<TContext> : YCVisitorBaseNoReturn<object, TContext> { }
+
     public abstract class YCVisitorBaseNoReturn<TRet, TContext> : IYCVisitor<TRet, TContext>
     {
-        public virtual void Visit(YCConstantExpression expr, TContext ctx) => Visit((YCPrimaryExpression)expr, ctx);
-
-        public virtual void Visit(YCArgumentExpression expr, TContext ctx) => Visit((YCPrimaryExpression)expr, ctx);
+        public virtual void Visit(YCLiteralExpression expr, TContext ctx) => Visit((YCPrimaryExpression)expr, ctx);
 
 
         public virtual void Visit(YCUnaryMinusExpression expr, TContext ctx) => Visit((YCUnaryExpression)expr, ctx);
@@ -88,8 +88,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         public virtual void Visit(YCExpression expr, TContext ctx) => throw new NotImplementedException();
 
 
-        TRet IYCVisitor<TRet, TContext>.Visit(YCConstantExpression expr, TContext ctx) { Visit(expr, ctx); return default; }
-        TRet IYCVisitor<TRet, TContext>.Visit(YCArgumentExpression expr, TContext ctx) { Visit(expr, ctx); return default; }
+        TRet IYCVisitor<TRet, TContext>.Visit(YCLiteralExpression expr, TContext ctx) { Visit(expr, ctx); return default; }
         TRet IYCVisitor<TRet, TContext>.Visit(YCUnaryMinusExpression expr, TContext ctx) { Visit(expr, ctx); return default; }
         TRet IYCVisitor<TRet, TContext>.Visit(YCUnaryPlusExpression expr, TContext ctx) { Visit(expr, ctx); return default; }
         TRet IYCVisitor<TRet, TContext>.Visit(YCAddExpression expr, TContext ctx) { Visit(expr, ctx); return default; }

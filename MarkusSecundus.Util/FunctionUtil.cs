@@ -56,6 +56,8 @@ namespace MarkusSecundus.Util
 
 
 
+
+
         public static Delegate Entuplize(this Delegate self)
         {
             var parameters = self.GetFunctionParameters();
@@ -209,6 +211,25 @@ namespace MarkusSecundus.Util
                 ).Compile();
             }
 
+        }
+
+
+
+
+
+
+
+
+
+
+        public static Delegate MakeDelegate(this ConstructorInfo self)
+        {
+            var parameters = self.GetParameters().Select(p=>Expression.Parameter(p.ParameterType, p.Name)).ToArray();
+
+            return Expression.Lambda(
+                Expression.New(self, parameters),
+                parameters
+            ).Compile();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MarkusSecundus.ProgrammableCalculator.Numerics;
 using MarkusSecundus.Util;
+using MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl;
 using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
 using MarkusSecundus.YoowzxCalc.DSL.AST;
 using MarkusSecundus.YoowzxCalc.DSL.AST.BinaryExpressions;
@@ -7,6 +8,7 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
 using MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression;
 using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
@@ -26,6 +28,12 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
         {
             var args = toCompile.Arguments.Select(name => (name, Expression.Parameter(typeof(TNumber), name)).AsKV()).ToArray();
 
+            var formatErrors = YCIdentifierValidator<TNumber>.Instance.Validate(toCompile, Op);
+            if (!formatErrors.IsEmpty())
+            {
+                throw formatErrors.Aggregate<FormatException>();
+            }
+
             var compilationContext = new VisitContext
             (
                 CoreContext: ctx,
@@ -34,10 +42,12 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
                 Args: args.ToImmutableDictionary()
             );
 
+
             var ret = Expression.Lambda(
                 toCompile.Body.Accept(CompilerVisitor.Instance, compilationContext),
                 args.Select(a => a.Value).ToArray()
             );
+
 
             return new YCCompilationResult<TNumber>(ret.Compile(), compilationContext.ThisFunctionWrapper);
         }
@@ -60,6 +70,8 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
         }
 
 
+
+
         private class CompilerVisitor : YCVisitorBase<Expression, VisitContext>
         {
             private CompilerVisitor() { }
@@ -67,6 +79,8 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
             private Expression v(YCExpression e, VisitContext ctx)
                 => e.Accept(this, ctx);
+
+            private static Expression _DefaultExpression = Expression.Default(typeof(TNumber));
 
             private static MethodInfo f(Func<TNumber, TNumber, TNumber> binaryOp) => binaryOp.Method;
             private static MethodInfo f(Func<TNumber, TNumber> unaryOp) => unaryOp.Method;
@@ -78,13 +92,19 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
                 => Expression.Call(ctx.OpE, f(i), v(expr.LeftChild, ctx), v(expr.RightChild, ctx));
 
 
-            public override Expression Visit(YCConstantExpression expr, VisitContext ctx)
-                => Expression.Constant(ctx.Op.Parse(expr.Value));
 
-            public override Expression Visit(YCArgumentExpression expr, VisitContext ctx)
-                => ctx.Args.TryGetValue(expr.ArgumentName, out var ret)
-                    ? ret
-                    : v(new YCFunctioncallExpression { Name = expr.ArgumentName, Arguments = CollectionsUtils.EmptyList<YCExpression>()}, ctx);
+            public override Expression Visit(YCLiteralExpression expr, VisitContext ctx)
+            {
+
+                if (ctx.Op.TryParse(expr.Value, out var constant))
+                    return Expression.Constant(constant);
+                else
+                {
+                    return ctx.Args.TryGetValue(expr.Value, out var ret)
+                        ? ret
+                        : v(new YCFunctioncallExpression { Name = expr.Value, Arguments = CollectionsUtils.EmptyList<YCExpression>() }, ctx);
+                }
+            }
 
 
 

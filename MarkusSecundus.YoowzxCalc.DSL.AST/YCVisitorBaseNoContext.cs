@@ -9,11 +9,11 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
+    public abstract class YCVisitorBaseNoContext<T> : YCVisitorBaseNoContext<T, object> { }
+
     public abstract class YCVisitorBaseNoContext<T, TContext> : IYCVisitor<T, TContext>
     {
-        public virtual T Visit(YCConstantExpression expr) => Visit((YCPrimaryExpression)expr);
-
-        public virtual T Visit(YCArgumentExpression expr) => Visit((YCPrimaryExpression)expr);
+        public virtual T Visit(YCLiteralExpression expr) => Visit((YCPrimaryExpression)expr);
 
 
         public virtual T Visit(YCUnaryMinusExpression expr) => Visit((YCUnaryExpression)expr);
@@ -90,8 +90,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
 
 
 
-        T IYCVisitor<T, TContext>.Visit(YCConstantExpression expr, TContext ctx) => Visit(expr);
-        T IYCVisitor<T, TContext>.Visit(YCArgumentExpression expr, TContext ctx) => Visit(expr);
+        T IYCVisitor<T, TContext>.Visit(YCLiteralExpression expr, TContext ctx) => Visit(expr);
         T IYCVisitor<T, TContext>.Visit(YCUnaryMinusExpression expr, TContext ctx) => Visit(expr);
         T IYCVisitor<T, TContext>.Visit(YCUnaryPlusExpression expr, TContext ctx) => Visit(expr);
         T IYCVisitor<T, TContext>.Visit(YCAddExpression expr, TContext ctx) => Visit(expr);
