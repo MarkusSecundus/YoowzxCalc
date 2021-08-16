@@ -73,7 +73,7 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
                     RunCommand(line);
                 }catch(Exception e)
                 {
-                    Out.WriteLine("Error: {1} {0}", e.Message, e.GetType());
+                    Out.WriteLine("Error: {0} - {1}", e.GetType(), e.Message);
                 }
             }
             Exit();
