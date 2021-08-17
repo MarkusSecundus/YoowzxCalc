@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.Cmd", "MarkusSecundus.YoowzxCalc.Cmd\MarkusSecundus.YoowzxCalc.Cmd.csproj", "{63B111FD-9F3A-4A9F-98E6-E4AAF956EE55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.ReadLine", "MarkusSecundus.ReadLine\MarkusSecundus.ReadLine.csproj", "{9774CE97-D1BE-4106-9C82-17BC5BA11C82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.ReadLine", "ThirdPartyLibraries\MarkusSecundus.ReadLine\MarkusSecundus.ReadLine.csproj", "{9774CE97-D1BE-4106-9C82-17BC5BA11C82}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdPartyLibraries", "ThirdPartyLibraries", "{C6FCC85B-C50D-4261-B6E5-C80F66662E31}"
 EndProject

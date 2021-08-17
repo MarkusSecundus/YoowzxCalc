@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MarkusSecundus.ReadLine\MarkusSecundus.ReadLine.csproj" />
+    <ProjectReference Include="..\ThirdPartyLibraries\MarkusSecundus.ReadLine\MarkusSecundus.ReadLine.csproj" />
     <ProjectReference Include="..\MarkusSecundus.Util\MarkusSecundus.Util.csproj" />
     <ProjectReference Include="..\MarkusSecundus.YoowzxCalc\MarkusSecundus.YoowzxCalc.csproj" />
   </ItemGroup>
