@@ -62,6 +62,16 @@ namespace MarkusSecundus.Util
             foreach (var t in self) action(t);
         }
 
+
+        public static T[] Fill<T>(this T[] self, Func<int, T> valueSupplier)
+        {
+            for (int t = 0; t < self.Length; ++t) self[t] = valueSupplier(t);
+            return self;
+        }
+        public static T[] Fill<T>(this T[] self, T value)
+            => self.Fill(i => value);
+
+
         public static IEnumerable<T> Enumerate<T>(this T self)
         {
             yield return self;

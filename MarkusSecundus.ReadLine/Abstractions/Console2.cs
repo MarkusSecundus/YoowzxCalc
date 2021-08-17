@@ -2,6 +2,11 @@ using System;
 
 namespace Internal.ReadLine.Abstractions
 {
+    /// <summary>
+    /// Custom fork of <see href="https://github.com/tonerdo/readline"/>
+    /// 
+    /// All credits go to the original creator: Toni Solarin-Sodara 
+    /// </summary>
     internal class Console2 : IConsole
     {
         public int CursorLeft => Console.CursorLeft;

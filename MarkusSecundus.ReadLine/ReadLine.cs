@@ -10,6 +10,8 @@ namespace System
     /// Custom fork of <see href="https://github.com/tonerdo/readline"/>
     /// with added support of EOF simulation through Ctrl+D (like on Unix)
     /// and stdin redirection.
+    /// 
+    /// All credits go to the original creator: Toni Solarin-Sodara
     /// </summary>
     public static class ReadLine
     {
@@ -56,10 +58,12 @@ namespace System
         private static string GetText(KeyHandler keyHandler)
         {
             ConsoleKeyInfo keyInfo = ReadKey();
+            //<Customised>
             if (keyInfo.IsEOF() )
             {
                 return null;
             }
+            //</Customised>
 
             while (keyInfo.Key != ConsoleKey.Enter)
             {
@@ -72,6 +76,7 @@ namespace System
         }
 
 
+        //<Customised>
         private static bool _HasConsole = true;
         private static ConsoleKeyInfo ReadKey()
         {
@@ -89,5 +94,6 @@ namespace System
 
         private static bool IsEOF(this ConsoleKeyInfo key)
             => key.Key == ConsoleKey.D && (key.Modifiers & ConsoleModifiers.Control) != 0;
+        //</Customised>
     }
 }
