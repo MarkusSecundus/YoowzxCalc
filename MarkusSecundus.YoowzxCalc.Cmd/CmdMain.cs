@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using num = System.Double;
 
@@ -22,7 +23,7 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
 
     public class CmdMain
     {
-        private IYoowzxCalculator<num> Calc = IYoowzxCalculator<num>.Make();
+        private IYoowzxCalculator<num> Calc;
 
         public delegate string CmdCommand(string args);
 
@@ -43,14 +44,17 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
                 ["save"] = Save,
                 ["list"] = List,
                 ["exit"] = Exit,
+                ["help"] = Help,
             };
+            Calc = IYoowzxCalculator<num>.Make()
+                .AddFunction<Func<num>>("fail", () => throw new FailException())
+                .AddFunction<Func<num, num>>("fail", x => throw new FailException(""+x));
         }
-
 
 
         public void Main(CmdOptions args)
         {
-            args.FilesToLoad.ForAll(Load);
+            foreach(var f in args.FilesToLoad) Load(f);
 
             if (args.Eval != null)
             {
@@ -85,7 +89,7 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
             if (string.IsNullOrEmpty(command)) return;
 
             var (commandName, args) = command.SplitByFirstOccurence(" ");
-            args.Trim();
+            args = args?.Trim()??"";
 
             var output = Commands.TryGetValue(commandName, out var cmd)
                                 ? cmd(args)
@@ -135,6 +139,7 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
             return _definitionsHistory.MakeString("\n");
         }
 
+        string Help(string _ = null) => HelpString;
 
         string Exit(string args = null)
         {
@@ -144,7 +149,45 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
 
 
 
-        public static void Main(string[] args) => Launch(args);
+
+        public static void Main(string[] args)
+        {
+            Launch(args);
+            return;
+            var m = new CmdMain();
+            m.RunCommand("f(x, acc) := x <= 1 ? acc : f(x-1, x*acc)");
+            m.RunCommand("[cached]f(x) := fa(x, 1)");
+            m.RunCommand("fa(x, y) := f(x, y)");
+            m.RunCommand("f(200000)");
+        }
         public static void Launch(string[] args) => Parser.Default.ParseArguments<CmdOptions>(args).WithParsed(new CmdMain().Main);
+
+
+
+
+        public static string HelpString =>
+@"Yoowzx Calc v1.0
+
+Commands:
+- help ... Print this overview
+
+- exit ... Exit this application
+
+- load [filepath] ... Load definitions from the specified file
+
+- save [filepath]... Save all function defined so far in this session of Yoowzx Calc to specified file
+
+- list ... List all functions that were defined so far in this session of Yoowzx Calc
+
+- eval? [expression or function definition] ... Evaluate a mathematical expression
+    
+
+
+" + new string('_', Console.WindowWidth-1)+
+@"
+
+Author: Jakub Hroník
+git: https://github.com/MarkusSecundus/YoowzxCalc";
+
     }
 }

@@ -28,11 +28,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
         {
             var args = toCompile.Arguments.Select(name => (name, Expression.Parameter(typeof(TNumber), name)).AsKV()).ToArray();
 
-            var formatErrors = YCIdentifierValidator<TNumber>.Instance.Validate(toCompile, Op);
-            if (!formatErrors.IsEmpty())
-            {
-                throw formatErrors.Aggregate<FormatException>();
-            }
+            YCIdentifierValidator<TNumber>.Instance.Validate(toCompile, Op);
 
             var compilationContext = new VisitContext
             (
@@ -45,6 +41,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
             var ret = Expression.Lambda(
                 toCompile.Body.Accept(CompilerVisitor.Instance, compilationContext),
+                tailCall : true,
                 args.Select(a => a.Value).ToArray()
             );
 
@@ -191,16 +188,14 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
             public override Expression Visit(YCFunctioncallExpression expr, VisitContext ctx)
             {
-                var function = getFunction(expr.GetSignature<TNumber>(), ctx);
+                var signature = expr.GetSignature<TNumber>();
+
+                var function = getFunction(signature, ctx, () => throw new ArgumentException($"Function {signature.ToStringTypeless()} not found!"));
 
                 var args = expr.Arguments.Select(arg => v(arg, ctx));
 
-                var signature = expr.GetSignature<TNumber>();
 
-                return ExpressionUtil.SubstituteThrow<NullReferenceException>(
-                        Expression.Invoke(function, args),
-                        e => throw new ArgumentException($"Function {signature.ToStringTypeless()} not found!")
-                    );
+                return Expression.Invoke(function, args);
             }
 
 
@@ -239,7 +234,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
 
 
-            private static Expression getFunction(YCFunctionSignature<TNumber> func, VisitContext ctx)
+            private static Expression getFunction(YCFunctionSignature<TNumber> func, VisitContext ctx, Action onNull)
             {
                 SettableOnce<Delegate> wrap;
                 if (func == ctx.ThisFunctionSignature)
@@ -260,10 +255,13 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
                 }
 
                 return wrap.Value != null
-                    ? Expression.Constant(wrap)
-                    : Expression.Convert(
-                            Expression.PropertyOrField(Expression.Constant(wrap), nameof(wrap.Value)),
-                            func.GetFuncType()
+                    ? Expression.Constant(wrap.Value)
+                    : ExpressionUtil.AssertNotNull(
+                          Expression.Convert(
+                             Expression.PropertyOrField(Expression.Constant(wrap), nameof(wrap.Value)),
+                             func.GetFuncType()
+                          ),
+                          onNull
                       );
 
             }

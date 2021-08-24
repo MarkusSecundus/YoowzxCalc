@@ -23,32 +23,39 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
         public static YCIdentifierValidator<TNumber> Instance { get; } = new();
 
 
-        private void validate(string expr, YCIdentifierValidatorArgs<TNumber> ctx)
+        private void checkIdentifierValidity(string expr, YCIdentifierValidatorArgs<TNumber> ctx)
         {
             var error = ctx.Op.ValidateIdentifier(expr);
             if (error != null) ctx.Exceptions.Add(error);
         }
 
-        private void validateDuplicity(IReadOnlyCollection<string> exprs, YCIdentifierValidatorArgs<TNumber> ctx)
+        private void checkArgumentDuplicity(IReadOnlyCollection<string> exprs, YCIdentifierValidatorArgs<TNumber> ctx)
         {
             if (exprs.CheckHasDuplicit() )
                 ctx.Exceptions.Add(new FormatException($"Some arguments are duplicit: [{exprs.MakeString()}]"));
         }
 
-        public List<FormatException> Validate(YCFunctionDefinition def, INumberOperator<TNumber> op)
+        public List<FormatException> Scan(YCFunctionDefinition def, INumberOperator<TNumber> op)
         {
             YCIdentifierValidatorArgs<TNumber> ctx = new() { Op = op, Exceptions = new() };
 
             if(!def.IsAnonymous)
-                validate(def.Name, ctx);
+                checkIdentifierValidity(def.Name, ctx);
             foreach (var arg in def.Arguments)
-                validate(arg, ctx);
+                checkIdentifierValidity(arg, ctx);
 
-            validateDuplicity(def.Arguments, ctx);
+            checkArgumentDuplicity(def.Arguments, ctx);
 
             def.Body.Accept(this, ctx);
 
             return ctx.Exceptions;
+        }
+
+        public void Validate(YCFunctionDefinition def, INumberOperator<TNumber> op)
+        {
+            var errors = Scan(def, op);
+            if (errors != null && !errors.IsEmpty())
+                throw errors.Aggregate<FormatException>();
         }
 
 
@@ -56,13 +63,13 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
         {
             if (!ctx.Op.TryParse(expr.Value, out _))
             {
-                validate(expr.Value, ctx);
+                checkIdentifierValidity(expr.Value, ctx);
             }
         }
 
         public override void Visit(YCFunctioncallExpression expr, YCIdentifierValidatorArgs<TNumber> ctx)
         {
-            validate(expr.Name, ctx);
+            checkIdentifierValidity(expr.Name, ctx);
             Visit((YCExpression)expr, ctx);
         }
 

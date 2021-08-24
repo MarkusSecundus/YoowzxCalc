@@ -10,18 +10,22 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression;
 using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 using MarkusSecundus.YoowzxCalc.DSL.AST.BinaryExpressions;
 using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
+using MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl;
 
 namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
     class YCInterpreterBase<TNumber> : IYCInterpreter<TNumber>
     {
-        private readonly INumberOperator<TNumber> op;
+        private readonly INumberOperator<TNumber> Op;
 
         public YCInterpreterBase(INumberOperator<TNumber> numberOperator)
-            => op = numberOperator;
+            => Op = numberOperator;
 
         public TNumber Interpret(IYCInterpretationContext<TNumber> ctx, YCFunctionDefinition toInterpret, IEnumerable<TNumber> args)
         {
+            YCIdentifierValidator<TNumber>.Instance.Validate(toInterpret, Op);
+
+
             var argsDict = args.Select((arg, index) => (toInterpret.Arguments[index], arg).AsKV()).ToImmutableDictionary();
             if (argsDict.Count != toInterpret.Arguments.Count)
                 throw new YCCompilerException($"Interpreting function: `{toInterpret.GetSignature<TNumber>()}` - {argsDict.Count} args provided instead of {toInterpret.Arguments.Count}");
@@ -46,7 +50,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             ImmutableDictionary<string, TNumber> Args
         )
         {
-            public INumberOperator<TNumber> Op => Father.op;
+            public INumberOperator<TNumber> Op => Father.Op;
 
             public TNumber InterpretRecursively(IEnumerable<TNumber> args)
                 => Father.Interpret(CoreContext, ThisFunction, args);

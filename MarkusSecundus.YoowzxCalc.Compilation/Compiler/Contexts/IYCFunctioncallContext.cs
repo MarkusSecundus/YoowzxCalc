@@ -16,12 +16,12 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Contexts
         public static IYCFunctioncallContext<TNumber> Make(IEnumerable<KeyValuePair<YCFunctionSignature<TNumber>, Delegate>> initialFunctions) => Make().ResolveSymbols(initialFunctions);
     }
 
-    public static class IASTFunctioncallContext
+    public static class IYCFunctioncallContext
     {
         public static IYCFunctioncallContext<TNumber> ResolveSymbols<TNumber>(this IYCFunctioncallContext<TNumber> self, params (YCFunctionSignature<TNumber>, Delegate)[] symbolDefinitions)
             => self.ResolveSymbols(symbolDefinitions.Select(CollectionsUtils.AsKV));
 
 
-        public static IYCFunctioncallContext<TNumber> Make<TNumber>() => new YCFunctioncallContext<TNumber>();
+        public static IYCFunctioncallContext<TNumber> Make<TNumber>() => IYCFunctioncallContext<TNumber>.Make();
     }
 }

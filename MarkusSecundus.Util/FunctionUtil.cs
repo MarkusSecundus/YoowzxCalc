@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.Util
 {
+    /// <summary>
+    /// Static class with utility functions that should have been in standard library.
+    /// </summary>
     public static class FunctionUtil
     {
 

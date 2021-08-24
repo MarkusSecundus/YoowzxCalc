@@ -6,10 +6,19 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.Util
 {
+    /// <summary>
+    /// Proxy pointing to a value that can be written once and read arbitrarily.
+    /// </summary>
+    /// <typeparam name="T">
+    /// Type of contained value
+    /// </typeparam>
     public sealed class SettableOnce<T>
     {
         private T _value;
 
+        /// <summary>
+        /// Value this proxy points to
+        /// </summary>
         public T Value 
         {
             get => _value;
@@ -22,6 +31,9 @@ namespace MarkusSecundus.Util
             } 
         }
 
+        /// <summary>
+        /// Whether the value has already been set
+        /// </summary>
         public bool IsSet { get; private set; } = false;
 
 
