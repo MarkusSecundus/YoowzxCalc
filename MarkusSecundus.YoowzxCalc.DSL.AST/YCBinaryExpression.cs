@@ -24,9 +24,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
                childIndex == 1 ? RightChild :
                 throw new IndexOutOfRangeException($"Index {childIndex} not in range <0;{Arity})");
 
-        public abstract string Symbol { get; }
 
 
+        internal abstract string Symbol { get; }
 
 
         public override string ToString() => $"({LeftChild} {Symbol} {RightChild})";

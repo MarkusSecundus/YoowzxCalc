@@ -10,7 +10,7 @@ namespace System
     /// Custom fork of <see href="https://github.com/tonerdo/readline"/>
     /// with added support of EOF simulation through Ctrl+D (like on Unix)
     /// and stdin redirection.
-    /// 
+    /// <para/>
     /// All credits go to the original creator: Toni Solarin-Sodara
     /// </summary>
     public static class ReadLine

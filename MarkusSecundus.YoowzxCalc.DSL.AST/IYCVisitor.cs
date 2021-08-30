@@ -6,10 +6,31 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
     /// <summary>
+    /// Object that can visit <see cref="YCExpression"/> and perform some operation on it.
     /// 
+    /// <para>
+    /// For canonical implementations see:
+    /// <para/>
+    /// - <see cref="YCVisitorBase{TRet, TContext}"/>
+    /// <para/>
+    /// - <see cref="YCVisitorBaseNoContext{TRet, TContext}"/>
+    /// <para/>
+    /// - <see cref="YCVisitorBaseNoReturn{TRet, TContext}"/>
+    /// <para/>
+    /// - <see cref="YCVisitorBaseNoReturnNoContext{TRet, TContext}"/>
+    /// <para/>
+    /// - <see cref="YCVisitorBaseNoContext{TRet}"/>
+    /// <para/>
+    /// - <see cref="YCVisitorBaseNoReturn{TContext}"/>
+    /// <para/>
+    /// - <see cref="YCVisitorBaseNoReturnNoContext"/>
+    /// </para>
+    /// <para>
+    /// See: <see href="https://en.wikipedia.org/wiki/Visitor_pattern"/>
+    /// </para>
     /// </summary>
-    /// <typeparam name="TRet"></typeparam>
-    /// <typeparam name="TContext"></typeparam>
+    /// <typeparam name="TRet">Result type of the visit.</typeparam>
+    /// <typeparam name="TContext">Type for carrying additional information needed during the visit.</typeparam>
     public interface IYCVisitor<out TRet, in TContext>
     {
         public TRet Visit(YCLiteralExpression expr, TContext ctx);

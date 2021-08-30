@@ -9,11 +9,16 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
+    /// <summary>
+    /// Abstract base for any unary subexpression in abstract syntax tree of a YoowzxCalc expression.
+    /// </summary>
     public abstract record YCUnaryExpression : YCExpression
     {
         internal YCUnaryExpression() { }
 
-
+        /// <summary>
+        /// The only child of this node.
+        /// </summary>
         public YCExpression Child { get; init; }
 
         public sealed override int Arity => 1;
@@ -22,7 +27,10 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
             => childIndex == 0 ? Child :
                 throw new IndexOutOfRangeException($"Index {childIndex} not in range <0;{Arity})");
 
-        public abstract string Symbol { get; }
+        /// <summary>
+        /// Symbol representing this node's operation in textual 
+        /// </summary>
+        internal abstract string Symbol { get; }
 
         public override string ToString() => $"({Symbol}{Child})";
 
