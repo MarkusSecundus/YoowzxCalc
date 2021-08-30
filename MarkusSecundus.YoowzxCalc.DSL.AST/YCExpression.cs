@@ -13,7 +13,7 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
-    public abstract class YCExpression : IReadOnlyList_PreimplementedEnumerator<YCExpression>
+    public abstract record YCExpression : IReadOnlyList_PreimplementedEnumerator<YCExpression>
     {
         internal YCExpression() { }
 
@@ -28,18 +28,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
 
 
 
-
-
-
-
         private int? _hashCode;
 
         public override int GetHashCode() => _hashCode ??= ComputeHashCode();
-
-        public sealed override bool Equals(object obj) => Equals_impl(obj);
-
-        protected abstract bool Equals_impl(object o);
         protected abstract int ComputeHashCode();
-
     }
 }

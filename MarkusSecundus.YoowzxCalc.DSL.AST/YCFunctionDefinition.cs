@@ -12,7 +12,7 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
-    public sealed class YCFunctionDefinition
+    public sealed record YCFunctionDefinition
     {
         public string Name { get; init; }
 
@@ -37,7 +37,6 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
 
         public override string ToString() => $"{HeadRepr(this)} := {Body}";
 
-        public override bool Equals(object obj) => obj is YCFunctionDefinition e && Name == e.Name && Arguments.SequenceEqual(e.Arguments) && Equals(Body, e.Body);
 
         public override int GetHashCode() => (Name, Arguments.SequenceHashCode(), Body).GetHashCode();
     }

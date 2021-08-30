@@ -1,6 +1,6 @@
 ﻿namespace MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions
 {
-    public sealed class YCUnaryMinusExpression : YCUnaryExpression
+    public sealed record YCUnaryMinusExpression : YCUnaryExpression
     {
         public override T Accept<T, TContext>(IYCVisitor<T, TContext> visitor, TContext ctx) => visitor.Visit(this, ctx);
 

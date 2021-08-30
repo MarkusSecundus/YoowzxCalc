@@ -5,10 +5,8 @@ using System.Collections.Generic;
 
 namespace MarkusSecundus.YoowzxCalc.Numerics
 {
-    public interface IYCNumberOperator { }
 
-
-    public interface IYCNumberOperator<TNumber> : IYCNumberOperator
+    public interface IYCNumberOperator<TNumber>
     {
         public bool TryParse(string repr, out TNumber value);
 

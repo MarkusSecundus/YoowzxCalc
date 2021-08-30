@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions
 {
-    public sealed class YCFunctioncallExpression : YCExpression
+    public sealed record YCFunctioncallExpression : YCExpression
     {
         public override T Accept<T, TContext>(IYCVisitor<T, TContext> visitor, TContext ctx) => visitor.Visit(this, ctx);
 
@@ -19,8 +19,6 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions
 
 
         public override string ToString() => $"{Name}({Arguments.MakeString()})";
-
-        protected override bool Equals_impl(object obj) => obj is YCFunctioncallExpression b && Name == b.Name && Arguments.SequenceEqual(b.Arguments);
 
         protected override int ComputeHashCode() => (Name, Arguments.SequenceHashCode()).GetHashCode();
     }

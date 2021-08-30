@@ -5,6 +5,11 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TRet"></typeparam>
+    /// <typeparam name="TContext"></typeparam>
     public interface IYCVisitor<out TRet, in TContext>
     {
         public TRet Visit(YCLiteralExpression expr, TContext ctx);

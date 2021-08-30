@@ -136,10 +136,24 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
 
             return null;
         }
-        string List(string _=null)
+
+        string List(string arg=null)
         {
-            return _definitionsHistory.MakeString("\n");
+            switch( arg = arg.Trim() )
+            {
+                case "all":
+                    return Operator.StandardLibrary.Keys.Chain(Calc.Context.Functions.Keys)
+                                .Distinct().Select(f => f.ToStringTypeless()).MakeString("\n");
+
+                case "":
+                    return _definitionsHistory.MakeString("\n");
+
+                default:
+                    throw new ArgumentException($"Invalid mode: '{arg}' - must be one of ( '' | 'all' )");
+            }
         }
+
+
 
         string Help(string _ = null) => HelpString;
 
@@ -169,11 +183,11 @@ Commands:
 
 - load [filepath] ... Load definitions from the specified file
 
-- save [filepath] ... Save all function defined so far in this session of Yoowzx Calc to specified file
+- save [filepath] ... Save all functions defined so far in this session of Yoowzx Calc to specified file
 
-- list (all | defined) ... List all functions that were defined so far in this session of Yoowzx Calc
+- list (all) ... List all functions that would be saved by the 'save' command / that are available for use to the user
 
-- eval? [expression or function definition] ... Evaluate a mathematical expression
+- (eval) [expression or function definition] ... Evaluate a mathematical expression
     
 
 

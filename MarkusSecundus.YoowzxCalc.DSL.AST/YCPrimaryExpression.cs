@@ -9,7 +9,7 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
-    public abstract class YCPrimaryExpression : YCExpression
+    public abstract record YCPrimaryExpression : YCExpression
     {
         internal YCPrimaryExpression() { }
 

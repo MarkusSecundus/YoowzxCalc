@@ -1,6 +1,6 @@
 ﻿namespace MarkusSecundus.YoowzxCalc.DSL.AST.BinaryExpressions
 {
-    public sealed class YCModuloExpression : YCBinaryExpression
+    public sealed record YCModuloExpression : YCBinaryExpression
     {
         public override T Accept<T, TContext>(IYCVisitor<T, TContext> visitor, TContext ctx) => visitor.Visit(this, ctx);
 

@@ -9,7 +9,7 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
-    public abstract class YCBinaryExpression : YCExpression
+    public abstract record YCBinaryExpression : YCExpression
     {
         internal YCBinaryExpression() { }
 
@@ -30,8 +30,6 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
 
 
         public override string ToString() => $"({LeftChild} {Symbol} {RightChild})";
-
-        protected override bool Equals_impl(object obj) => obj is YCBinaryExpression b && GetType() == b.GetType() && Equals(LeftChild, b.LeftChild) && Equals(RightChild, b.RightChild);
 
         protected override int ComputeHashCode() => (LeftChild, RightChild).GetHashCode();
     }
