@@ -13,11 +13,20 @@ namespace MarkusSecundus.Util
     /// </summary>
     public static class FunctionUtil
     {
-
         private static bool IsExpressionClosureType(this Type self) => self.FullName == "System.Runtime.CompilerServices.Closure";
 
+        /// <summary>
+        /// Counts number of arguments the specified delegate requires
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns>Number of arguments the delegate requires</returns>
         public static int ArgumentsCount(this Delegate self) => self.GetParameters().Length;
 
+        /// <summary>
+        /// Gets list of parameters for the provided function delegate excluding (unlike MethodInfo::GetParameters() ) eventual 'implementation-detail'-Closure argument that ExpressionTrees-generated functions have.
+        /// </summary>
+        /// <param name="self">Delegate whose parameters to get</param>
+        /// <returns>Parameter info for the specified delegate</returns>
         public static ParameterInfo[] GetParameters(this Delegate self)
         {
             var parameters = self.Method.GetParameters();
@@ -26,8 +35,14 @@ namespace MarkusSecundus.Util
                 : parameters;
         }
 
+        /// <summary>
+        /// Determines whether the specified delegate type is a concrete leaf descendant of <see cref="Delegate"/>
+        /// </summary>
+        /// <typeparam name="TDelegate">Delegate type to be checked</typeparam>
+        /// <returns>True if the specified type is concrete leaf delegate type</returns>
         public static bool IsConcreteDelegateType<TDelegate>() where TDelegate : Delegate
             => typeof(TDelegate) != typeof(Delegate) && typeof(TDelegate) != typeof(MulticastDelegate);
+
 
 
         public static IReadOnlyList<ParameterInfo> GetDelegateTypeParameters<TDelegate>() where TDelegate : Delegate

@@ -6,8 +6,6 @@ using System.Linq.Expressions;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using MarkusSecundus.ProgrammableCalculator.DSL.Parser;
-using MarkusSecundus.ProgrammableCalculator.Numerics;
 using MarkusSecundus.Util;
 using MarkusSecundus.YoowzxCalc.Compiler;
 using MarkusSecundus.YoowzxCalc.Compiler.Contexts;

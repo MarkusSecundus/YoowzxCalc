@@ -152,10 +152,10 @@ namespace MarkusSecundus.Util
         }
 
         /// <summary>
-        /// For convenience purposes - converts a tuple of 2 elements (Key, Value) into a <typeparamref name="KeyValuePair"/>
+        /// For convenience purposes - converts a tuple of 2 elements (Key, Value) into a <see cref="KeyValuePair"/>
         /// </summary>
-        /// <param name="pair">Pair to be converted to <typeparamref name="KeyValuePair"/></param>
-        /// <returns>KeyValuePair with corresponding key and value</returns>
+        /// <param name="pair">Pair to be converted to <see cref="KeyValuePair{TKey, TValue}"/></param>
+        /// <returns><see cref="KeyValuePair"/> with corresponding key and value</returns>
         public static KeyValuePair<TKey, TValue> AsKV<TKey, TValue>(this (TKey Key, TValue Value) pair)
             => new KeyValuePair<TKey, TValue>(pair.Key, pair.Value);
 
@@ -173,7 +173,7 @@ namespace MarkusSecundus.Util
         public static IReadOnlyDictionary<TKey, TValue> EmptyDictionary<TKey, TValue>() => ImmutableDictionary<TKey, TValue>.Empty;
 
         /// <summary>
-        /// Computes a good position sensitive hash code for given sequence of items.
+        /// Computes a good position-sensitive hash code for given sequence of items.
         /// </summary>
         /// <typeparam name="T">Type of the provided sequence elements</typeparam>
         /// <param name="self">Seqence to compute hash code of</param>
@@ -191,7 +191,7 @@ namespace MarkusSecundus.Util
         /// </summary>
         /// <typeparam name="T">Type of the collection elements</typeparam>
         /// <param name="self">The collection to be checked for duplicit element</param>
-        /// <param name="comparer">The <typeparamref name="IEqualityComparer"/> to be used for determining duplicity, <code>EqualityComparer[T].Default</code> if <code>null</code></param>
+        /// <param name="comparer">Comparer to be used for determining item eqality, <code>EqualityComparer{T}.Default</code> if <code>null</code></param>
         /// <returns></returns>
         public static bool CheckHasDuplicit<T>(this IReadOnlyCollection<T> self, IEqualityComparer<T> comparer = null)
         {
@@ -204,7 +204,7 @@ namespace MarkusSecundus.Util
 
 
         /// <summary>
-        /// For convenience purposes - <typeparamref name="IReadOnlyList"/> variant that has <code>GetEnumerator()</code> methods preimplemented as default methods using the indexer property on <code>this</code>
+        /// For convenience purposes - <see cref="System.Collections.Generic.IReadOnlyList{T}"/> variant that has <code>GetEnumerator()</code> methods preimplemented as default methods using the indexer property on <code>this</code>
         /// </summary>
         /// <typeparam name="T">Type of the contained elements</typeparam>
         public interface IReadOnlyList_PreimplementedEnumerator<T> : IReadOnlyList<T>

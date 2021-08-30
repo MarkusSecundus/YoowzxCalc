@@ -3,12 +3,12 @@ using MarkusSecundus.YoowzxCalc.Compiler;
 using System;
 using System.Collections.Generic;
 
-namespace MarkusSecundus.ProgrammableCalculator.Numerics
+namespace MarkusSecundus.YoowzxCalc.Numerics
 {
-    public interface INumberOperator { }
+    public interface IYCNumberOperator { }
 
 
-    public interface INumberOperator<TNumber> : INumberOperator
+    public interface IYCNumberOperator<TNumber> : IYCNumberOperator
     {
         public bool TryParse(string repr, out TNumber value);
 

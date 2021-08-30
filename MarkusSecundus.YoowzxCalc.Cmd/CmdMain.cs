@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using MarkusSecundus.YoowzxCalc.Numerics;
 using MarkusSecundus.Util;
 using MarkusSecundus.YoowzxCalc.Compiler;
 using Microsoft.CodeAnalysis;
@@ -24,6 +25,7 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
     public class CmdMain
     {
         private IYoowzxCalculator<num> Calc;
+        private IYCNumberOperator<num> Operator;
 
         public delegate string CmdCommand(string args);
 
@@ -46,9 +48,9 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
                 ["exit"] = Exit,
                 ["help"] = Help,
             };
-            Calc = IYoowzxCalculator<num>.Make()
-                .AddFunction<Func<num>>("fail", () => throw new FailException())
-                .AddFunction<Func<num, num>>("fail", x => throw new FailException(""+x));
+
+            Operator = YCBasicNumberOperators.Get<num>();
+            Calc = IYoowzxCalculator<num>.Make(compiler: IYCCompiler<num>.Make(Operator));
         }
 
 
@@ -150,16 +152,8 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
 
 
 
-        public static void Main(string[] args)
-        {
-            Launch(args);
-            return;
-            var m = new CmdMain();
-            m.RunCommand("f(x, acc) := x <= 1 ? acc : f(x-1, x*acc)");
-            m.RunCommand("[cached]f(x) := fa(x, 1)");
-            m.RunCommand("fa(x, y) := f(x, y)");
-            m.RunCommand("f(200000)");
-        }
+        public static void Main(string[] args) => Launch(args);
+        
         public static void Launch(string[] args) => Parser.Default.ParseArguments<CmdOptions>(args).WithParsed(new CmdMain().Main);
 
 
@@ -175,9 +169,9 @@ Commands:
 
 - load [filepath] ... Load definitions from the specified file
 
-- save [filepath]... Save all function defined so far in this session of Yoowzx Calc to specified file
+- save [filepath] ... Save all function defined so far in this session of Yoowzx Calc to specified file
 
-- list ... List all functions that were defined so far in this session of Yoowzx Calc
+- list (all | defined) ... List all functions that were defined so far in this session of Yoowzx Calc
 
 - eval? [expression or function definition] ... Evaluate a mathematical expression
     

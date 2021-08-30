@@ -12,16 +12,24 @@ namespace MarkusSecundus.Util
     /// </summary>
     public static class ExceptionUtils
     {
-        public static TException Aggregate<TException>(this IReadOnlyCollection<TException> self) where TException : Exception
+        /// <summary>
+        /// Creates an exception object of specified type by aggregating multiple exceptions of that same type.
+        /// 
+        /// Assumes that TException has public constructor with signature (string message, System.Exception innerException)
+        /// </summary>
+        /// <typeparam name="TException">Type of the result exception</typeparam>
+        /// <param name="self">List of exceptions to be aggregated</param>
+        /// <returns>The original exception if there is exactly one of it, otherwise an aggregate of all the provided exceptions.</returns>
+        public static TException Aggregate<TException>(this IEnumerable<TException> self) where TException : Exception
         {
-            if (self.Count == 1) return self.First();
             var aggr = new AggregateException(self);
-            return ExceptionConstructorContainer<TException>.WithMessageAndInner(aggr.Message, aggr);
+            if (aggr.InnerExceptions.Count == 1) return (TException)aggr.InnerExceptions[0];
+            return ExceptionConstructorContainer_ArgsAreMessageAndInner<TException>.Value(aggr.Message, aggr);
         }
 
-        private static class ExceptionConstructorContainer<TException>
+        private static class ExceptionConstructorContainer_ArgsAreMessageAndInner<TException>
         {
-            public readonly static Func<string, Exception, TException> WithMessageAndInner 
+            public readonly static Func<string, Exception, TException> Value 
                 = (Func<string, Exception, TException>) typeof(TException).GetConstructor(new[] { typeof(string), typeof(Exception) }).MakeDelegate();
 
         }

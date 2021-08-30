@@ -1,4 +1,4 @@
-﻿using MarkusSecundus.ProgrammableCalculator.Numerics;
+﻿using MarkusSecundus.YoowzxCalc.Numerics;
 using MarkusSecundus.Util;
 using MarkusSecundus.YoowzxCalc.Compiler;
 using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
@@ -11,11 +11,14 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.YoowzxCalc
 {
-
+    /// <summary>
+    /// Canonical implementation of <see cref="IYoowzxCalculator{TNumber}"/>
+    /// </summary>
+    /// <typeparam name="TNumber"></typeparam>
     class YoowzxCalculator<TNumber> : IYoowzxCalculator<TNumber>
     {
         private static IYCAstBuilder DefaultAstBuilder => IYCAstBuilder.Instance;
-        private static IYCCompiler<TNumber> DefaultCompiler => IYCCompiler<TNumber>.Make(BasicNumberOperators.Get<TNumber>());
+        private static IYCCompiler<TNumber> DefaultCompiler => IYCCompiler<TNumber>.Make(YCBasicNumberOperators.Get<TNumber>());
         private static IYCFunctioncallContext<TNumber> DefaultContext => IYCFunctioncallContext<TNumber>.Make();
 
         private IYCAstBuilder _astBuilder;

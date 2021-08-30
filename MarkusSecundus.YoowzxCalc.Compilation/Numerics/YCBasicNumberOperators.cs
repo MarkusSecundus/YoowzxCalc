@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace MarkusSecundus.ProgrammableCalculator.Numerics
+namespace MarkusSecundus.YoowzxCalc.Numerics
 {
-    public static class BasicNumberOperators
+    public static class YCBasicNumberOperators
     {
         private static readonly Dictionary<Type, object> _table = new();
 
-        public static void Register<TNumber>(Func<INumberOperator<TNumber>> operatorSupplier)
+        public static void Register<TNumber>(Func<IYCNumberOperator<TNumber>> operatorSupplier)
             => _table[typeof(TNumber)] = operatorSupplier;
 
-        public static INumberOperator<TNumber> Get<TNumber>() => ((Func<INumberOperator<TNumber>>)_table[typeof(TNumber)])();
+        public static IYCNumberOperator<TNumber> Get<TNumber>() => ((Func<IYCNumberOperator<TNumber>>)_table[typeof(TNumber)])();
 
-        static BasicNumberOperators()
+        static YCBasicNumberOperators()
         {
             Register(() => new Double());
             Register(() => new Decimal());
@@ -34,7 +34,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
             => Const.IdentifierValidator.IsMatch(identifier) ? null : new FormatException($"Invalid identifier: '{identifier}'");
 
 
-        public class Double : INumberOperator<double>
+        public class Double : IYCNumberOperator<double>
         {
             public static Double Instance { get; } = new();
 
@@ -111,7 +111,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
 
         
         
-        public class Decimal : INumberOperator<decimal>
+        public class Decimal : IYCNumberOperator<decimal>
         {
             public static Decimal Instance { get; } = new();
 
@@ -144,7 +144,7 @@ namespace MarkusSecundus.ProgrammableCalculator.Numerics
             public decimal NegateLogical(decimal a) => toBool(a == 0);
         }
 
-        public class Long : INumberOperator<long>
+        public class Long : IYCNumberOperator<long>
         {
             public static Long Instance { get; } = new();
 

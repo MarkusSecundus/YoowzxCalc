@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.ReadLine", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdPartyLibraries", "ThirdPartyLibraries", "{C6FCC85B-C50D-4261-B6E5-C80F66662E31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkusSecundus.YoowzxCalc.Desktop", "MarkusSecundus.YoowzxCalc.Desktop\MarkusSecundus.YoowzxCalc.Desktop.csproj", "{6C932784-74D0-44BB-8090-A19407C1F555}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,10 +53,6 @@ Global
 		{9774CE97-D1BE-4106-9C82-17BC5BA11C82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9774CE97-D1BE-4106-9C82-17BC5BA11C82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9774CE97-D1BE-4106-9C82-17BC5BA11C82}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C932784-74D0-44BB-8090-A19407C1F555}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C932784-74D0-44BB-8090-A19407C1F555}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C932784-74D0-44BB-8090-A19407C1F555}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C932784-74D0-44BB-8090-A19407C1F555}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

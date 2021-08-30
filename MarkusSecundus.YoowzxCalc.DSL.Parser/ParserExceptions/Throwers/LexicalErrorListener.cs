@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser.ParserExceptions.Throwers
+namespace MarkusSecundus.YoowzxCalc.DSL.Parser.ParserExceptions.Throwers
 {
     sealed class LexicalErrorListener : IAntlrErrorListener<int>
     {
@@ -17,7 +17,7 @@ namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser.ParserExceptions.Thro
 
         public void SyntaxError([NotNull] IRecognizer recognizer, [Nullable] int offendingSymbol, int line, int charPositionInLine, [NotNull] string msg, [Nullable] RecognitionException e)
         {
-            throw new LexicalErrorException(msg, recognizer, offendingSymbol, line, charPositionInLine);
+            throw new YCLexicalErrorException(msg, recognizer, offendingSymbol, line, charPositionInLine);
         }
     }
 }

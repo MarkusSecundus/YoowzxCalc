@@ -1,4 +1,4 @@
-﻿using MarkusSecundus.ProgrammableCalculator.Numerics;
+﻿using MarkusSecundus.YoowzxCalc.Numerics;
 using MarkusSecundus.Util;
 using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
 using MarkusSecundus.YoowzxCalc.DSL.AST;
@@ -16,9 +16,9 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
     class YCInterpreterBase<TNumber> : IYCInterpreter<TNumber>
     {
-        private readonly INumberOperator<TNumber> Op;
+        private readonly IYCNumberOperator<TNumber> Op;
 
-        public YCInterpreterBase(INumberOperator<TNumber> numberOperator)
+        public YCInterpreterBase(IYCNumberOperator<TNumber> numberOperator)
             => Op = numberOperator;
 
         public TNumber Interpret(IYCInterpretationContext<TNumber> ctx, YCFunctionDefinition toInterpret, IEnumerable<TNumber> args)
@@ -50,7 +50,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             ImmutableDictionary<string, TNumber> Args
         )
         {
-            public INumberOperator<TNumber> Op => Father.Op;
+            public IYCNumberOperator<TNumber> Op => Father.Op;
 
             public TNumber InterpretRecursively(IEnumerable<TNumber> args)
                 => Father.Interpret(CoreContext, ThisFunction, args);

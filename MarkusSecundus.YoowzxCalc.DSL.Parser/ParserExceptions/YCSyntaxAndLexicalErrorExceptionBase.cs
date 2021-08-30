@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarkusSecundus.ProgrammableCalculator.DSL.Parser.ParserExceptions
+namespace MarkusSecundus.YoowzxCalc.DSL.Parser.ParserExceptions
 {
-    public class SyntaxAndLexicalErrorExceptionBase<TToken> : ParserException
+    public class YCSyntaxAndLexicalErrorExceptionBase<TToken> : YCAstBuilderException
     {
 
-        public SyntaxAndLexicalErrorExceptionBase(string message, IRecognizer recognizer, TToken offendingSymbol, int line, int charPositionInLine)
+        public YCSyntaxAndLexicalErrorExceptionBase(string message, IRecognizer recognizer, TToken offendingSymbol, int line, int charPositionInLine)
             : base(createMessage(message, offendingSymbol, line, charPositionInLine))
         {
             CoreMessage = message;

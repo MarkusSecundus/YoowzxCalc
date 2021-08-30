@@ -1,4 +1,4 @@
-﻿using MarkusSecundus.ProgrammableCalculator.Numerics;
+﻿using MarkusSecundus.YoowzxCalc.Numerics;
 using MarkusSecundus.Util;
 using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
 using MarkusSecundus.YoowzxCalc.Compiler.Impl;
@@ -15,7 +15,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
         public TNumber Interpret(IYCInterpretationContext<TNumber> ctx, YCFunctionDefinition toInterpret, IEnumerable<TNumber> args);
 
 
-        public static IYCInterpreter<TNumber> Make(INumberOperator<TNumber> op) => new YCInterpreterBase<TNumber>(op);
+        public static IYCInterpreter<TNumber> Make(IYCNumberOperator<TNumber> op) => new YCInterpreterBase<TNumber>(op);
     }
 
 

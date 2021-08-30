@@ -1,4 +1,4 @@
-﻿using MarkusSecundus.ProgrammableCalculator.Numerics;
+﻿using MarkusSecundus.YoowzxCalc.Numerics;
 using MarkusSecundus.YoowzxCalc.Compiler;
 using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
 using MarkusSecundus.YoowzxCalc.Compiler.Impl;
@@ -15,7 +15,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
     {
         private readonly YCCompilerBase<TNumber> Base;
 
-        public YCCompiler(INumberOperator<TNumber> numberOperator)
+        public YCCompiler(IYCNumberOperator<TNumber> numberOperator)
             => Base = new(numberOperator);
 
         public IYCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)

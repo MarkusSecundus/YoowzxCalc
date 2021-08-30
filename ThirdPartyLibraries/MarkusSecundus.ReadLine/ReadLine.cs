@@ -58,15 +58,13 @@ namespace System
         private static string GetText(KeyHandler keyHandler)
         {
             ConsoleKeyInfo keyInfo = ReadKey();
-            //<Customised>
-            if (keyInfo.IsEOF() )
-            {
-                return null;
-            }
-            //</Customised>
 
             while (keyInfo.Key != ConsoleKey.Enter)
             {
+                //<Customised>
+                if (keyInfo.IsEOF() && keyHandler.Text=="")
+                    return null;
+                //</Customised>
                 keyHandler.Handle(keyInfo);
                 keyInfo = ReadKey();
             }

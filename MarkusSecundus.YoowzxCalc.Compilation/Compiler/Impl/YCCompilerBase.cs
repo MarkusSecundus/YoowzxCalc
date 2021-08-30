@@ -1,4 +1,4 @@
-﻿using MarkusSecundus.ProgrammableCalculator.Numerics;
+﻿using MarkusSecundus.YoowzxCalc.Numerics;
 using MarkusSecundus.Util;
 using MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl;
 using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
@@ -18,9 +18,9 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
     class YCCompilerBase<TNumber> : IYCCompiler<TNumber>
     {
-        private readonly INumberOperator<TNumber> Op;
+        private readonly IYCNumberOperator<TNumber> Op;
 
-        public YCCompilerBase(INumberOperator<TNumber> numberOperator)
+        public YCCompilerBase(IYCNumberOperator<TNumber> numberOperator)
             => Op = numberOperator;
 
 
@@ -63,7 +63,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
             public Expression OpE { get; } = Expression.Constant(Father.Op);
 
-            public INumberOperator<TNumber> Op => Father.Op;
+            public IYCNumberOperator<TNumber> Op => Father.Op;
         }
 
 
@@ -256,7 +256,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
                 return wrap.Value != null
                     ? Expression.Constant(wrap.Value)
-                    : ExpressionUtil.AssertNotNull(
+                    : ExpressionUtils.AssertNotNull(
                           Expression.Convert(
                              Expression.PropertyOrField(Expression.Constant(wrap), nameof(wrap.Value)),
                              func.GetFuncType()

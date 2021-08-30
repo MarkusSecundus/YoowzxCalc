@@ -1,4 +1,4 @@
-﻿using MarkusSecundus.ProgrammableCalculator.Numerics;
+﻿using MarkusSecundus.YoowzxCalc.Numerics;
 using MarkusSecundus.Util;
 using MarkusSecundus.YoowzxCalc.DSL.AST;
 using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
@@ -13,7 +13,7 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
 {
     struct YCIdentifierValidatorArgs<TNumber>
     {
-        public INumberOperator<TNumber> Op { get; init; }
+        public IYCNumberOperator<TNumber> Op { get; init; }
         public List<FormatException> Exceptions { get; init; }
     }
 
@@ -35,7 +35,7 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
                 ctx.Exceptions.Add(new FormatException($"Some arguments are duplicit: [{exprs.MakeString()}]"));
         }
 
-        public List<FormatException> Scan(YCFunctionDefinition def, INumberOperator<TNumber> op)
+        public List<FormatException> Scan(YCFunctionDefinition def, IYCNumberOperator<TNumber> op)
         {
             YCIdentifierValidatorArgs<TNumber> ctx = new() { Op = op, Exceptions = new() };
 
@@ -51,7 +51,7 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
             return ctx.Exceptions;
         }
 
-        public void Validate(YCFunctionDefinition def, INumberOperator<TNumber> op)
+        public void Validate(YCFunctionDefinition def, IYCNumberOperator<TNumber> op)
         {
             var errors = Scan(def, op);
             if (errors != null && !errors.IsEmpty())
