@@ -143,7 +143,8 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
             {
                 case "all":
                     return Operator.StandardLibrary.Keys.Chain(Calc.Context.Functions.Keys)
-                                .Distinct().Select(f => f.ToStringTypeless()).MakeString("\n");
+                                .Distinct().Where(f=>!f.IsAnonymousExpression())
+                                .Select(f => f.ToStringTypeless()).MakeString("\n");
 
                 case "":
                     return _definitionsHistory.MakeString("\n");

@@ -13,6 +13,7 @@ definition_or_expression: function_definition EOF #upcast_function_definition_to
 	;
 
 function_definition: IDENTIFIER bracketed_args_list ASSIGN expression #function_definition_rule
+	| IDENTIFIER ASSIGN expression #constant_definition_rule
 	;
 
 bracketed_args_list: LPAR args_list RPAR #bracketed_args_list_fillled

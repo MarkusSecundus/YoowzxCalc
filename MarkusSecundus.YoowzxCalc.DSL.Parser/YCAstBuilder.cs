@@ -188,6 +188,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser
 
             public override void ExitFunction_definition_rule([NotNull] CalculatorDSLParser.Function_definition_ruleContext context)
                 => returnValueBody = (context.IDENTIFIER().Symbol.Text, argsStack.Pop(), stack.Pop());
+            public override void ExitConstant_definition_rule([NotNull] CalculatorDSLParser.Constant_definition_ruleContext context)
+                => returnValueBody = (context.IDENTIFIER().Symbol.Text, new List<string>(), stack.Pop());
+
 
             public override void ExitAnonymous_function_definition([NotNull] CalculatorDSLParser.Anonymous_function_definitionContext context)
                 => returnValueBody = (YCFunctionDefinition.AnonymousFunctionName, Array.Empty<string>(), stack.Pop());
