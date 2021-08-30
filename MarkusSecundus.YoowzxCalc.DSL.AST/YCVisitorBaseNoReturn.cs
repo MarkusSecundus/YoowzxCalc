@@ -9,8 +9,20 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
+    /// <summary>
+    /// Abstract base for expression visitors that provides some convenience functionality on top of bare <see cref="IYCVisitor{TRet, TContext}"/> contract.
+    /// <para/>
+    /// Contains additional Visit methods for abstract expression supertypes - every Visit method by default redirects to Visit method of supertype, Visit(<see cref="YCExpression"/>) throws a <see cref="NotImplementedException"/>.
+    /// </summary>
+    /// <typeparam name="TContext">Type for carrying additional data needed during the visit.</typeparam>
     public abstract class YCVisitorBaseNoReturn<TContext> : YCVisitorBaseNoReturn<object, TContext> { }
 
+    /// <summary>
+    /// Abstract base for expression visitors that provides some convenience functionality on top of bare <see cref="IYCVisitor{TRet, TContext}"/> contract.
+    /// <para/>
+    /// Contains additional Visit methods for abstract expression supertypes - every Visit method by default redirects to Visit method of supertype, Visit(<see cref="YCExpression"/>) throws a <see cref="NotImplementedException"/>.
+    /// </summary>
+    /// <typeparam name="TContext">Type for carrying additional data needed during the visit.</typeparam>
     public abstract class YCVisitorBaseNoReturn<TRet, TContext> : IYCVisitor<TRet, TContext>
     {
         public virtual void Visit(YCLiteralExpression expr, TContext ctx) => Visit((YCPrimaryExpression)expr, ctx);

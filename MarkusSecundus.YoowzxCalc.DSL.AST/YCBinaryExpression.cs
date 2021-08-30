@@ -9,12 +9,21 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.AST
 {
+    /// <summary>
+    /// Abstract base for any binary subexpression in abstract syntax tree of a YoowzxCalc expression.
+    /// </summary>
     public abstract record YCBinaryExpression : YCExpression
     {
         internal YCBinaryExpression() { }
 
-
+        /// <summary>
+        /// Left subexpression
+        /// </summary>
         public YCExpression LeftChild { get; init; }
+
+        /// <summary>
+        /// Right subexpression
+        /// </summary>
         public YCExpression RightChild { get; init; }
 
         public sealed override int Arity => 2;
@@ -26,6 +35,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
 
 
 
+        /// <summary>
+        /// Symbol textually representing the operation this node performs
+        /// </summary>
         internal abstract string Symbol { get; }
 
 

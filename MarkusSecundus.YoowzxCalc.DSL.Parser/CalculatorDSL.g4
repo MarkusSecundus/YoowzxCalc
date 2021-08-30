@@ -121,7 +121,7 @@ fragment DOUBLEQUOTE_STRING : '"' (~('"') | '\\"')* '"' ;
 fragment SINGLEQUOTE_STRING : '\'' (~('\'') | '\\\'')* '\'' ;
 
 fragment STRING : DOUBLEQUOTE_STRING | SINGLEQUOTE_STRING ;
-fragment NUMBER : DIGIT+ ('.' DIGIT*)? (('E' | 'e') '-'? DIGIT+)?;
+fragment NUMBER : DIGIT+ ('.' DIGIT*)? (('E' | 'e') ('-' | '+')? DIGIT+)?;
 
 fragment IDENTIFIER_OLD : LETTER (LETTER | DIGIT)* ;
 

@@ -27,8 +27,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
             => childIndex == 0 ? Child :
                 throw new IndexOutOfRangeException($"Index {childIndex} not in range <0;{Arity})");
 
+
         /// <summary>
-        /// Symbol representing this node's operation in textual 
+        /// Symbol textually representing the operation this node performs
         /// </summary>
         internal abstract string Symbol { get; }
 
