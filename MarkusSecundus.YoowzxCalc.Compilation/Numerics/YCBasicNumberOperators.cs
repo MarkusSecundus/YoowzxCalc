@@ -6,13 +6,34 @@ using System.Text.RegularExpressions;
 
 namespace MarkusSecundus.YoowzxCalc.Numerics
 {
+
+    /// <summary>
+    /// Static class encapsulating basic implementations of <see cref="IYCNumberOperator{TNumber}"/> for the most common numeric types
+    /// and providing a basic infrastructure for registering and finding operators by the numeric types they operate on.
+    /// </summary>
     public static class YCBasicNumberOperators
     {
         private static readonly Dictionary<Type, object> _table = new();
 
-        public static void Register<TNumber>(Func<IYCNumberOperator<TNumber>> operatorSupplier)
-            => _table[typeof(TNumber)] = operatorSupplier;
+        /// <summary>
+        /// Register an operator provider for given number type.
+        /// </summary>
+        /// <typeparam name="TNumber">Number type to be operated on</typeparam>
+        /// <param name="operatorProvider">Factory creating operator instances for given number type.</param>
+        /// <exception cref="InvalidOperationException">If there is already a provider registered for given number type</exception>
+        public static void Register<TNumber>(Func<IYCNumberOperator<TNumber>> operatorProvider)
+        {
+            if (_table.TryGetValue(typeof(TNumber), out var curr))
+                throw new InvalidOperationException($"There is already number operator {curr} registered for type {typeof(TNumber)}!");
+           _table[typeof(TNumber)] = operatorProvider;
+        }
 
+        /// <summary>
+        /// Get an instance of <see cref="IYCNumberOperator{TNumber}"/> for given number type
+        /// </summary>
+        /// <typeparam name="TNumber">Number type to be operated</typeparam>
+        /// <returns>An instance of <see cref="IYCNumberOperator{TNumber}"/> registered for given <typeparamref name="TNumber"/> type</returns>
+        /// <exception cref="KeyNotFoundException">If there is no operator provider registered for given number type</exception>
         public static IYCNumberOperator<TNumber> Get<TNumber>() => ((Func<IYCNumberOperator<TNumber>>)_table[typeof(TNumber)])();
 
         static YCBasicNumberOperators()
@@ -22,25 +43,54 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             Register(() => new Long());
         }
 
+        /// <summary>
+        /// Subclass containing constant values.
+        /// </summary>
         public static class Const
         {
+            /// <summary>
+            /// Number style describing the common way how number types with fractional part should be parsed
+            /// </summary>
             public const NumberStyles NonintegerNumberStyle = NumberStyles.Number | NumberStyles.AllowExponent;
+
+            /// <summary>
+            /// Number style describing the common way how integral number types should be parsed
+            /// </summary>
             public const NumberStyles IntegerNumberStyle = NumberStyles.Integer;
 
-            public static readonly Regex IdentifierValidator = new Regex(@"^\p{L}[\p{L}\p{N}]*$", RegexOptions.Compiled);
+            /// <summary>
+            /// Regex describing the identifier definition that's common in C-like languages
+            /// </summary>
+            public static readonly Regex IdentifierValidator = new Regex(@"^[_\p{L}][_\p{L}\p{N}]*$", RegexOptions.Compiled);
         }
 
-        public static FormatException DefaultIdentifierValidation(string identifier)
-            => Const.IdentifierValidator.IsMatch(identifier) ? null : new FormatException($"Invalid identifier: '{identifier}'");
+        /// <summary>
+        /// Check whether the identifier matches the specified regex pattern. 
+        /// <para/>
+        /// If not, create a <see cref="FormatException"/> describing the problem encountered.
+        /// </summary>
+        /// <param name="identifier">Identifier candidate to be checked for validity</param>
+        /// <param name="validator">Pattern that performs the matching. If left default, <see cref="Const.IdentifierValidator"/> will be used</param>
+        /// <returns>Null of the candidate matches successfully; the corresponding exception otherwise.</returns>
+        public static FormatException ValidateIdentifierFormat(string identifier, Regex validator=null)
+            => (validator??Const.IdentifierValidator).IsMatch(identifier) ? null : new FormatException($"Invalid identifier: '{identifier}'");
 
 
+        /// <summary>
+        /// Basic implementation for calculating on type <see cref="System.Double"/>.
+        /// <para/>
+        /// Standard library includes all functions and constants from <see cref="System.Math"/>.
+        /// </summary>
         public class Double : IYCNumberOperator<double>
         {
+            /// <summary>
+            /// Instance of the singleton.
+            /// </summary>
             public static Double Instance { get; } = new();
 
             public bool TryParse(string repr, out double value) => double.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
-            public FormatException ValidateIdentifier(string identifier) => DefaultIdentifierValidation(identifier);
+            public FormatException ValidateIdentifier(string identifier) => ValidateIdentifierFormat(identifier);
 
             private static double toBool(bool d) => d ? 1d : 0d;
 
@@ -67,7 +117,10 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             public double NegateLogical(double a) => toBool(a == 0);
 
 
-
+            /// <summary>
+            /// <inheritdoc/>
+            /// Contains all functions from <see cref="System.Math"/>
+            /// </summary>
             public IReadOnlyDictionary<YCFunctionSignature<double>, Delegate> StandardLibrary { get; }
                 = new Dictionary<YCFunctionSignature<double>, Delegate>().MakeFunctionsAdder()
                     .Add<Func<double>>("PI", () => Math.PI)
@@ -103,21 +156,27 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
                     .Value;
         }
 
-        
 
-        
 
-        
 
-        
-        
+
+
+
+
+
+        /// <summary>
+        /// Basic implementation for calculating on type <see cref="System.Decimal"/>
+        /// </summary>
         public class Decimal : IYCNumberOperator<decimal>
         {
+            /// <summary>
+            /// Instance of the singleton.
+            /// </summary>
             public static Decimal Instance { get; } = new();
 
             public bool TryParse(string repr, out decimal value) => decimal.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
-            public FormatException ValidateIdentifier(string identifier) => DefaultIdentifierValidation(identifier);
+            public FormatException ValidateIdentifier(string identifier) => ValidateIdentifierFormat(identifier);
 
             private static decimal toBool(bool d) => d ? 1 : 0;
 
@@ -144,13 +203,19 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             public decimal NegateLogical(decimal a) => toBool(a == 0);
         }
 
+        /// <summary>
+        /// Basic implementation for calculating on type <see cref="System.Int64"/>
+        /// </summary>
         public class Long : IYCNumberOperator<long>
         {
+            /// <summary>
+            /// Instance of the singleton.
+            /// </summary>
             public static Long Instance { get; } = new();
 
             public bool TryParse(string repr, out long value) => long.TryParse(repr, Const.IntegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
-            public FormatException ValidateIdentifier(string identifier) => DefaultIdentifierValidation(identifier);
+            public FormatException ValidateIdentifier(string identifier) => ValidateIdentifierFormat(identifier);
 
             private static long toBool(bool d) => d ? 1 : 0;
 
