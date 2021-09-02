@@ -28,7 +28,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
             var argsDict = args.Select((arg, index) => (toInterpret.Arguments[index], arg).AsKV()).ToImmutableDictionary();
             if (argsDict.Count != toInterpret.Arguments.Count)
-                throw new YCCompilerException($"Interpreting function: `{toInterpret.GetSignature<TNumber>()}` - {argsDict.Count} args provided instead of {toInterpret.Arguments.Count}");
+                throw new ArgumentException($"Interpreting function: `{toInterpret.GetSignature<TNumber>()}` - {argsDict.Count} args provided instead of {toInterpret.Arguments.Count}", nameof(args));
 
             return toInterpret.Body.Accept(InterpreterVisitor.Instance, new VisitContext
             (

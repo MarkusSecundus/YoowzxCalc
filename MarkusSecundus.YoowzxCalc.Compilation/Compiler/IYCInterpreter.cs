@@ -23,7 +23,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
         /// <param name="args">Expression arguments</param>
         /// <returns>Result of the expression</returns>
         /// <exception cref="System.FormatException">If the AST is not valid</exception>
-        /// <exception cref="ArgumentException">On attempt to call a symbol not defined in the interpretation context</exception>
+        /// <exception cref="ArgumentException">On wrong number of arguments; On an attempt to call a symbol not defined in the interpretation context.</exception>
         public TNumber Interpret(IYCInterpretationContext<TNumber> ctx, YCFunctionDefinition toInterpret, IEnumerable<TNumber> args);
 
 
