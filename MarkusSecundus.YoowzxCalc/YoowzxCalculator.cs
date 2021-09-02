@@ -29,7 +29,7 @@ namespace MarkusSecundus.YoowzxCalc
 
         public IYCAstBuilder AstBuilder { get => _astBuilder??=DefaultAstBuilder; init => _astBuilder = value; }
         public IYCCompiler<TNumber> Compiler { get => _compiler??=DefaultCompiler; init => _compiler = value; }
-        public IYCInterpretationContext<TNumber> Context { get => Context_impl; init => Context_impl = IYCFunctioncallContext<TNumber>.Make((value??DefaultContext).Functions); }
+        public IYCInterpretationContext<TNumber> Context { get => Context_impl; init => Context_impl = IYCFunctioncallContext<TNumber>.Make().ResolveSymbols((value??DefaultContext).Functions); }
 
 
         

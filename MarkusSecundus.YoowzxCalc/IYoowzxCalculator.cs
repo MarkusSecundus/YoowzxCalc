@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.YoowzxCalc
 {
+
+    /// <summary>
+    /// Facade
+    /// </summary>
+    /// <typeparam name="TNumber"></typeparam>
     public interface IYoowzxCalculator<TNumber>
     {
         public IYCAstBuilder AstBuilder { get; init; }
@@ -36,6 +41,9 @@ namespace MarkusSecundus.YoowzxCalc
 
 
 
+    /// <summary>
+    /// Static class containing some convenience functions for working with <see cref="IYoowzxCalculator{TNumber}"/>
+    /// </summary>
     public static class YoowzxCalculatorExtensions
     {
         public static IYoowzxCalculator<TNumber> AddFunctions<TNumber>(this IYoowzxCalculator<TNumber> self, params string[] toAdd)
