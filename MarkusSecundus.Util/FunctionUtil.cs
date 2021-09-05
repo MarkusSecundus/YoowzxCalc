@@ -46,7 +46,11 @@ namespace MarkusSecundus.Util
 
 
         public static IReadOnlyList<ParameterInfo> GetDelegateTypeParameters<TDelegate>() where TDelegate : Delegate
-            => _DelegateTypeParametersContainer<TDelegate>.Value;
+        {
+            if (!IsConcreteDelegateType<TDelegate>())
+                throw new ArgumentException($"Must be a concrete delegate type but is {typeof(TDelegate)}", nameof(TDelegate));
+            return _DelegateTypeParametersContainer<TDelegate>.Value;
+        }
 
             private static class _DelegateTypeParametersContainer<TDelegate> where TDelegate: Delegate
             {

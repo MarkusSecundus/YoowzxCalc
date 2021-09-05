@@ -48,8 +48,11 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
             => self.GetSignature<TNumber, Delegate>(name);
 
 
+
+
         public static bool IsAnonymousExpression<TNumber>(this YCFunctionSignature<TNumber> self)
             => ReferenceEquals(self.Name, YCFunctionDefinition.AnonymousFunctionName);
+
 
 
         public static YCFunctionSignature<TNumber> GetSignature<TNumber, TDelegate>(this TDelegate self, string name) where TDelegate : Delegate
@@ -65,42 +68,6 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
 
             return new() { Name = name, ArgumentsCount = parameters.Length };
         }
-
-
-
-
-
-
-
-        internal delegate TNumber ExpressionDelegate<TNumber>(params TNumber[] args);
-
-        internal static Expression<ExpressionDelegate<TNumber>> WrapParams<TNumber>(this Delegate self)
-        {
-            var args = Expression.Parameter(typeof(TNumber[]), "#args");
-            var argsPassed = new Expression[self.ArgumentsCount()];
-
-            for (int t = 0; t < argsPassed.Length; ++t)
-                argsPassed[t] = Expression.ArrayAccess(args, Expression.Constant(t));
-
-            return Expression.Lambda<ExpressionDelegate<TNumber>>(
-                Expression.Invoke(Expression.Constant(self), argsPassed),
-                args
-            );
-        }
-
-        internal static Expression<TDelegate> UnwrapArrayParams<TNumber, TDelegate>(this ExpressionDelegate<TNumber> self, int argsCount)
-        {
-            var argParams = new ParameterExpression[argsCount];
-            for (int t = argsCount; --t >= 0;) argParams[t] = Expression.Parameter(typeof(TNumber));
-
-            return Expression.Lambda<TDelegate>(
-                Expression.Invoke(Expression.Constant(self), Expression.NewArrayInit(typeof(TNumber), argParams)),
-                argParams
-            );
-        }
-
-
-
 
 
 

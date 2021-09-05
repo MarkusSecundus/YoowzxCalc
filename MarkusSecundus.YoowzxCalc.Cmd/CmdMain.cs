@@ -11,23 +11,36 @@ using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using num = System.Double;
 
+
 namespace MarkusSecundus.YoowzxCalc.Cmd
 {
+    /// <summary>
+    /// Datová třída specifikující argumenty příkazové řádky, jež mohou programu být předány.
+    /// </summary>
     public class CmdOptions
     {
+        /// <summary>
+        /// Seznam souborů s definicemi, jež mají před spuštěním programu být načteny.
+        /// </summary>
         [Option('f', "file", Required = false, HelpText = "Files from which to load definitions", Separator =';', Max =int.MaxValue)]
         public IEnumerable<string> FilesToLoad { get; init; }
 
+        /// <summary>
+        /// Výraz k přímému vyhodnocení. Pokud je ne-null, nebude spuštěn REPL, místo toho bude pouze vyhodnocen daný výraz a vypsán výsledek.
+        /// </summary>
         [Option('e', "eval", Required = false, HelpText ="Provide an expression to evaluate directly")]
         public string Eval { get; init; }
     }
 
+    /// <summary>
+    /// Hlavní třída kontrolující běh terminálového kalkulátoru.
+    /// </summary>
     public class CmdMain
     {
         private IYoowzxCalculator<num> Calc;
         private IYCNumberOperator<num> Operator;
 
-        public delegate string CmdCommand(string args);
+        private delegate string CmdCommand(string args);
 
         private readonly Dictionary<string, CmdCommand> Commands;
 
@@ -35,9 +48,25 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
 
         private readonly string Prompt;
 
+        /// <summary>
+        /// Podtřída nesoucí konstanty.
+        /// </summary>
+        public static class Const
+        {
+            /// <summary>
+            /// Výchozí 
+            /// </summary>
+            public const string DefaultPrompt = ">>> ";
+        }
+
+        /// <summary>
+        /// Inicializuje instanci kalkulátoru specifikovaným textovým výstupem.
+        /// </summary>
+        /// <param name="output">Textový proud do nějž bude zapisován výstup kalkulátoru.</param>
+        /// <param name="prompt">Výzva jež se vždy vypíše na začátku řádky očekávající uživatelský vstup.</param>
         public CmdMain(TextWriter output=null, string prompt = null)
         {
-            Prompt = prompt ?? ">>> ";
+            Prompt = prompt ?? Const.DefaultPrompt;
             Out = output ?? Console.Out;
             Commands = new()
             {
@@ -53,7 +82,12 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
             Calc = IYoowzxCalculator<num>.Make(compiler: IYCCompiler<num>.Make(Operator));
         }
 
-
+        /// <summary>
+        /// Provede jeden průběh aplikace.
+        /// <para/>
+        /// V závislosti na předaných argumentech buď vyhodnotí výraz a skončí, nebo započne REPL smyčku.
+        /// </summary>
+        /// <param name="args">List argumentů</param>
         public void Main(CmdOptions args)
         {
             foreach(var f in args.FilesToLoad) Load(f);
@@ -69,7 +103,7 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
         }
 
 
-        public void Repl()
+        void Repl()
         {
             for(string line; (line = ReadLine.Read(Prompt))!= null;)
             {
@@ -85,7 +119,7 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
             Exit();
         }
 
-        public void RunCommand(string command)
+        void RunCommand(string command)
         {
             command = command.TrimStart();
             if (string.IsNullOrEmpty(command)) return;
@@ -141,12 +175,12 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
         {
             switch( arg = arg.Trim() )
             {
-                case "all":
+                case "":
                     return Operator.StandardLibrary.Keys.Chain(Calc.Context.Functions.Keys)
                                 .Distinct().Where(f=>!f.IsAnonymousExpression())
                                 .Select(f => f.ToStringTypeless()).MakeString("\n");
 
-                case "":
+                case "save":
                     return _definitionsHistory.MakeString("\n");
 
                 default:
@@ -166,36 +200,34 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
 
 
 
-
-        public static void Main(string[] args) => Launch(args);
         
-        public static void Launch(string[] args) => Parser.Default.ParseArguments<CmdOptions>(args).WithParsed(new CmdMain().Main);
+        public static void Main(string[] args) => Parser.Default.ParseArguments<CmdOptions>(args).WithParsed(new CmdMain().Main);
 
 
 
 
         public static string HelpString =>
-@"Yoowzx Calc v1.0
+@"Yoowzx Calc v0.1
 
-Commands:
-- help ... Print this overview
+Příkazy:
+- help ... Vypíše tento přehled
 
-- exit ... Exit this application
+- exit ... Ukončí tento program
 
-- load [filepath] ... Load definitions from the specified file
+- load [filepath] ... Načte definice z daného souboru
 
-- save [filepath] ... Save all functions defined so far in this session of Yoowzx Calc to specified file
+- save [filepath] ... Uloží všechny v této relaci definované funkce do specifikovaného souboru. (Zavolej `list save` pro náhled funkcí, jež budou uloženy) 
 
-- list (all) ... List all functions that would be saved by the 'save' command / that are available for use to the user
+- list (save) ... Vypiš funkce, jež jsou k dispozici / jež by byly uloženy příkazem `save`
 
-- (eval) [expression or function definition] ... Evaluate a mathematical expression
+- (eval) [expression or function definition] ... Vyhodnoť matematický výraz (gramatiku viz níže)
     
 
 
 " + new string('_', Console.WindowWidth-1)+
 @"
 
-Author: Jakub Hroník
+Autor: Jakub Hroník
 git: https://github.com/MarkusSecundus/YoowzxCalc";
 
     }
