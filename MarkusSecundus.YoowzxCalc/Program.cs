@@ -26,12 +26,11 @@ namespace MarkusSecundus.YoowzxCalc
                 .AddFunction<Func<double, double>>("Sin", Math.Sin)
                 .AddFunction<Func<double, double>>("Print", x=> { Console.WriteLine(x); return x; });
 
-            calc.AddFunctions("Fib10 := fib(10)", "fib(x) := x<= 1 ? x : fib(x-1) + fib(x-2)", "fib(x) := 76823.7456", "Fib3 := fib(3)");
-            for (int t=0;t<10;++t)
-                Console.WriteLine(calc.Get<Func<double, double>>("fib")(t));
-            WriteLine();
-            WriteLine(calc.Get<Func<double>>("Fib10")());
-            WriteLine(calc.Get<Func<double>>("Fib3")());
+            calc.AddFunctions("fact(x, acc) := x<= 1? acc : fact(x-1, x*acc)", "fact(x):= fact(x, 1)");
+
+            //for (int t = 0; t < 10; ++t)
+                WriteLine(calc.Get<Func<double, double>>("fact")(80000));
+
         }
 
     }
