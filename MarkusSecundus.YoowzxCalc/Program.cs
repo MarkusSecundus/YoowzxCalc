@@ -20,9 +20,18 @@ namespace MarkusSecundus.YoowzxCalc
 
         public static void Main()
         {
-            var bld = IYCAstBuilder.Instance;
-            var tree = bld.Build("černá + zelená - 45 + 45e-78");
-            Console.WriteLine(tree);
+            IYoowzxCalculator<double> calc = IYoowzxCalculator<double>.Make();
+
+            calc.AddFunction<Func<double>>("Pi", () => 4)
+                .AddFunction<Func<double, double>>("Sin", Math.Sin)
+                .AddFunction<Func<double, double>>("Print", x=> { Console.WriteLine(x); return x; });
+
+            calc.AddFunctions("Fib10 := fib(10)", "fib(x) := x<= 1 ? x : fib(x-1) + fib(x-2)", "fib(x) := 76823.7456", "Fib3 := fib(3)");
+            for (int t=0;t<10;++t)
+                Console.WriteLine(calc.Get<Func<double, double>>("fib")(t));
+            WriteLine();
+            WriteLine(calc.Get<Func<double>>("Fib10")());
+            WriteLine(calc.Get<Func<double>>("Fib3")());
         }
 
     }

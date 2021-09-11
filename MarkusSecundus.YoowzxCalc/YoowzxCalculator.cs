@@ -59,9 +59,17 @@ namespace MarkusSecundus.YoowzxCalc
                 var tree = AstBuilder.Build(function);
                 var signature = tree.GetSignature<TNumber>();
                 var result = Compiler.Compile(Context_impl, tree).Compile();
-                Context_impl.GetUnresolvedFunction(signature).Value = result;
+
+                {
+                    SettableOnce<Delegate> unresolved;
+                    while ((unresolved = Context_impl.GetUnresolvedFunction(signature)).IsSet)
+                        Context_impl = Context_impl.ResolveSymbols();
+                    unresolved.Value = result;
+                    if (Context.Functions.ContainsKey(signature))
+                        Context_impl = Context_impl.ResolveSymbols();
+                }
             }
-            Context_impl.ResolveSymbols();
+            Context_impl = Context_impl.ResolveSymbols();
 
             return this;
         }

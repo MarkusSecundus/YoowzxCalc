@@ -156,8 +156,8 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
             if (string.IsNullOrWhiteSpace(path)) return null;
 
             using var rdr = new StreamReader(path);
-            foreach (var line in rdr.IterateLines())
-                Calc.AddFunction(line, out _, out _);
+
+            Calc.AddFunctions(rdr.IterateLines().Where(s=>!string.IsNullOrWhiteSpace(s)));
 
             return null;
         }
