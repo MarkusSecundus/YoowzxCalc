@@ -35,7 +35,9 @@ Takto výraz pouze zkompilujeme, ale ať už byl pojmenovaný nebo ne, nikdy neb
 
 ***Máme-li naopak několik výrazů, které chceme zkompilovat a rovnou přidat do kontextu, můžeme použít metodu `AddFunctions()`:***
 ```c#
-calc.AddFunctions("fib(x) := x<= 1 ? x : fib(x-1) + fib(x-2)", "Pi := 4", "Fib_10 := fib(10)");
+calc.AddFunctions("fib(x) := x<= 1 ? x : fib(x-1) + fib(x-2)",
+                  "Pi := 4",
+                  "Fib_10 := fib(10)");
 ```
 Jakmile je funkce součástí kontextu, můžeme ji volat z jiných výrazů.  
 
