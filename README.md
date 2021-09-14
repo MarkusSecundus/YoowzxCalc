@@ -60,6 +60,8 @@ Yoowzx plně podporuje [optimalizaci koncové rekurze](https://en.wikipedia.org/
 ```c#
 calc.AddFunctions("fact(x, accumulator) := x <= 1? accumulator : fact(x-1, x*accumulator)",
                   "fact(x) := fact(x, 1)");
+
+calc.Get<Func<double, double>>("fact")(800000); //doběhne bez pádu
 ```
 
 ### ***Kešování výsledků***
@@ -67,6 +69,8 @@ Pomocí anotace "cached" lze kompilátoru nařídit, aby volání funkce pro dan
 Tím pádem např. takto definovaná funkce pro výpočet fibonacciho posloupnosti poběží v lineárním čase (resp. konstantním pro opětovná volání):
 ```c#
 calc.AddFunctions("[cached] fib(x) := x <= 1 ? x : fib(x-1) + fib(x-2)");
+
+calc.Get<Func<double, double>>("fib")(1000); //doběhne dříve než skončí vesmír
 ```
 _Kešování je podporováno pro všechny funkce bez ohledu na to, jak mnoho argumentů berou._
 
