@@ -17,7 +17,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser
     /// 
     /// <para/>
     /// Canonically the grammar should look like this:
-    /// WHITESPACE: [\u0000- ] -> ignored ;
+    /// <para/>
+    /// WHITESPACE: [\u0000- ] -&gt; ignored 
+    /// <para/>
     /// IDENTIFIER: (any_non_special_non_whitespace_char 
     ///              | ('"'(any_char_except_double_quote | '\\"')'"')      //string in double-quotes, double-quotes inside it must be escaped
     ///              | ('\''(any_char_except_single_quote | '\\\'')'\'')   //string in single-quotes, single-quotes inside it must be escaped
@@ -25,7 +27,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser
     ///              )+
     ///       
     /// 
-    /// function_definition: annotations_list? (function_header ':=')? expression ;
+    /// <para/>
+    /// function_definition: annotations_list? (function_header ':=')? expression 
+    /// <para/>
     /// 
     /// 
     /// expression : literal
@@ -33,24 +37,34 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser
     ///     | binary_expression
     ///     | ternary_expression
     ///     | functioncall
-    ///     ;
+    ///     
+    /// <para/>
     /// 
     /// literal : IDENTIFIER
     ///     | '(' expression ')'
-    ///     ;
+    ///     
+    /// <para/>
     ///     
     ///     -- with usual operator precedence
-    /// unary_expression: ('+' | '-' | ('!' | '¬') ) expression ;
-    /// binary_expression: expression ( '+' | '-' | '*' | '/' | '%' | ('**' | '^') | ('∧'| '&') | ('|' | '∨') | '<' | '<=' | '>' | '>=' | ('=' | '==') | '!=' ) expression ;
-    /// ternary_expression: expression '?' expression ':' expression ;
+    /// <para/>
+    /// unary_expression: ('+' | '-' | ('!' | '¬') ) expression 
+    /// <para/>
+    /// binary_expression: expression ( '+' | '-' | '*' | '/' | '%' | ('**' | '^') | ('∧'| '&amp;') | ('|' | '∨') | '&lt;' | '&lt;=' | '&gt;' | '&gt;=' | ('=' | '==') | '!=' ) expression 
+    /// <para/>
+    /// ternary_expression: expression '?' expression ':' expression 
+    /// <para/>
     /// 
     /// functioncall: IDENTIFIER '(' (expression (',' expression)* )? ')'
+    /// <para/>
     /// 
     /// 
     /// function_header: IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)* )? ')'
+    /// <para/>
     /// 
     /// annotations_list: '[' (annotation (',' annotation)* )? ']'
+    /// <para/>
     /// annotation: IDENTIFIER (':' IDENTIFIER)?
+    /// <para/>
     /// 
     /// </summary>
     public interface IYCAstBuilder

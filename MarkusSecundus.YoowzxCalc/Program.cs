@@ -20,6 +20,7 @@ namespace MarkusSecundus.YoowzxCalc
 
         public static void Main()
         {
+            IYCAstBuilder
             IYoowzxCalculator<double> calc = IYoowzxCalculator<double>.Make();
 
             calc.AddFunction<Func<double>>("Pi", () => 4)

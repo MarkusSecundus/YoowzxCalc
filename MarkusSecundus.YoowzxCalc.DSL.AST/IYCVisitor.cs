@@ -9,7 +9,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
     /// Object that can visit <see cref="YCExpression"/> and perform some operation on it.
     /// 
     /// <para>
-    /// For canonical implementations see:
+    /// For more convenient-to-use abstract base classes see:
     /// <para/>
     /// - <see cref="YCVisitorBase{TRet, TContext}"/>
     /// <para/>
