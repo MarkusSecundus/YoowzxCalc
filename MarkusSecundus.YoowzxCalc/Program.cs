@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using MarkusSecundus.Util;
 using MarkusSecundus.YoowzxCalc.Compiler;
 using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
+using MarkusSecundus.YoowzxCalc.DSL.AST;
 using MarkusSecundus.YoowzxCalc.DSL.Parser;
 using static System.Console;
 
@@ -20,7 +21,7 @@ namespace MarkusSecundus.YoowzxCalc
 
         public static void Main()
         {
-            IYCAstBuilder
+
             IYoowzxCalculator<double> calc = IYoowzxCalculator<double>.Make();
 
             calc.AddFunction<Func<double>>("Pi", () => 4)

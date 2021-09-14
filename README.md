@@ -75,8 +75,13 @@ _Kešování je podporováno pro všechny funkce bez ohledu na to, jak mnoho arg
 ## Gramatika
 Překlad textově zapsaného výrazu do počítačem přímočaře zpracovatelné formy (AST) je úkolem modulu MarkusSecundus.YoowzxCalc.DSL.  
 Podmodul ***[MarkusSecundus.YoowzxCalc.DSL.AST](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST)*** obsahuje definici jednotlivých uzlů AST a [mašinérii](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/IYCVisitor.cs) pro jejich spracování pomocí [visitor patternu](https://en.wikipedia.org/wiki/Visitor_pattern).  
-Sestavení AST z textově zapsaného výrazu je úkolem [YCAstBuilder](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/IYCAstBuilder.cs)u. Jeho kanonická implementace (která respektuje níže popsanou gramatiku) je singleton a lze ji získat jako `IYCAstBuilder.Instance`
-
+Sestavení AST z textově zapsaného výrazu je úkolem [YCAstBuilder](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/IYCAstBuilder.cs)u. Jeho kanonická implementace (která respektuje níže popsanou gramatiku) je bezestavový singleton a lze ji získat jako `IYCAstBuilder.Instance`.  
+Máme-li tedy textově zapsaný výraz, AST z něj získáme nějak takto:
+```c#
+string expression;
+YCFunctionDefinition root = IYCAstBuilder.Instance.Build(expression);
+```
+Narazil-li parser na nějakou lexikální či syntaktickou chybu, vyhodí na konci svého běhu [výjimku](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/ParserExceptions/YCAggregateAstBuilderException.cs), nesoucí informace o všech chybách, ke kterým v překládaném textu došlo.
 
 ### Literály a identifikátory
-Pro větší flexibilitu jsou z hlediska 
+Pro větší flexibilitu jsou v gramatice
