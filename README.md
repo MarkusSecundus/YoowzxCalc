@@ -56,7 +56,7 @@ Func<double, double, double> f2 = calc.Get<Func<double, double, double>>("f");
 _Pozor - Yoowzx podporuje přetěžování funkcí. V tomto případě pro hodnotu f1 bude hledána funkce s názvem "f" a jedním argumentem, pro f2 jiná funkce "f" s dvěma argumenty. Počet argumentů hledané funkce metoda Get() vykouká z typového parametru._  
 
 ### ***Koncová rekurze***
-Yoowzx plně podporuje optimalizaci koncové rekurze. Zadefinujeme-li tedy např. takto výpočet faktorialu, pro libovolně vysoké hodnoty argumentu nehrozí přetečení volacího zásobníku:
+Yoowzx plně podporuje [optimalizaci koncové rekurze](https://en.wikipedia.org/wiki/Tail_call). Zadefinujeme-li tedy např. takto výpočet faktorialu, pro libovolně vysoké hodnoty argumentu nehrozí přetečení volacího zásobníku:
 ```c#
 calc.AddFunctions("fact(x, accumulator) := x <= 1? accumulator : fact(x-1, x*accumulator)",
                   "fact(x) := fact(x, 1)");
@@ -68,8 +68,15 @@ Tím pádem např. takto definovaná funkce pro výpočet fibonacciho posloupnos
 ```c#
 calc.AddFunctions("[cached] fib(x) := x <= 1 ? x : fib(x-1) + fib(x-2)");
 ```
-_Kešování je podporováno pro všechny funkce bez ohledu na to, jak moc argumentů berou._
+_Kešování je podporováno pro všechny funkce bez ohledu na to, jak mnoho argumentů berou._
 
 &nbsp;
 -----------------------------
 ## Gramatika
+Překlad textově zapsaného výrazu do počítačem přímočaře zpracovatelné formy (AST) je úkolem modulu MarkusSecundus.YoowzxCalc.DSL.  
+Podmodul ***[MarkusSecundus.YoowzxCalc.DSL.AST](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST)*** obsahuje definici jednotlivých uzlů AST a [mašinérii](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/IYCVisitor.cs) pro jejich spracování pomocí [visitor patternu](https://en.wikipedia.org/wiki/Visitor_pattern).  
+Sestavení AST z textově zapsaného výrazu je úkolem [YCAstBuilder](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/IYCAstBuilder.cs)u. Jeho kanonická implementace (která respektuje níže popsanou gramatiku) je singleton a lze ji získat jako `IYCAstBuilder.Instance`
+
+
+### Literály a identifikátory
+Pro větší flexibilitu jsou z hlediska 
