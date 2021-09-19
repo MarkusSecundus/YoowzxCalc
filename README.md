@@ -6,6 +6,14 @@ Parsuje výrazy v infixní notaci s podporou uživatelsky definovaných pomocný
 Schopná z výrazů za běhu generovat CIL kód - běžící přímo na VM a tedy rychle - volatelný skrze delegáta.  
 Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku sloužící jako demo.
 
+&nbsp;
+
+Poděkování:
+  - Autorům .NET a jazyka C#
+  - Autorům knihovny [ReadLine](https://github.com/tonerdo/readline)
+  - Autorům knihovny [CommandLineParser](https://github.com/commandlineparser/commandline)
+  - Autorům parser-generátoru [ANTLR](https://www.antlr.org/)
+
 -----------------------
 &nbsp;
 ## Začínáme
