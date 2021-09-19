@@ -95,6 +95,7 @@ YCFunctionDefinition root = IYCAstBuilder.Instance.Build(expression);
 ```
 Narazil-li parser na nějakou lexikální či syntaktickou chybu, vyhodí na konci svého běhu [výjimku](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/ParserExceptions/YCAggregateAstBuilderException.cs), nesoucí informace o všech chybách, ke kterým v překládaném textu došlo.
 
+
 ### Literály a identifikátory
 Pro větší flexibilitu nejsou na úrovni gramatiky rozlišovány a jejich definice je velmi volná, s cílem umožnit např. zpracování výrazů nad textovými řetězci apod. bez nutnosti gramatiku přepisovat. 
 Jejich validace a rozlišení jsou ponechány na uživateli v rámci pozdějších fází zpracování výrazu (viz níže YCNumberOperator).  
@@ -114,3 +115,15 @@ Příkl. literálů:
   - `"Toto je text: \"qw\"""Jiný řetězec"` (dvojice řetězců hned vedle sebe, neoddělených bílým znakem)
   - `@'Další exemplář textu: "REwqefds"'` (nespeciální znak následovaný řetězcem)
   - `Abc1e+32"rew  "` (řetězec nespeciálních znaků následovaný číslem v exp. notaci následovaný řetězcem)
+
+
+### Operátory
+Yoowzx definuje klasicky používané, unární, binární a ternární, aritmetické a logické operátory s obvyklými prioritami a asociativitou.
+Každému operátoru odpovídá uzel AST, pro vyčerpávající výčet podporovaných operátorů náhlédněte tedy prosím zde:
+  - [Unární operátory](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST/UnaryExpressions)
+  - [Binární operátory](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST/BinaryExpressions)
+  - [Ternární operátor](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/OtherExpressions/YCConditionalExpression.cs)
+
+
+
+### Volání funkcí
