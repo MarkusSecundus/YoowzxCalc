@@ -127,3 +127,10 @@ Každému operátoru odpovídá uzel AST, pro vyčerpávající výčet podporov
 
 
 ### Volání funkcí
+Volání funkcí probíhá klasickým způsobem známým např. z jazyka C:  
+Jméno funkce je libovolný literál, za ním následují kulaté závorky, obsahující příp. jednotlivé argumenty (libovolně složité výrazy) oddělené čárkami.  
+Na úrovni AST je reprezentováno uzlem [YCFunctioncallExpression](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/OtherExpressions/YCFunctioncallExpression.cs).
+
+
+## Funkční definice
+Kompilační jednotkou je funkční definice.
