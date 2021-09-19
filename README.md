@@ -1,4 +1,4 @@
-# YoowzxCalc
+# ***YoowzxCalc***
 
 ### Knihovna pro zpracování matematických výrazů v prostředí .NET vyvíjená s důrazem na výkon a flexibilitu použití.   
 \
@@ -8,7 +8,7 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
 
 &nbsp;
 
-Poděkování:
+#### ***Poděkování:***
   - Autorům .NET a jazyka C#
   - Autorům knihovny [ReadLine](https://github.com/tonerdo/readline)
   - Autorům knihovny [CommandLineParser](https://github.com/commandlineparser/commandline)
@@ -16,7 +16,7 @@ Poděkování:
 
 -----------------------
 &nbsp;
-## Začínáme
+## ***Začínáme***
 
 Pro přímočaré použití základní funkcionality slouží fasáda [YoowzxCalculator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc/IYoowzxCalculator.cs).  
 Ta zaštiťuje celou pipelinu zpracování výrazu - prvotní zparsování textového zápisu na obecný abstraktní syntaktický strom, následnou generaci spustitelného kódu podle AST a zároveň i správu kontextu s funkcemi, které je možné z výrazů volat. Pro každý z těchto segmentů je možné explicitně dodat vlastní implementaci nebo nechat, aby byla použita ta defaultní.  
@@ -84,7 +84,7 @@ _Kešování je podporováno pro všechny funkce bez ohledu na to, jak mnoho arg
 
 &nbsp;
 -----------------------------
-## Gramatika
+## ***Gramatika***
 Překlad textově zapsaného výrazu do počítačem přímočaře zpracovatelné formy (AST) je úkolem modulu MarkusSecundus.YoowzxCalc.DSL.  
 Podmodul ***[MarkusSecundus.YoowzxCalc.DSL.AST](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST)*** obsahuje definici jednotlivých uzlů AST a [mašinérii](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/IYCVisitor.cs) pro jejich zpracování pomocí [visitor patternu](https://en.wikipedia.org/wiki/Visitor_pattern).  
 Sestavení AST z textově zapsaného výrazu je úkolem [YCAstBuilder](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/IYCAstBuilder.cs)u. Jeho kanonická implementace (která respektuje níže popsanou gramatiku) je bezestavový singleton a lze ji získat jako `IYCAstBuilder.Instance`.  
@@ -95,10 +95,10 @@ YCFunctionDefinition root = IYCAstBuilder.Instance.Build(expression);
 ```
 Narazil-li parser na nějakou lexikální či syntaktickou chybu, vyhodí na konci svého běhu [výjimku](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/ParserExceptions/YCAggregateAstBuilderException.cs), nesoucí informace o všech chybách, ke kterým v překládaném textu došlo.
 
-### Bílé znaky
+### ***Bílé znaky***
 Za bílé jsou považovány všechny znaky s ASCII kódem od 0 do ord(' ') včetně. Z hlediska gramatiky jsou ignorovány, slouží jako oddělovač.
 
-### Literály a identifikátory
+### ***Literály a identifikátory***
 Pro větší flexibilitu nejsou na úrovni gramatiky rozlišovány a jejich definice je velmi volná, s cílem umožnit např. zpracování výrazů nad textovými řetězci apod. bez nutnosti gramatiku přepisovat. 
 Jejich validace a rozlišení jsou ponechány na uživateli v rámci pozdějších fází zpracování výrazu (viz níže YCNumberOperator).  
 
@@ -119,7 +119,7 @@ Příkl. literálů:
   - `Abc1e+32"rew  "` (řetězec nespeciálních znaků následovaný číslem v exp. notaci následovaný řetězcem)
 
 
-### Operátory
+### ***Operátory***
 Yoowzx definuje klasicky používané, unární, binární a ternární, aritmetické a logické operátory s obvyklými prioritami a asociativitou.
 Každému operátoru odpovídá uzel AST, pro vyčerpávající výčet podporovaných operátorů náhlédněte tedy prosím zde:
   - [Unární operátory](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST/UnaryExpressions)
@@ -128,19 +128,36 @@ Každému operátoru odpovídá uzel AST, pro vyčerpávající výčet podporov
 
 
 
-### Volání funkcí
+### ***Volání funkcí***
 Volání funkcí probíhá klasickým způsobem známým např. z jazyka C:  
 Jméno funkce je libovolný literál, za ním následují kulaté závorky, obsahující příp. jednotlivé argumenty (libovolně složité výrazy) oddělené čárkami.  
 Na úrovni AST je reprezentováno uzlem [YCFunctioncallExpression](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/OtherExpressions/YCFunctioncallExpression.cs).
 
 
-## Kompilační jednotka
+### ***Kompilační jednotka***
 Výstupem kompilace je objekt typu [YCFunctionDefinition](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/YCFunctionDefinition.cs).  
 Jeho zápis vypadá nějak takto:
 ```c
-list_anotací? jméno_funkce '(' seznam_jmen_argumentů ')' ':=' výraz
+definice_funkce: list_anotací? jméno_funkce '(' seznam_jmen_argumentů ')' ':=' výraz ;
 ```
-Jméno funkce je libovolný literál, seznam jmen argumentů je (příp. prázdný) list literálů oddělených znakem ',', výraz pak libovolně složitý matematický výraz reprezentující tělo definované funkce.  
+Jméno funkce je libovolný literál, seznam jmen argumentů je (příp. prázdný) list literálů oddělených znakem ',', výraz pak libovolně složitý výraz reprezentující tělo definované funkce.  
 V případě funkce s nulovým počtem argumentů lze příp. prázdné závorky vynechat.  
-Popř. lze vynechat i jméno funkce s výrazem přiřadítka a zůstat se samotným (volitelně oanotovaným) výrazem. 
-V takovém případě bude jako jméno funkce použita (zaručeně non-null) hodnota `YCFunctionDefinition.AnonymousFunctionName`.
+Popř. lze vynechat i jméno funkce s výrazem přiřadítka a zůstat se samotným (volitelně oanotovaným) výrazem - v takovém případě bude jako jméno funkce použita (zaručeně non-null) hodnota `YCFunctionDefinition.AnonymousFunctionName`.
+
+#### ***Anotace***
+Někdy se hodí moci k definici funkce přiložit ještě dodatečná data, sloužící např. jako řidicí direktiva pro kompilátor apod. .  
+List anotací se zapisuje do hranatých závorek a jednotlivé anotace v něm jsou oddělené čárkami. Anotace může být buď anonymní - samotný literál, nebo může mít hodnotu uvozenou dvojtečkou a danou druhým literálem. Gramatika tedy vypadá takto:
+```c
+list_anotací: '[' anotace (',' anotace)* ']' ;
+anotace: LITERÁL | LITERÁL ':' LITERÁL ;
+```
+
+
+#### ***Příklady***
+Validní definice která projde kompilátorem může vypadat např. takto:
+  - `f(x) := x*x + 1`
+  - `Funkce1(arg1, arg2, arg3, arg4, arg5) := arg1==1? (arg1 + arg2 - (30 - arg1)*arg4)**((arg4)**2.14e-3) : Funkce1(1,1,1,1,arg3)`
+  - `f(a, b, a) := a*b*a` //kompilátor netestuje unikátnost funkčních argumentů
+  - `[anotace1, anotace2: něco] f() := 1`  
+  - `[anotace1, anotace2: něco] f := 1`
+  - `[anotace1, anotace2: něco] 1`
