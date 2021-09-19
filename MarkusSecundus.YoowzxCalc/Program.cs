@@ -21,6 +21,11 @@ namespace MarkusSecundus.YoowzxCalc
 
         public static void Main()
         {
+            IYCAstBuilder bld = IYCAstBuilder.Instance;
+            var tree = bld.Build("f(x) := 10 + 3*f(y, @'Toto je text''WE  ' + 10)");
+
+            Console.WriteLine(tree);
+            return;
 
             IYoowzxCalculator<double> calc = IYoowzxCalculator<double>.Make();
 

@@ -40,8 +40,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         /// </summary>
         internal abstract string Symbol { get; }
 
+        protected string ToString_canonicalImpl() => $"({LeftChild} {Symbol} {RightChild})";
 
-        public override string ToString() => $"({LeftChild} {Symbol} {RightChild})";
+        public override string ToString() => ToString_canonicalImpl();
 
         protected override int ComputeHashCode() => (LeftChild, RightChild).GetHashCode();
     }
