@@ -95,6 +95,8 @@ YCFunctionDefinition root = IYCAstBuilder.Instance.Build(expression);
 ```
 Narazil-li parser na nějakou lexikální či syntaktickou chybu, vyhodí na konci svého běhu [výjimku](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/ParserExceptions/YCAggregateAstBuilderException.cs), nesoucí informace o všech chybách, ke kterým v překládaném textu došlo.
 
+### Bílé znaky
+Za bílé jsou považovány všechny znaky s ASCII kódem od 0 do ord(' ') včetně. Z hlediska gramatiky jsou ignorovány, slouží jako oddělovač.
 
 ### Literály a identifikátory
 Pro větší flexibilitu nejsou na úrovni gramatiky rozlišovány a jejich definice je velmi volná, s cílem umožnit např. zpracování výrazů nad textovými řetězci apod. bez nutnosti gramatiku přepisovat. 
@@ -103,7 +105,7 @@ Jejich validace a rozlišení jsou ponechány na uživateli v rámci pozdější
 Na úrovni AST je reprezentuje uzel [YCLiteralExpression](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/PrimaryExpression/YCLiteralExpression.cs).
 
 Literál je libovolně dlouhý řetězec literálových prvků. Literálový prvek matchuje na jeden z těchto regulárních výrazů:
-  - `libovolný_nespeciální_newhitespace_znak`
+  - `libovolný_nespecielní_newhitespace_znak`   //specielní jsou všechny znaky s přiřazenou konkrétní rolí v gramatice - znaky operátorů apod.
   - `"([^"]|\")"`   //textový řetězec v uvozovkách - může obsahovat i specielní a bílé znaky; uvozovky též, pokud jsou odescapované
   - `'([^']|\')'`   //textový řetězec v apostrofech - může obsahovat i specielní a bílé znaky; apostrofy též, pokud jsou odescapované
   - `[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?`    //reálně číslo v exponenciální notaci - může obsahovat specielní znak '+' nebo '-'  
@@ -132,5 +134,13 @@ Jméno funkce je libovolný literál, za ním následují kulaté závorky, obsa
 Na úrovni AST je reprezentováno uzlem [YCFunctioncallExpression](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/OtherExpressions/YCFunctioncallExpression.cs).
 
 
-## Funkční definice
-Kompilační jednotkou je funkční definice.
+## Kompilační jednotka
+Výstupem kompilace je objekt typu [YCFunctionDefinition](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/YCFunctionDefinition.cs).  
+Jeho zápis vypadá nějak takto:
+```c
+list_anotací? jméno_funkce '(' seznam_jmen_argumentů ')' ':=' výraz
+```
+Jméno funkce je libovolný literál, seznam jmen argumentů je (příp. prázdný) list literálů oddělených znakem ',', výraz pak libovolně složitý matematický výraz reprezentující tělo definované funkce.  
+V případě funkce s nulovým počtem argumentů lze příp. prázdné závorky vynechat.  
+Popř. lze vynechat i jméno funkce s výrazem přiřadítka a zůstat se samotným (volitelně oanotovaným) výrazem. 
+V takovém případě bude jako jméno funkce použita (zaručeně non-null) hodnota `YCFunctionDefinition.AnonymousFunctionName`.
