@@ -21,7 +21,6 @@ namespace MarkusSecundus.YoowzxCalc
 
         public static void Main()
         {
-            YCFunctionDefinition.AnonymousFunctionName
             IYCAstBuilder bld = IYCAstBuilder.Instance;
             var tree = bld.Build("f(x) := 10 + 3*f(y, @'Toto je text''WE  ' + 10)");
 

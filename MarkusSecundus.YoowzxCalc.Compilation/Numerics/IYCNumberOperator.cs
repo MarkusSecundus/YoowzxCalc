@@ -14,6 +14,8 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
     {
         /// <summary>
         /// Tries to convert provided string to its numeric value.
+        /// <para/>
+        /// Every string that matches this is considered to be a constant. The ones that do not are then considered identifier-candidate
         /// </summary>
         /// <param name="repr">Text representation of a number.</param>
         /// <param name="value">Result value. Will be set to the respective value if the conversion succeeds or to <c>default(TNumber)</c> if it failed.</param>
@@ -24,7 +26,7 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
         /// Determines whether the string represents a valid identifier in the calculator grammar.
         /// </summary>
         /// <param name="identifier">Identifier candidate to be validated.</param>
-        /// <returns>Whether the string is a valid identifier</returns>
+        /// <returns><c>null</c> if the string is a valid identifier or an exception describing errors in its format</returns>
         public FormatException ValidateIdentifier(string identifier);
 
         /// <summary>

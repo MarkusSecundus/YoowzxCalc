@@ -94,8 +94,6 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
 
             private static double toBool(bool d) => d ? 1d : 0d;
 
-            public double AbsoluteValue(double a) => Math.Abs(a);
-
             public double Add(double a, double b) => a + b;
             public double Subtract(double a, double b) => a - b;
             public double Multiply(double a, double b) => a * b;
@@ -180,8 +178,6 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
 
             private static decimal toBool(bool d) => d ? 1 : 0;
 
-            public decimal AbsoluteValue(decimal a) => Math.Abs(a);
-
             public decimal Add(decimal a, decimal b) => a + b;
             public decimal Subtract(decimal a, decimal b) => a - b;
             public decimal Multiply(decimal a, decimal b) => a * b;
@@ -218,8 +214,6 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             public FormatException ValidateIdentifier(string identifier) => ValidateIdentifierFormat(identifier);
 
             private static long toBool(bool d) => d ? 1 : 0;
-
-            public long AbsoluteValue(long a) => Math.Abs(a);
 
             public long Add(long a, long b) => a + b;
             public long Subtract(long a, long b) => a - b;
