@@ -48,7 +48,7 @@ namespace MarkusSecundus.YoowzxCalc
         {
             var tree = AstBuilder.Build(function);
             var result = Compiler.Compile(_context, tree);
-            return result.Compile<TDelegate>();
+            return result.Finalize<TDelegate>();
         }
 
 
@@ -58,7 +58,7 @@ namespace MarkusSecundus.YoowzxCalc
             {
                 var tree = AstBuilder.Build(function);
                 var signature = tree.GetSignature<TNumber>();
-                var result = Compiler.Compile(Context_impl, tree).Compile();
+                var result = Compiler.Compile(Context_impl, tree).Finalize();
 
                 {
                     SettableOnce<Delegate> unresolved;
@@ -88,7 +88,7 @@ namespace MarkusSecundus.YoowzxCalc
         {
             var tree = AstBuilder.Build(expression);
             signature = tree.GetSignature<TNumber>();
-            result = Compiler.Compile(Context_impl, tree).Compile();
+            result = Compiler.Compile(Context_impl, tree).Finalize();
 
             Context_impl = Context_impl.ResolveSymbols((signature, result));
 

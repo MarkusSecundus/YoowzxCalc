@@ -11,9 +11,9 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
         internal Delegate Expression { get; }
         internal SettableOnce<Delegate> ThisFunctionWrapper { get; }
 
-        public TDelegate Compile<TDelegate>() where TDelegate : Delegate
+        public TDelegate Finalize<TDelegate>() where TDelegate : Delegate
             => (ThisFunctionWrapper.Value = Expression) as TDelegate;
 
-        public Delegate Compile() => Compile<Delegate>();
+        public Delegate Finalize() => Finalize<Delegate>();
     }
 }
