@@ -196,10 +196,31 @@ Z našeho výrazu je možné libovolně volat externí pojmenované funkce. Vzni
 #### ***Signatura funkce***
 Nejprve si ale musíme rozmyslet, jak vůbec funkci jednoznačně identifikovat. YoowzxCalc pro větší uživatelské pohodlí podporuje přetěžování funkcí se stejným jménem, ale různými argumenty. K jednoznačné identifikaci tedy slouží struktura [YCFunctionSignature&lt;TNumber&gt;](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/YCFunctionSignature.cs) - nese jméno funkce, počet a typ (jako generický parametr) argumentů. Ve třídě [YCCompilerUtils](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Util/YCCompilerUtils.cs) najdete extension-metody, kterými lze signaturu jednoduše získat z instance `System.Delegate` nebo z uzlů AST.
 
-#### ***Kompilační kontext***
-Spravování seznamu definic je úkolem objektu [IYCFunctioncallContext](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Contexts/IYCFunctioncallContext.cs).  
+#### ***Správa definic***
+Správa seznamu definic je úkolem objektu [IYCFunctioncallContext](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Contexts/IYCFunctioncallContext.cs).  
 Prázdnou instanci jeho kanonické implementace pro funkce nad typem `double` získáme takto:
 ```c#
 IYCFunctioncallContext<double> ctx = IYCFunctioncallContext<double>.Make();
 ```
-Funkce, které se v něm již napevno nacházejí, získáme skrze property `ctx.Functions`
+Hešmapu funkcí, jež se v něm již napevno nacházejí, získáme skrze property `ctx.Functions`.  
+
+Ne vždy jsme ale schopni pro všechny funkce, jež chceme volat, mít těla již zkompilovaná a připravená. Představte si např., že pracujeme na umělé inteligenci ke hře a pokoušíme se v kalkulátoru naimplementovat klasickým učebnicovým způsobem algoritmus [MiniMax](https://en.wikipedia.org/wiki/Minimax). Máme dvě funkce, které se mají volat vzájemně - první volá druhou, druhá volá první, tedy cyklická závislost.  
+Zkompilovat obě funkce najednou, aby jedna o druhé vzájemně věděly, není v silách YC - přineslo by to do něj extrémní a zbytečnou komplexitu. Přímočarý způsob, jak takovou situaci rozřešit, je umožnit volání funkcí, jež ještě nebyly definovány - vytvořit prázdný wrapper, na který odkážeme místo toho, a počítat, že příslušná definice do něj bude dodána později. Přesně tak to YC dělá a k tomu slouží ostatek mašinerie, kterou má [IYCFunctioncallContext](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Contexts/IYCFunctioncallContext.cs) na starosti.  
+Wrapper pro potencielně nerozřešený symbol s danou signaturou získáme takto:
+```c#
+IYCFunctioncallContext<double> ctx;
+YCFunctionSignature<double> signature;
+SettableOnce<Delegate> unresolved = ctx.GetUnresolvedFunction(signature);
+```
+Přesně toto dělá kompilátor pokaždé, když narazí na funkci, jež není k nalezení v hešmapě `Functions` ani ve [standardní knihovně](#standardní-knihovna).  
+Do `unresolved` nyní, pokud vskutku je nerozřešena (což není garantováno - zjistíme příp. skrze `unresolved.IsSet`), pokud bychom vážně chtěli, můžeme ručně uložit delegáta a rozřešit ji tak, normálně takto:
+```c#
+Delegate value;
+unresolved.Value = value;
+```
+V praxi to ale dělat nebudeme - místo toho využijeme funkce `ResolveSymbols` na kontextu - nějak takto:
+ ```c#
+ctx = ctx.ResolveSymbols((signature, del));
+ ```
+
+_Vedlejším efektem tohoto chování je fakt, že volání neexistující funkce zákonitě nemůže ústit v kompilační chybu, ale vždy až běhovou při pokusu onu neexistující funkci zavolat._
