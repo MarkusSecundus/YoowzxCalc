@@ -220,7 +220,7 @@ Příkazy:
 
 - list (save) ... Vypiš funkce, jež jsou k dispozici / jež by byly uloženy příkazem `save`
 
-- (eval) [expression or function definition] ... Vyhodnoť matematický výraz (gramatiku viz níže)
+- (eval) [expression or function definition] ... Vyhodnoť matematický výraz
     
 
 
