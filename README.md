@@ -57,7 +57,7 @@ Ta zaštiťuje celou pipelinu zpracování výrazu - prvotní zparsování texto
 ```c#
 IYoowzxCalc<double> calc = IYoowzxCalc<double>.Make(); 
 ```
-*V základu lze vytvořit kalkulátor nad typy `double`, `decimal` a `long`. Pro počítání nad jiným typem je třeba explicitní přidání podpory uživatelem (viz níže `NumberOperator`).*  
+*V základu lze vytvořit kalkulátor nad typy `double`, `decimal` a `long`. Pro počítání nad jiným typem je třeba explicitní přidání podpory uživatelem (viz níže [`NumberOperator`](#registrace-numberoperatoru)).*  
 
 ***Jakmile máme instanci kalkulátoru, můžeme vesele kompilovat výrazy:***
 ```c#
@@ -71,7 +71,7 @@ Func<double, double> fibonacci = calc.Compile<Func<double, double>>("fib(x) := x
 for(int t=0;t<10;++t)
     Console.WriteLine(fibonacci(t));    //vypíše prvních 10 fibonacciho čísel
 ```
-Takto výraz pouze zkompilujeme, ale ať už byl pojmenovaný nebo ne, nikdy nebude přidán jako volatelná funkce do kontextu. (Ale jeho jméno pořád má význam když chceme praktikovat rekurzi.)  
+Takto výraz pouze zkompilujeme, ale ať už byl pojmenovaný nebo ne, nikdy nebude přidán jako volatelná funkce do kontextu. (Jeho jméno však pořád má význam když chceme praktikovat rekurzi.)  
 
 ***Máme-li naopak několik výrazů, které chceme zkompilovat a rovnou přidat do kontextu, můžeme použít metodu `AddFunctions()`:***
 ```c#
@@ -112,8 +112,9 @@ calc.AddFunctions("[cached] fib(x) := x <= 1 ? x : fib(x-1) + fib(x-2)");
 
 calc.Get<Func<double, double>>("fib")(1000); //doběhne dříve než skončí vesmír
 ```
-_Kešování je podporováno pro všechny funkce bez ohledu na to, jak mnoho argumentů berou._
+_Kešování je podporováno pro všechny funkce bez ohledu na to, jak mnoho argumentů berou._  
 
+_Současná implementace kešování na funkcích, jež ji využívají, neumožňuje optimalizaci koncové rekurze. Na řešení se pracuje._
 
 -----------------------------
 &nbsp;
