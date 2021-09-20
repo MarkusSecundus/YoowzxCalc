@@ -273,12 +273,12 @@ YCFunctionSignature<double> signature;
 SettableOnce<Delegate> unresolved = ctx.GetUnresolvedFunction(signature);
 ```
 Přesně toto dělá kompilátor pokaždé, když narazí na funkci, jež není k nalezení v hešmapě `Functions` ani ve [standardní knihovně](#standardní-knihovna).  
-Do `unresolved` nyní, pokud vskutku je nerozřešena (což není garantováno - zjistíme příp. skrze `unresolved.IsSet`), pokud bychom vážně chtěli, můžeme ručně uložit delegáta a rozřešit ji tak, normálně takto:
+Do `unresolved` nyní, pokud vskutku je nerozřešena (což není garantováno - zjistíme příp. skrze `unresolved.IsSet`), pokud bychom vážně chtěli, můžeme ručně uložit delegáta a rozřešit ji tím, normálně takto:
 ```c#
 Delegate value;
 unresolved.Value = value;
 ```
-V praxi to ale dělat nebudeme - místo toho využijeme metody `ResolveSymbols` na kontextu - nějak takto:
+V praxi to ale skoro jistě dělat nebudeme - místo toho využijeme metody `ResolveSymbols` na kontextu - nějak takto:
  ```c#
 ctx = ctx.ResolveSymbols((signature, del));
  ```
