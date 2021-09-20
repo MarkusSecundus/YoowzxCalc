@@ -222,5 +222,7 @@ V praxi to ale dělat nebudeme - místo toho využijeme funkce `ResolveSymbols` 
  ```c#
 ctx = ctx.ResolveSymbols((signature, del));
  ```
+ Ta bere libovolný počet dvojic `(signatura, delegát)`, všechny najednou rozřeší a vrátí novou instanci kontextu, jež má všechny rozřešené symboly přidány do svých `Functions` (včetně symbolů, jež byly vedeny jako unresolved, ale měly hodnotu už nastavenou odjinud než z argumentů `ResolveSymbols`). Definice předaná sem jako argument bude v pořádku přidána do výsledného kontextu i tehdy, když vůbec nebyla vedena jako unresolved - tímto způsobem tedy jsme schopni do kontextu přímočaře přidávat i úplně nové definice.  
+ Někdy by se mohla hodit metoda `GetUnresolvedSymbolsList` - ta vrací proud všech symbolů, jež jsou vedeny jako unresolved a skutečně ještě rozřešeny nebyly.
 
 _Vedlejším efektem tohoto chování je fakt, že volání neexistující funkce zákonitě nemůže ústit v kompilační chybu, ale vždy až běhovou při pokusu onu neexistující funkci zavolat._
