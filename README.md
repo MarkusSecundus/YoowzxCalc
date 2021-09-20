@@ -218,11 +218,14 @@ Do `unresolved` nyní, pokud vskutku je nerozřešena (což není garantováno -
 Delegate value;
 unresolved.Value = value;
 ```
-V praxi to ale dělat nebudeme - místo toho využijeme funkce `ResolveSymbols` na kontextu - nějak takto:
+V praxi to ale dělat nebudeme - místo toho využijeme metody `ResolveSymbols` na kontextu - nějak takto:
  ```c#
 ctx = ctx.ResolveSymbols((signature, del));
  ```
- Ta bere libovolný počet dvojic `(signatura, delegát)`, všechny najednou rozřeší a vrátí novou instanci kontextu, jež má všechny rozřešené symboly přidány do svých `Functions` (včetně symbolů, jež byly vedeny jako unresolved, ale měly hodnotu už nastavenou odjinud než z argumentů `ResolveSymbols`). Definice předaná sem jako argument bude v pořádku přidána do výsledného kontextu i tehdy, když vůbec nebyla vedena jako unresolved - tímto způsobem tedy jsme schopni do kontextu přímočaře přidávat i úplně nové definice.  
+ Ta bere jako varargs libovolný počet dvojic `(signatura, delegát)`, všechny najednou rozřeší a vrátí novou instanci kontextu, jež má všechny rozřešené symboly přidány do svých `Functions` (včetně symbolů, jež byly vedeny jako unresolved, ale měly hodnotu už nastavenou odjinud než z argumentů `ResolveSymbols`). Definice předaná sem jako argument bude v pořádku přidána do výsledného kontextu i tehdy, když vůbec nebyla vedena jako unresolved - tímto způsobem tedy jsme schopni do kontextu přímočaře přidávat i úplně nové definice.  
+
+ _Jakmile je symbol jednou rozřešen, pokus o změnu jeho hodnoty vyústí v běhovou chybu - to je záměr. Já, jakožto autor, si jsem plně vědom, že tím zavírám cestu k mnoha zajímavým a zajisté i velmi užitečným trikům, kterých by s tím bylo možno dosáhnout, avšak v důsledku toho, jak je zbytek YC implementován, by to vedlo v některých okrajových případech k velmi komplikovanému chování, které, upřímně, nemám nervy dokumentovat. Pokud to uživatel opravdu nutně potřebuje, neměl by pro něj být velký problém, naimplementovat nad YC další vrstvu, jež mu to umožní, příp. obstarat si vlastní verzi `MarkusSecundus.Util.dll` s odebranými checky v `SettableOnce`, je-li vážně zoufalý._
+
  Někdy by se mohla hodit metoda `GetUnresolvedSymbolsList` - ta vrací proud všech symbolů, jež jsou vedeny jako unresolved a skutečně ještě rozřešeny nebyly.
 
 _Vedlejším efektem tohoto chování je fakt, že volání neexistující funkce zákonitě nemůže ústit v kompilační chybu, ale vždy až běhovou při pokusu onu neexistující funkci zavolat._
