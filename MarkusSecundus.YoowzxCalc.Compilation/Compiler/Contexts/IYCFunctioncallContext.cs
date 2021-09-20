@@ -7,7 +7,10 @@ using System.Linq;
 namespace MarkusSecundus.YoowzxCalc.Compiler.Contexts
 {
 
-
+    /// <summary>
+    /// Object carrying definitions of functions that can be called from an YC expression and taking care of tracking not-already-resolved functions attempted to be called from somewhere.
+    /// </summary>
+    /// <typeparam name="TNumber">Number type used</typeparam>
     public interface IYCFunctioncallContext<TNumber> : IYCCompilationContext<TNumber>
     {
         /// <summary>

@@ -7,7 +7,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Contexts
     /// <summary>
     /// Set of data-carrying contracts sufficient for a context used during compilation of an YC expression.
     /// </summary>
-    /// <typeparam name="TNumber">Number type used by the compiler</typeparam>
+    /// <typeparam name="TNumber">Number type used</typeparam>
     public interface IYCCompilationContext<TNumber> : IYCInterpretationContext<TNumber>
     {
         /// <summary>
