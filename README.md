@@ -191,3 +191,9 @@ Volitelně ještě můžeme dodat množinu funkcí jakožto standardní knihovnu
 
 
 ### ***Kompilační kontext***
+Z našeho výrazu je možné libovolně volat externí pojmenované funkce. Vzniká tedy problém, jak kompilátoru dodat jejich definice, aby mohl ona volání vytvořit.
+
+#### ***Signatura funkce***
+Nejprve si ale musíme rozmyslet, jak vůbec funkci jednoznačně identifikovat. YoowzxCalc pro větší uživatelské pohodlí podporuje přetěžování funkcí se stejným jménem, ale různými argumenty. K jednoznačné identifikaci tedy slouží struktura [YCFunctionSignature&lt;TNumber&gt;](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/YCFunctionSignature.cs) - nese jméno funkce, počet a typ (jako generický parametr) argumentů. Ve třídě [YCCompilerUtils](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Util/YCCompilerUtils.cs) najdete extension-metody, kterými lze signaturu jednoduše získat z instance `System.Delegate` nebo z uzlů AST.
+
+#### ***Kompilační kontext***
