@@ -11,21 +11,16 @@ using MarkusSecundus.YoowzxCalc.Compiler;
 using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
 using MarkusSecundus.YoowzxCalc.DSL.AST;
 using MarkusSecundus.YoowzxCalc.DSL.Parser;
+using MarkusSecundus.YoowzxCalc.Numerics;
 using static System.Console;
 
 namespace MarkusSecundus.YoowzxCalc
 {
-
     public static class Program
     {
 
         public static void Main()
         {
-            IYCFunctioncallContext<double> ctx;
-            YCFunctionSignature<double> signature;
-            Delegate del;
-
-
             IYCAstBuilder bld = IYCAstBuilder.Instance;
             var tree = bld.Build("f(x) := 10 + 3*f(y, @'Toto je text''WE  ' + 10)");
 

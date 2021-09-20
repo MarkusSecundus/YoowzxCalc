@@ -189,6 +189,33 @@ Nyní zbývá už jen doplnit metody odpovídající jednotlivým operátorům d
 #### ***Standardní knihovna***
 Volitelně ještě můžeme dodat množinu funkcí jakožto standardní knihovnu. Každá funkce v ní definovaná bude kompilátorem automaticky viditelná, aniž by se musela nacházet v kompilačním kontextu. Pokud se v kontextu nachází funkce se stejnou signaturou, zastíní funkci ve standardní knihovně.
 
+#### ***Registrace NumberOperatoru***
+Volitelně ještě může mít smysl vytvořený number operator zaregistrovat jako kanonický operátor k použití nad daným číselným typem.  
+Jejich seznam vede opět třída [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs) a registrujeme v ní factory dodávající vždy novou instanci. Je-li náš operátor bezestavový singleton, může to vypadat nějak takto:
+```c#
+
+struct MyNumberType { }
+class MyNumberOperator : IYCNumberOperator<MyNumberType> 
+{
+    ...
+    public static MyNumberOperator Instance { get; } = new();
+}
+
+class EntryPoint
+{
+    public static void Main()
+    {
+        YCBasicNumberOperators.Register<MyNumberType>(() => MyNumberOperator.Instance);
+    }
+}
+```
+Instanci kanonického operátoru nyní získáme takto:
+```c#
+IYCNumberOperator<MyNumberType> op = YCBasicNumberOperators.Get<MyNumberType>();
+```
+Přesně takto získává defaultní operátor fasáda [YoowzxCalculator](#začínáme), pokud jí žádný nedodáme explicitně. Nyní ji tedy můžeme bez problémů používat pro náš nový typ. 
+
+&nbsp;
 
 ### ***Kompilační kontext***
 Z našeho výrazu je možné libovolně volat externí pojmenované funkce. Vzniká tedy problém, jak kompilátoru dodat jejich definice, aby mohl ona volání vytvořit.
@@ -224,8 +251,13 @@ ctx = ctx.ResolveSymbols((signature, del));
  ```
  Ta bere jako varargs libovolný počet dvojic `(signatura, delegát)`, všechny najednou rozřeší a vrátí novou instanci kontextu, jež má všechny rozřešené symboly přidány do svých `Functions` (včetně symbolů, jež byly vedeny jako unresolved, ale měly hodnotu už nastavenou odjinud než z argumentů `ResolveSymbols`). Definice předaná sem jako argument bude v pořádku přidána do výsledného kontextu i tehdy, když vůbec nebyla vedena jako unresolved - tímto způsobem tedy jsme schopni do kontextu přímočaře přidávat i úplně nové definice.  
 
- _Jakmile je symbol jednou rozřešen, pokus o změnu jeho hodnoty vyústí v běhovou chybu - to je záměr. Já, jakožto autor, si jsem plně vědom, že tím zavírám cestu k mnoha zajímavým a zajisté i velmi užitečným trikům, kterých by s tím bylo možno dosáhnout, avšak v důsledku toho, jak je zbytek YC implementován, by to vedlo v některých okrajových případech k velmi komplikovanému chování, které, upřímně, nemám nervy dokumentovat. Pokud to uživatel opravdu nutně potřebuje, neměl by pro něj být velký problém, naimplementovat nad YC další vrstvu, jež mu to umožní, příp. obstarat si vlastní verzi `MarkusSecundus.Util.dll` s odebranými checky v `SettableOnce`, je-li vážně zoufalý._
+ _Jakmile je symbol jednou rozřešen, pokus o změnu jeho hodnoty vyústí v běhovou chybu - to je záměr. Já, jakožto autor, si jsem plně vědom, že tím zavírám cestu k mnoha zajímavým a zajisté i velmi užitečným trikům, kterých by s tím bylo možno dosáhnout, avšak v důsledku toho, jak je zbytek YC implementován, by to vedlo v některých okrajových případech k velmi komplexnímu chování, které, upřímně, nemám nervy dokumentovat.  
+ Pokud to uživatel opravdu nutně potřebuje, neměl by pro něj být velký problém naimplementovat nad YC další vrstvu, jež mu to umožní, příp. obstarat si na vlastní nebezpečí verzi `MarkusSecundus.Util.dll` s odebranými checky v `SettableOnce`, je-li vážně zoufalý._
 
- Někdy by se mohla hodit metoda `GetUnresolvedSymbolsList` - ta vrací proud všech symbolů, jež jsou vedeny jako unresolved a skutečně ještě rozřešeny nebyly.
+ Někdy by se mohla hodit metoda `GetUnresolvedSymbolsList` - ta vrací proud těch symbolů, jež jsou vedeny jako unresolved a skutečně ještě rozřešeny nebyly.
 
 _Vedlejším efektem tohoto chování je fakt, že volání neexistující funkce zákonitě nemůže ústit v kompilační chybu, ale vždy až běhovou při pokusu onu neexistující funkci zavolat._
+
+### ***Kompilátor***
+Nyní konečně známe vše, co potřebujeme, abychom mohli přistoupit k vlastní kompilaci.  
+Ta je úkolem objektu [IYCCompiler](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/IYCCompiler.cs). 
