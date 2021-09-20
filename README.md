@@ -2,7 +2,7 @@
 
 ### Knihovna pro zpracování matematických výrazů v prostředí .NET vyvíjená s důrazem na výkon a flexibilitu použití.   
 \
-Parsuje výrazy v infixní notaci s podporou uživatelsky definovaných pomocných funkcí a rekurzivních volání (viz níže gramatiku).   
+Parsuje výrazy v infixní notaci s podporou uživatelsky definovaných pomocných funkcí a rekurzivních volání.   
 Schopná z výrazů za běhu generovat CIL kód - běžící přímo na VM a tedy rychle - volatelný skrze delegáta.  
 Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku sloužící jako demo.
 
