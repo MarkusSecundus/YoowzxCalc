@@ -6,6 +6,34 @@ Parsuje výrazy v infixní notaci s podporou uživatelsky definovaných pomocný
 Schopná z výrazů za běhu generovat CIL kód - běžící přímo na VM a tedy rychle - volatelný skrze delegáta.  
 Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku sloužící jako demo.
 
+
+&nbsp;
+
+#### ***Obsah***
+  0. [Začínáme](#začínáme)
+     - [Koncová rekurze](#koncová-rekurze) 
+     - [Kešování výsledků](#kešování-výsledků)
+  1. [Gramatka](#gramatika)
+     - [Bílé znaky](#bílé-znaky)
+     - [Literály a identifikátory](#literály-a-identifikátory)
+     - [Operátory](#operátory)
+     - [Volání funkcí](#volání-funkcí)
+     - [Kompilační jednotka](#kompilační-jednotka)
+       - [Anotace](#anotace)
+       - [Příklady](#příklady)
+  2. [Kompilace](#kompilace)
+     - [Jak definovat operace](#jak-definovat-operace)
+       - [Rozlišení konstant](#rozlišení-konstant)
+       - [Validace identifikátorů](#validace-identifikátorů)
+       - [Definice operátorů](#definice-operátorů)
+       - [Standardní knihovna](#standardní-knihovna)
+       - [Registrace NumberOperatoru](#registrace-numberoperatoru)
+     - [Kompilační kontext](#kompilační-kontext)
+       - [Signatura funkce](#signatura-funkce)
+       - [Správa definic](#správa-definic)
+     - [Kompilátor](#kompilátor)
+  3. [Demo kalkulačka](#demo-kalkulačka)
+
 &nbsp;
 
 #### ***Poděkování:***
@@ -13,6 +41,10 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
   - Autorům knihovny [ReadLine](https://github.com/tonerdo/readline)
   - Autorům knihovny [CommandLineParser](https://github.com/commandlineparser/commandline)
   - Autorům parser-generátoru [ANTLR](https://www.antlr.org/)
+
+#### ***Autor***:
+  - Jakub Hroník
+
 
 -----------------------
 &nbsp;
@@ -287,3 +319,6 @@ Nyní jsme konečně získali spustitelného delegáta reprezentujícího náš 
 -----------------------------
 &nbsp;
 ## ***Demo kalkulačka***
+Balíček [MarkusSecundus.YoowzxCalc.Cmd](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Cmd) obsahuje spustitelnou kalkulačku pro příkazovou řádku operující v klasické REPL smyčce nad typem `double` a sloužící jako ukázka demonstrující některé možnosti této knihovny.  
+
+Pro podrobnější instrukce k jejímu použití kalkulačku spusťte v interaktivním režimu a zavolejte příkaz `help`.
