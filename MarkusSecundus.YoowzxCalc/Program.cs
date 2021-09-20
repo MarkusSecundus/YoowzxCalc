@@ -21,6 +21,9 @@ namespace MarkusSecundus.YoowzxCalc
 
         public static void Main()
         {
+            IYCFunctioncallContext<double> ctx = IYCFunctioncallContext<double>.Make();
+            ctx.
+
             IYCAstBuilder bld = IYCAstBuilder.Instance;
             var tree = bld.Build("f(x) := 10 + 3*f(y, @'Toto je text''WE  ' + 10)");
 
