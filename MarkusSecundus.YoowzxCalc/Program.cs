@@ -26,7 +26,12 @@ namespace MarkusSecundus.YoowzxCalc
             IYCNumberOperator<MyNumberType> op = YCBasicNumberOperators.Get<MyNumberType>();
             IYCCompiler<MyNumberType> compiler = IYCCompiler<MyNumberType>.Make(op);
 
-            compiler.Compile()
+            IYCFunctioncallContext<MyNumberType> ctx = null;
+            YCFunctionDefinition toCompile = null;
+            IYCCompilationResult<MyNumberType> result = compiler.Compile(ctx, toCompile);
+
+            var r = result.Finalize();
+            var runnableResult = result.Finalize<Func<MyNumberType, MyNumberType>>();
         }
 
     }

@@ -266,4 +266,24 @@ Máme-li již instanci operátoru, kompilátor získáme následovně:
 IYCNumberOperator<MyNumberType> op;
 IYCCompiler<MyNumberType> compiler = IYCCompiler<MyNumberType>.Make(op);
 ```
-Použití je víceméně přímočaré
+Použití je víceméně přímočaré - zavoláme metodu `Compile`, jako argumenty jí předáme kontext a AST výrazu, jenž chceme zkompilovat - takto:
+```c#
+IYCFunctioncallContext<MyNumberType> ctx;
+
+YCFunctionDefinition toCompile;
+IYCCompilationResult<MyNumberType> result = compiler.Compile(ctx, toCompile);
+```
+
+Z implementačních důvodů takto ještě nezískáme přímo spustitelného delegáta, ale polotovar, který je nutné finalizovat jedním z těchto způsobů:
+```c#
+Delegate weaklyTypedResult = result.Finalize();
+Func<MyNumberType> stronglyTypedResult = result.Finalize<Func<MyNumberType>>();
+```
+
+Nyní jsme konečně získali spustitelného delegáta reprezentujícího náš výraz! Ještě zbývá zkontrolovat a příp. doplnit nevyřešené symboly, které se kompilací objevily v kontextu, a můžeme ho vesele začít používat, jak jen se nám zachce.
+
+
+
+-----------------------------
+&nbsp;
+## ***Demo kalkulačka***
