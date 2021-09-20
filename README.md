@@ -180,7 +180,7 @@ Popř. lze vynechat i jméno funkce s výrazem přiřadítka a zůstat se samotn
 
 #### ***Anotace***
 Někdy se hodí moci k definici funkce přiložit ještě dodatečná data, sloužící např. jako řidicí direktiva pro kompilátor apod. .  
-List anotací se zapisuje do hranatých závorek a jednotlivé anotace v něm jsou oddělené čárkami. Anotace může být buď anonymní - samotný literál, nebo může mít hodnotu uvozenou dvojtečkou a danou druhým literálem. Gramatika tedy vypadá takto:
+List anotací se zapisuje do hranatých závorek a jednotlivé anotace v něm jsou oddělené čárkami. Anotace může být buď prázdná - samotný literál, nebo může mít hodnotu uvozenou dvojtečkou a danou druhým literálem. Gramatika tedy vypadá takto:
 ```c
 list_anotací: '[' anotace (',' anotace)* ']' ;
 anotace: LITERÁL | LITERÁL ':' LITERÁL ;
@@ -204,9 +204,9 @@ Jakmile je postaven abstraktní syntaktický strom, nic už nám nebrání zač�
 Mašinérii s tím související obsahuje modul ***[MarkusSecundus.YoowzxCalc.Compilation](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Compilation)***.
 
 ### ***Jak definovat operace***
-Chceme-li být schopni přeložit matematický výraz na spustitelný kód, musíme nejprve vědět, co vůbec která v něm zapsaná operace znamená, a také jak rozlišit konstantu od identifikátoru a jak vůbec platný identifikátor vypadá. To všechno kompilátoru řekneme skrze instanci rozhranní ***[IYCNumberOperator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/IYCNumberOperator.cs)***.  
+Chceme-li být schopni přeložit matematický výraz na spustitelný kód, musíme nejprve vědět, co vůbec která v něm zapsaná operace znamená, a také jak rozlišit konstantu od identifikátoru a jak vypadá platný identifikátor. To všechno kompilátoru řekneme skrze instanci rozhranní ***[IYCNumberOperator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/IYCNumberOperator.cs)***.  
 
-Pracujeme-li s typem `double`, `decimal` nebo `long`, nemusíme se namáhat - pro ty už je defaultní implementace připravena - jako podtřída statické třídy [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs). Tyto výchozí implementace definují operátory intuitivním způsobem - operátor '+' odpovídá sčítání, '%' modulení, '**' mocnění apod., konstantou je vše, co projde metodou `TryParse` na odpovídajícím číselném typu při invariantní kultuře, validní identifikátor matchuje na regex `[[:alpha:]_][[:alnum:]_]*`, operátor pro typ `double` navíc zahrnuje ve standardní knihovně všechny funkce ze třídy `System.Math`.  
+Pracujeme-li s typem `double`, `decimal` nebo `long`, nemusíme se namáhat - pro ty už je defaultní implementace připravena - jako podtřída statické třídy [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs). Tyto výchozí implementace definují operátory intuitivním způsobem - operátor `+` odpovídá sčítání, `%` modulení, `**` mocnění apod., konstantou je vše, co projde metodou `TryParse` na odpovídajícím číselném typu při invariantní kultuře, validní identifikátor matchuje na regex `[[:alpha:]_][[:alnum:]_]*`, operátor pro typ `double` navíc zahrnuje ve standardní knihovně všechny funkce ze třídy `System.Math`.  
 
 Chcete-li napsat vlastní číselný operátor, doporučuji se podívat pro inspiraci právě na tyto předpřipravené implementace. Celkově to ale je poměrně přímočarý proces.
 
