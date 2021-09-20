@@ -82,8 +82,9 @@ calc.Get<Func<double, double>>("fib")(1000); //doběhne dříve než skončí ve
 ```
 _Kešování je podporováno pro všechny funkce bez ohledu na to, jak mnoho argumentů berou._
 
-&nbsp;
+
 -----------------------------
+&nbsp;
 ## ***Gramatika***
 Překlad textově zapsaného výrazu do počítačem přímočaře zpracovatelné formy (AST) je úkolem modulu MarkusSecundus.YoowzxCalc.DSL.  
 Podmodul ***[MarkusSecundus.YoowzxCalc.DSL.AST](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST)*** obsahuje definici jednotlivých uzlů AST a [mašinérii](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/IYCVisitor.cs) pro jejich zpracování pomocí [visitor patternu](https://en.wikipedia.org/wiki/Visitor_pattern).  
@@ -140,7 +141,7 @@ Jeho zápis vypadá nějak takto:
 ```c
 definice_funkce: list_anotací? jméno_funkce '(' seznam_jmen_argumentů ')' ':=' výraz ;
 ```
-Jméno funkce je libovolný literál, seznam jmen argumentů je (příp. prázdný) list literálů oddělených znakem ',', výraz pak libovolně složitý výraz reprezentující tělo definované funkce.  
+"Jméno funkce" je libovolný literál, "seznam jmen argumentů" je (příp. prázdný) list literálů oddělených znakem ',' a "výraz" pak libovolně složitý výraz reprezentující tělo definované funkce.  
 V případě funkce s nulovým počtem argumentů lze příp. prázdné závorky vynechat.  
 Popř. lze vynechat i jméno funkce s výrazem přiřadítka a zůstat se samotným (volitelně oanotovaným) výrazem - v takovém případě bude jako jméno funkce použita (zaručeně non-null) hodnota `YCFunctionDefinition.AnonymousFunctionName`.
 
@@ -157,7 +158,36 @@ anotace: LITERÁL | LITERÁL ':' LITERÁL ;
 Validní definice která projde kompilátorem může vypadat např. takto:
   - `f(x) := x*x + 1`
   - `Funkce1(arg1, arg2, arg3, arg4, arg5) := arg1==1? (arg1 + arg2 - (30 - arg1)*arg4)**((arg4)**2.14e-3) : Funkce1(1,1,1,1,arg3)`
-  - `f(a, b, a) := a*b*a` //kompilátor netestuje unikátnost funkčních argumentů
+  - `f(a, b, a) := a*b*a` //kompilátor netestuje duplicitu funkčních argumentů
   - `[anotace1, anotace2: něco] f() := 1`  
   - `[anotace1, anotace2: něco] f := 1`
   - `[anotace1, anotace2: něco] 1`
+
+
+&nbsp;
+-----------------------------
+## ***Kompilace***
+Jakmile je postaven abstraktní syntaktický strom, nic už nám nebrání začít se zabývat jeho kompilací na spustitelný kód.  
+Mašinérii s tím související obsahuje modul ***[MarkusSecundus.YoowzxCalc.Compilation](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Compilation)***.
+
+### ***Jak definovat operace***
+Chceme-li být schopni přeložit matematický výraz na spustitelný kód, musíme nejprve vědět, co vůbec která v něm zapsaná operace znamená, a také jak rozlišit konstantu od identifikátoru a jak vůbec platný identifikátor vypadá. To všechno kompilátoru řekneme skrze instanci rozhranní ***[IYCNumberOperator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/IYCNumberOperator.cs)***.  
+
+Pracujeme-li s typem `double`, `decimal` nebo `long`, nemusíme se namáhat - pro ty už je defaultní implementace připravena - jako podtřída statické třídy [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs). Tyto výchozí implementace definují operátory intuitivním způsobem - operátor '+' odpovídá sčítání, '%' modulení, '**' mocnění apod., konstantou je vše, co projde metodou `TryParse` na odpovídajícím číselném typu při invariantní kultuře, validní identifikátor matchuje na regex `[[:alpha:]_][[:alnum:]_]*`, operátor pro typ `double` navíc zahrnuje ve standardní knihovně všechny funkce ze třídy `System.Math`.  
+
+Chcete-li napsat vlastní číselný operátor, doporučuji se podívat pro inspiraci právě na tyto předpřipravené implementace. Celkově to ale je poměrně přímočarý proces.
+
+#### ***Rozlišení konstant***
+První metodou, jíž je třeba dodat, je `TryParse`. Jejím úkolem je z textového zápisu určit, zda reprezentuje konstantu, a její případnou hodnotu. Všechny literály jsou nejprve testovány na konstantu a teprve pokud neprojdou, stanou se kandidátem na identifikátor.
+
+#### ***Validace identifikátorů***
+Pokud literál není vyhodnocen jako konstanta, stane se kandidátem na identifikátor. Tato metoda má pak za úkol rozhodnout, zda identifikátorem vskutku je, příp. lidsky čitelným způsobem popsat odchylky od identifikátorového formátu, jichž se dopouští. Třída [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs) poskytuje pár statických metod a polí, které by se při její implementaci mohly hodit.
+
+#### ***Definice operátorů***
+Nyní zbývá už jen doplnit metody odpovídající jednotlivým operátorům definovaným v gramatice, což by měl být naprosto přímočarý proces.
+
+#### ***Standardní knihovna***
+Volitelně ještě můžeme dodat množinu funkcí jakožto standardní knihovnu. Každá funkce v ní definovaná bude kompilátorem automaticky viditelná, aniž by se musela nacházet v kompilačním kontextu. Pokud se v kontextu nachází funkce se stejnou signaturou, zastíní funkci ve standardní knihovně.
+
+
+### ***Kompilační kontext***
