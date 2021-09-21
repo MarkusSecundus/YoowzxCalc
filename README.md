@@ -11,9 +11,11 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
 
 #### ***Obsah***
   0. [Začínáme](#začínáme)
+     - [Jak zkompilovat](#jak-zkompilovat)
+     - [Jak používat](#jak-používat)
      - [Koncová rekurze](#koncová-rekurze) 
      - [Kešování výsledků](#kešování-výsledků)
-  1. [Gramatka](#gramatika)
+  2. [Gramatka](#gramatika)
      - [Bílé znaky](#bílé-znaky)
      - [Literály a identifikátory](#literály-a-identifikátory)
      - [Operátory](#operátory)
@@ -21,7 +23,7 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
      - [Kompilační jednotka](#kompilační-jednotka)
        - [Anotace](#anotace)
        - [Příklady](#příklady)
-  2. [Kompilace](#kompilace)
+  3. [Kompilace](#kompilace)
      - [Jak definovat operace](#jak-definovat-operace)
        - [Rozlišení konstant](#rozlišení-konstant)
        - [Validace identifikátorů](#validace-identifikátorů)
@@ -32,7 +34,7 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
        - [Signatura funkce](#signatura-funkce)
        - [Správa definic](#správa-definic)
      - [Kompilátor](#kompilátor)
-  3. [Demo kalkulačka](#demo-kalkulačka)
+  4. [Demo kalkulačka](#demo-kalkulačka)
 
 &nbsp;
 
@@ -49,6 +51,12 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
 -----------------------
 &nbsp;
 ## ***Začínáme***
+
+### ***Jak zkompilovat***
+Otevřete solution v MS Visual Studio 2019 aktuální verze a zkompilujte ho. Napříč projektem je hojně využíváno novinek jazyka C# 9 - .NET 5.0 je tedy vyžadován.
+
+
+### ***Jak používat***
 
 Pro přímočaré použití základní funkcionality slouží fasáda [YoowzxCalculator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc/IYoowzxCalculator.cs).  
 Ta zaštiťuje celou pipelinu zpracování výrazu - prvotní zparsování textového zápisu na obecný abstraktní syntaktický strom, následnou generaci spustitelného kódu podle AST a zároveň i správu kontextu s funkcemi, které je možné z výrazů volat. Pro každý z těchto segmentů je možné explicitně dodat vlastní implementaci nebo nechat, aby byla použita ta defaultní.  
@@ -95,7 +103,7 @@ Func<double, double, double> f2 = calc.Get<Func<double, double, double>>("f");
 ```
 _Pozor - Yoowzx podporuje přetěžování funkcí. V tomto případě pro hodnotu f1 bude hledána funkce s názvem "f" a jedním argumentem, pro f2 jiná funkce "f" s dvěma argumenty. Počet argumentů hledané funkce metoda Get() vykouká z typového parametru._  
 
-### ***Koncová rekurze***
+#### ***Koncová rekurze***
 Yoowzx plně podporuje [optimalizaci koncové rekurze](https://en.wikipedia.org/wiki/Tail_call). Zadefinujeme-li tedy např. takto výpočet faktorialu, pro libovolně vysoké hodnoty argumentu nehrozí přetečení volacího zásobníku:
 ```c#
 calc.AddFunctions("fact(x, accumulator) := x <= 1? accumulator : fact(x-1, x*accumulator)",
