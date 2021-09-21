@@ -15,7 +15,7 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
      - [Jak používat](#jak-používat)
      - [Koncová rekurze](#koncová-rekurze) 
      - [Kešování výsledků](#kešování-výsledků)
-  2. [Gramatka](#gramatika)
+  2. [Gramatika](#gramatika)
      - [Bílé znaky](#bílé-znaky)
      - [Literály a identifikátory](#literály-a-identifikátory)
      - [Operátory](#operátory)
