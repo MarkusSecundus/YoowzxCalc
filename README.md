@@ -124,6 +124,25 @@ _Kešování je podporováno pro všechny funkce bez ohledu na to, jak mnoho arg
 
 _Současná implementace kešování na funkcích, jež ji využívají, neumožňuje optimalizaci koncové rekurze. Na řešení se pracuje._
 
+----------------------------
+&nbsp;
+## ***Výkon***
+|                  Method |       Mean |    Error |   StdDev |
+|-------------------------|------------|----------|----------|
+|        Fibonacci_Yoowzx | 1,535.2 us | 12.71 us | 10.61 us |
+|        Fibonacci_CSharp |   372.8 us |  1.78 us |  1.66 us |
+|.........................|............|..........|..........|
+| Fibonacci_Cached_Yoowzx |   593.0 us |  3.87 us |  3.62 us |
+| Fibonacci_Cached_CSharp |   552.1 us |  3.05 us |  2.70 us |
+|.........................|............|..........|..........|
+|        Factorial_Yoowzx |   715.8 us |  4.70 us |  4.16 us |
+|        Factorial_CSharp |   201.1 us |  0.78 us |  0.73 us |
+|.........................|............|..........|..........|
+|              Sum_Yoowzx | 2,669.6 us | 20.27 us | 17.97 us |
+|              Sum_CSharp | 2,125.0 us | 12.02 us | 11.24 us |
+
+
+
 -----------------------------
 &nbsp;
 ## ***Gramatika***
