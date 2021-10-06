@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MarkusSecundus.Util\MarkusSecundus.Util.csproj" />
+    <ProjectReference Include="..\MarkusSecundus.YoowzxCalc.Compilation\MarkusSecundus.YoowzxCalc.Compilation.csproj" />
+    <ProjectReference Include="..\MarkusSecundus.YoowzxCalc.DSL.AST\MarkusSecundus.YoowzxCalc.DSL.AST.csproj" />
+    <ProjectReference Include="..\MarkusSecundus.YoowzxCalc.DSL.Parser\MarkusSecundus.YoowzxCalc.DSL.Parser.csproj" />
+    <ProjectReference Include="..\MarkusSecundus.YoowzxCalc\MarkusSecundus.YoowzxCalc.csproj" />
+  </ItemGroup>
+
+</Project>
