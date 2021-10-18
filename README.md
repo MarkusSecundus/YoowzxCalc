@@ -54,7 +54,7 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
 ## ***Začínáme***
 
 ### ***Jak zkompilovat***
-Otevřete solution v MS Visual Studio 2019 aktuální verze a zkompilujte ho. Napříč projektem je hojně využíváno novinek jazyka C# 9 - .NET 5.0 je tedy vyžadován.
+Otevřte solution v MS Visual Studio 2019 aktuální verze a zkompilujte ho. Napříč projektem je hojně využíváno novinek jazyka C# 9 - .NET 5.0 je tedy vyžadován.
 
 
 ### ***Jak používat***
