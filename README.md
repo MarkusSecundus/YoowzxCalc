@@ -15,6 +15,7 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
      - [Jak používat](#jak-používat)
      - [Koncová rekurze](#koncová-rekurze) 
      - [Kešování výsledků](#kešování-výsledků)
+  1. [Výkon](#výkon)
   2. [Gramatika](#gramatika)
      - [Bílé znaky](#bílé-znaky)
      - [Literály a identifikátory](#literály-a-identifikátory)
@@ -53,7 +54,7 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
 ## ***Začínáme***
 
 ### ***Jak zkompilovat***
-Otevřete solution v MS Visual Studio 2019 aktuální verze a zkompilujte ho. Napříč projektem je hojně využíváno novinek jazyka C# 9 - .NET 5.0 je tedy vyžadován.
+Otevřte solution v MS Visual Studio 2019 aktuální verze a zkompilujte ho. Napříč projektem je hojně využíváno novinek jazyka C# 9 - .NET 5.0 je tedy vyžadován.
 
 
 ### ***Jak používat***
@@ -127,20 +128,23 @@ _Současná implementace kešování na funkcích, jež ji využívají, neumož
 ----------------------------
 &nbsp;
 ## ***Výkon***
+
+V modulu [MarkusSecundus.YoowzxCalc.Benchmarks](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Benchmarks) je umístěno pár jednoduchých benchmarků, porovnávajících produkty YC s ekvivalentními lambdami zkompilovanými přímo jako součást C# zdrojáku.  
+Z výstupu vidíme, že v současné verzi YC sice je nezanedbatelně pomalejší - ve scénářích, kde velkou roli hraje rekurzivní volání (Fibonacci, Factorial) cca 4krát, ve scénářích, kde důraz leží na aritmetice, již jen o cca 25% - pořád ale jde o mnohonásobné zrychlení oproti neJITovaným interpretovaným jazykům (typu CPython apod.).  
+
 |                  Method |       Mean |    Error |   StdDev |
 |-------------------------|------------|----------|----------|
 |        Fibonacci_Yoowzx | 1,535.2 us | 12.71 us | 10.61 us |
 |        Fibonacci_CSharp |   372.8 us |  1.78 us |  1.66 us |
-|.........................|............|..........|..........|
 | Fibonacci_Cached_Yoowzx |   593.0 us |  3.87 us |  3.62 us |
 | Fibonacci_Cached_CSharp |   552.1 us |  3.05 us |  2.70 us |
-|.........................|............|..........|..........|
 |        Factorial_Yoowzx |   715.8 us |  4.70 us |  4.16 us |
 |        Factorial_CSharp |   201.1 us |  0.78 us |  0.73 us |
-|.........................|............|..........|..........|
 |              Sum_Yoowzx | 2,669.6 us | 20.27 us | 17.97 us |
 |              Sum_CSharp | 2,125.0 us | 12.02 us | 11.24 us |
 
+  
+_Referenční výsledky měřeny na stock-taktovaném Core i7 9700KF._
 
 
 -----------------------------
