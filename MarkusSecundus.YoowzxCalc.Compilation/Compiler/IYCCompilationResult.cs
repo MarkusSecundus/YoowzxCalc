@@ -8,7 +8,6 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
     /// <typeparam name="TNumber">Number type operated on</typeparam>
     public interface IYCCompilationResult<TNumber>
     {
-    {
         /// <summary>
         /// Finalize into a weakly typed delegate
         /// </summary>
