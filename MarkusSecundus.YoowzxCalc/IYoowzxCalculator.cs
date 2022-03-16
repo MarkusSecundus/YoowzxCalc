@@ -10,105 +10,104 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.YoowzxCalc
 {
-    //TODO: doplnit dockomenty
     /// <summary>
-    /// Fasáda nad Yoowzxí pipeline pro zpracování matematických výrazů.
+    /// Facade covering the Yoowzx pipeline for mathematical expressions evaluation.
     /// <para/>
-    /// Poskytuje pohodlnou a přímočarou cestu kompilace z textové reprezentace přímo do spustitelného kódu apod.
+    /// Provides a convenient and straightforward way to compile a text representated function directly to executable code etc.
     /// </summary>
-    /// <typeparam name="TNumber">Číselný typ nad kterým probíhají výpočty</typeparam>
+    /// <typeparam name="TNumber">Numeric type used in the calculations</typeparam>
     public interface IYoowzxCalculator<TNumber>
     {
         /// <summary>
-        /// Objekt zodpovědný za převod výrazu z textové reprezentace na AST
+        /// Object responsible for transformation of the text-written expression to AST
         /// </summary>
         public IYCAstBuilder AstBuilder { get; init; }
         /// <summary>
-        /// Objekt zodpovědný za překlad AST na spustitelný kód
+        /// Object responsible for compilation of the AST to executable code
         /// </summary>
         public IYCCompiler<TNumber> Compiler { get; init; }
         /// <summary>
-        /// Objekt definující funkce, na něž se lze z překládaného výrazu odkazovat
+        /// Object carrying function definitions that can be referenced from the expression being compiled
         /// </summary>
         public IYCInterpretationContext<TNumber> Context { get; init; }
 
 
 
         /// <summary>
-        /// Získá z kontextu již existující funkci s požadovanou signaturou.
+        /// Gets an existing function with given signature from the Context.
         /// </summary>
-        /// <param name="signature">Signatura hledané funkce</param>
-        /// <returns>Funkce s požadovanou signaturou definovaná v kontextu kalkulátoru</returns>
-        /// <exception cref="KeyNotFoundException">Pokud pro požadovanou signaturu v kontextu žádná funkce není definována</exception>
+        /// <param name="signature">Signature of the sought function</param>
+        /// <returns>Function residing in the context under the provided signature.</returns>
+        /// <exception cref="KeyNotFoundException">If no function is defined for the provided signature.</exception>
         public Delegate Get(YCFunctionSignature<TNumber> signature);
         /// <summary>
-        /// Získá z kontextu již existující funkci s požadovanou signaturou. 
-        /// Argumenty v signatuře jsou vykoukány z typu hledaného delegáta.
+        /// Gets an existing function with given signature from the Context.
+        /// Signature arguments are deduced from the provided Delegate type.
         /// </summary>
-        /// <typeparam name="TDelegate">Datový typ hledané funkce. Musí být konkrétní - <see cref="Delegate"/> a <see cref="MulticastDelegate"/> nejsou povolené.</typeparam>
-        /// <param name="signature">Jméno hledané funkce</param>
-        /// <returns>Funkce s požadovanou signaturou definovaná v kontextu kalkulátoru</returns>
-        /// <exception cref="KeyNotFoundException">Pokud pro požadovanou signaturu v kontextu žádná funkce není definována</exception>
-        /// <exception cref="ArgumentException">Pokud <typeparamref name="TDelegate"/> je typu <see cref="Delegate"/> nebo <see cref="MulticastDelegate"/></exception>
+        /// <typeparam name="TDelegate">Type of the sought function. Must be concrete - <see cref="Delegate"/> and <see cref="MulticastDelegate"/> are not allowed.</typeparam>
+        /// <param name="signature">Name of the sought function</param>
+        /// <returns>Function residing in the context under the provided signature.</returns>
+        /// <exception cref="KeyNotFoundException">If no function is defined for the provided signature.</exception>
+        /// <exception cref="ArgumentException">If <typeparamref name="TDelegate"/> is exactly of type <see cref="Delegate"/> or <see cref="MulticastDelegate"/></exception>
         public TDelegate Get<TDelegate>(string signature) where TDelegate : Delegate;
 
         
 
         /// <summary>
-        /// Zkompiluje výraz zapsaný v textovém řetězci na spustitelný kód.
+        /// Compiles a text-written expression to executable function.
         /// </summary>
-        /// <typeparam name="TDelegate">Datový typ výsledného delegáta</typeparam>
-        /// <param name="function">Výraz ke zkompilování</param>
-        /// <returns>Zkompilovaný výraz jako delegát</returns>
+        /// <typeparam name="TDelegate">Type of the result delegate</typeparam>
+        /// <param name="function">Expression to be compiled</param>
+        /// <returns>Compiled result</returns>
         public TDelegate Compile<TDelegate>(string function) where TDelegate : Delegate;
 
         /// <summary>
-        /// Zkompiluje všechny dané výrazy a postupně je přidá do kontextu kalkulátoru.
+        /// Compiles all the given expressions and adds them one after the other to the Context.
         /// </summary>
-        /// <param name="toAdd">List textově reprezentovaných výrazů</param>
-        /// <returns><c>this</c> pro účely řetězení</returns>
+        /// <param name="toAdd">List of text-represented expressions</param>
+        /// <returns><c>this</c> for chaining purposes</returns>
         public IYoowzxCalculator<TNumber> AddFunctions(IEnumerable<string> toAdd);
 
         /// <summary>
-        /// Zkompiluje daný výraz a přidá ho do kontextu kalkulátoru.
+        /// Compiles given expression and adds it to the Context.
         /// </summary>
-        /// <param name="expression">Textová reprezentace výrazu</param>
-        /// <param name="signature">Signatura popisující zkompilovaný výraz, pod kterou byl právě přidán do kontextu</param>
-        /// <param name="result">Spustitelný produkt kompilace, jež byl právě přidán do kontextu</param>
-        /// <returns><c>this</c> pro účely řetězení</returns>
+        /// <param name="expression">Text-represented expression</param>
+        /// <param name="signature">Signature describing the compiled expression, under which it has just been added to the Context</param>
+        /// <param name="result">Executable product of the compilation that has just been added to the Context</param>
+        /// <returns><c>this</c> for chaining purposes</returns>
         public IYoowzxCalculator<TNumber> AddFunction(string expression, out YCFunctionSignature<TNumber> signature, out Delegate result);
 
 
         /// <summary>
-        /// Přidá delegáta do kalkulátorového kontextu.
+        /// Adds a delegate to Context.
         /// </summary>
-        /// <typeparam name="TDelegate">Datový typ přidávaného delegáta. Hodí se specifikovat pro pohodlné přidávání inline lambd.</typeparam>
-        /// <param name="name">Jméno, pod kterým má funkce být přidána.</param>
-        /// <param name="toAdd">Delegát k přidání do kontextu</param>
-        /// <param name="signature">Signatura pod níž byl delegát uložen do kontextu. Počet argumentů byl vykoukán z hlavičky funkce, na níž delegát reálně ukazuje</param>
-        /// <returns><c>this</c> pro účely řetězení</returns>
+        /// <typeparam name="TDelegate">Type of the delegate being added. Useful to specify it for convenient passing of inline lambdas</typeparam>
+        /// <param name="name">Name under which the function is to be added.</param>
+        /// <param name="toAdd">Delegate to be added</param>
+        /// <param name="signature">Signature under which the delegate has just been added to Context. Number of arguments was deduced from the header of the function that the delegate points to.</param>
+        /// <returns><c>this</c> for chaining purposes</returns>
         public IYoowzxCalculator<TNumber> AddFunction<TDelegate>(string name, TDelegate toAdd, out YCFunctionSignature<TNumber> signature) where TDelegate: Delegate;
 
         /// <summary>
-        /// Přidá delegáta do kalkulátorového kontextu.
+        /// Adds a delegate to Context.
         /// <para/>
-        /// Dodatečné přetížení pro větší pohodlí uživatele - alias pro <c>AddFunction(name, toAdd, out _)</c>
+        /// Additional overload for more better user comfort - alias for <c>AddFunction(name, toAdd, out _)</c>
         /// </summary>
-        /// <typeparam name="TDelegate">Datový typ přidávaného delegáta. Hodí se specifikovat pro pohodlné přidávání inline lambd.</typeparam>
-        /// <param name="name">Jméno, pod kterým má funkce být přidána.</param>
-        /// <param name="toAdd">Delegát k přidání do kontextu</param>
-        /// <returns><c>this</c> pro účely řetězení</returns>
+        /// <typeparam name="TDelegate">Type of the delegate being added. Useful to specify it for convenient passing of inline lambdas</typeparam>
+        /// <param name="name">Name under which the function is to be added.</param>
+        /// <param name="toAdd">Delegate to be added</param>
+        /// <returns><c>this</c> for chaining purposes</returns>
         public IYoowzxCalculator<TNumber> AddFunction<TDelegate>(string name, TDelegate toAdd) where TDelegate : Delegate
             => AddFunction(name, toAdd, out _);
 
 
 
         /// <summary>
-        /// Vytvoří novou instanci kanonické implementace kalkulátoru.
+        /// Creates new instance of the cannonical implementation of the calculator.
         /// </summary>
-        /// <param name="astBuilder">Instance AstBuilderu. Pokud je null, bude použita instance kanonické implementace.</param>
-        /// <param name="compiler">Instance kompilátoru. Pokud je null, bude použita instance kanonické implementace s operátorem získaným skrze <c><see cref="YCBasicNumberOperators.Get{TNumber}()"/></c>.</param>
-        /// <param name="context">Instance kontextu. Pokud je null, bude použita instance kanonické implementace.</param>
+        /// <param name="astBuilder">Instance of AstBuilder. If null, a new instance of cannonical implementation will be created.</param>
+        /// <param name="compiler">Instance of compiler. If null, a new instance of cannonical implementation will be created with NumberOperated obtained from <c><see cref="YCBasicNumberOperators.Get{TNumber}()"/></c>.</param>
+        /// <param name="context">Instance of kontextu. If null, a new instance of cannonical implementation will be created.</param>
         /// <returns>Nová instance kanonické implementace kalkulátoru.</returns>
         public static IYoowzxCalculator<TNumber> Make(IYCAstBuilder astBuilder = null, IYCCompiler<TNumber> compiler = null, IYCInterpretationContext<TNumber> context = null)
             => new YoowzxCalculator<TNumber>() { AstBuilder = astBuilder, Compiler = compiler, Context = context };
@@ -118,28 +117,28 @@ namespace MarkusSecundus.YoowzxCalc
 
 
     /// <summary>
-    /// Statická třída s rozšiřujícími metodami pro pohodlnější práci s <see cref="IYoowzxCalculator{TNumber}"/>
+    /// Static class with extension methods for more comfortable work with <see cref="IYoowzxCalculator{TNumber}"/>
     /// </summary>
     public static class YoowzxCalculatorExtensions
     {
         /// <summary>
-        /// Zkompiluje všechny dané výrazy a postupně je přidá do kontextu kalkulátoru.
-        /// <para/>
-        /// Dodatečné přetížení pro větší pohodlí uživatele.
+        /// Compiles all the given expressions and adds them one after the other to the Context.
         /// </summary>
-        /// <param name="toAdd">List textově reprezentovaných výrazů</param>
-        /// <returns><c>self</c> pro účely řetězení</returns>
+        /// Additional overload for more better user comfort.
+        /// </summary>
+        /// <param name="toAdd">List of text-represented expressions</param>
+        /// <returns><c>this</c> for chaining purposes</returns>
         public static IYoowzxCalculator<TNumber> AddFunctions<TNumber>(this IYoowzxCalculator<TNumber> self, params string[] toAdd)
             => self.AddFunctions(toAdd);
 
         /// <summary>
-        /// Přidá delegáta do kalkulátorového kontextu.
+        /// Adds a delegate to Context.
         /// <para/>
-        /// Dodatečné přetížení pro větší pohodlí uživatele.
+        /// Additional overload for more better user comfort.
         /// </summary>
-        /// <param name="name">Jméno, pod kterým má funkce být přidána.</param>
-        /// <param name="toAdd">Delegát k přidání do kontextu</param>
-        /// <returns><c>self</c> pro účely řetězení</returns>
+        /// <param name="name">Name under which the function is to be added.</param>
+        /// <param name="toAdd">Delegate to be added</param>
+        /// <returns><c>this</c> for chaining purposes</returns>
         public static IYoowzxCalculator<TNumber> AddFunction<TNumber>(this IYoowzxCalculator<TNumber> self, string name, Delegate toAdd)
             => self.AddFunction(name, toAdd);
 
