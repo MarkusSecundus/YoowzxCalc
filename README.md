@@ -2,9 +2,9 @@
  
 ### .NET library for processing of mathematical expressions developed with emphasis on performance and flexibility of use.
 \
-Parses expressions in infix notation, with support of recursion and user defined functions.
-Works by emitting CIL bytecode at runtime - capable of running natively on the VM and thus quickly - callable via delegate.
-Also includes a programmable calculator for terminal that serves as demo.
+Parses expressions in infix notation, with support of recursion and user defined functions.  
+Works by emitting CIL bytecode at runtime - capable of running natively on the VM - callable via delegate.  
+Also includes a programmable calculator for terminal that serves as demo.  
 
 
 &nbsp;
@@ -45,7 +45,7 @@ Also includes a programmable calculator for terminal that serves as demo.
   - Creators of the [CommandLineParser](https://github.com/commandlineparser/commandline) library
   - Creators of the [ANTLR](https://www.antlr.org/) parser-generator
 
-#### ***Autor***:
+#### ***Author***:
   - Jakub Hroník
 
 
@@ -53,16 +53,15 @@ Also includes a programmable calculator for terminal that serves as demo.
 &nbsp;
 ## ***First steps***
 
-### ***Jak zkompilovat***
-Otevřte solution v MS Visual Studio 2019 aktuální verze a zkompilujte ho. Napříč projektem je hojně využíváno novinek jazyka C# 9 - .NET 5.0 je tedy vyžadován.
-
+### ***How to build***
+Open the solution in an up-to-date version of MS Visual Studio 2019 and build it. Throughout the projects, features of C# 9 are used heavily - thus .NET 5.0 is required.  
 
 ### ***Jak používat***
 
-Pro přímočaré použití základní funkcionality slouží fasáda [YoowzxCalculator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc/IYoowzxCalculator.cs).  
-Ta zaštiťuje celou pipelinu zpracování výrazu - prvotní zparsování textového zápisu na obecný abstraktní syntaktický strom, následnou generaci spustitelného kódu podle AST a zároveň i správu kontextu s funkcemi, které je možné z výrazů volat. Pro každý z těchto segmentů je možné explicitně dodat vlastní implementaci nebo nechat, aby byla použita ta defaultní.  
+For straightforward use of the base functionality the facade [YoowzxCalculator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc/IYoowzxCalculator.cs) is provided.  
+It encompasses the whole expression processing pipeline - the initial parsing of text representation into abstract syntax tree (AST), subsequent generation of executable bytecode from the AST and also management of the context containing other functions callable from the expressions. For each of these segments, the user can provide custom implementation or just let the default one be used.  
 
-***Instanci kalkulátoru počítajícího nad typem `double` získáme takto:***
+***Instance of calculator operating on type `double` can be obtained like this:***
 ```c#
 IYoowzxCalc<double> calc = IYoowzxCalc<double>.Make(); 
 ```
