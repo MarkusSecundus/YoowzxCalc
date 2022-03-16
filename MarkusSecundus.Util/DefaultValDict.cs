@@ -8,27 +8,25 @@ namespace MarkusSecundus.Util
 {
 
     /// <summary>
-    /// Wrapper nad libovolným IDictionary, který v případě, že tázaný klíč není přítomný,
-    /// pro něj vytvoří hodnotu. Jako defaultdict v Pythonu.
+    /// Decorator for IDictionary. Adds the functionality of creating default value when none is present but is being asked for.
+    /// Similar to `defaultdict` in Python standard library.
     /// </summary>
     /// <typeparam name="K">
-    /// Datový typ klíčů.
+    /// Key datatype
     /// </typeparam>
     /// <typeparam name="V">
-    /// Datový typ hodnot.
+    /// Value datatype
     /// </typeparam>
     public struct DefaultValDict<K, V> : IDictionary<K, V>, IReadOnlyDictionary<K, V>, ICollection<KeyValuePair<K,V>>, IReadOnlyCollection<KeyValuePair<K,V>>
     {
         /// <summary>
-        /// Jediný platný konstruktor
+        /// The only valid constructor (unlike the default one)
         /// </summary>
         /// <param name="supplier">
-        /// Funkce k vytváření defaultních hodnot. Jako parametr přebírá klíč,
-        /// pro který je nová hodnota vytvářena.
+        /// Supplier of default values. Gets passed the key for which the value is being asked.
         /// </param>
         /// <param name="baseDict">
-        /// Objekt, kterému bude nová instance <see cref="DefaultValDict{K, V}"/>
-        /// sloužit jako proxy. Pokud není určen, tak <see cref="new Dictionary{K,V}()"/>
+        /// Object, to whom the new instance of <see cref="DefaultValDict{K, V}"/> will serve as decorator (by default <see cref="new Dictionary{K,V}()"/>)
         /// </param>
         public DefaultValDict(Func<K, V> supplier, IDictionary<K, V> baseDict = null)
         {
@@ -37,7 +35,7 @@ namespace MarkusSecundus.Util
         }
 
 
-        /*  Jediný opravdu důležitý řádek na celé této třídě */
+        /*  The only really important piece of code in the whole of this class xD */
         public V this[K key]
         {
             get
@@ -51,7 +49,7 @@ namespace MarkusSecundus.Util
         }
 
         /// <summary>
-        /// Vnitřní implementace, na kterou tato proxy odkazuje.
+        /// Inner implementation being pointed to by this decorator.
         /// </summary>
         public readonly IDictionary<K, V> Base;
 
