@@ -15,25 +15,25 @@ using num = System.Double;
 namespace MarkusSecundus.YoowzxCalc.Cmd
 {
     /// <summary>
-    /// Datová třída specifikující argumenty příkazové řádky, jež mohou programu být předány.
+    /// Data class specifying command line arguments that can be passed to the program.
     /// </summary>
     public class CmdOptions
     {
         /// <summary>
-        /// Seznam souborů s definicemi, jež mají před spuštěním programu být načteny.
+        /// List of files containing definitions that are supposed to be loaded before the program starts.
         /// </summary>
         [Option('f', "file", Required = false, HelpText = "Files from which to load definitions", Separator =';', Max =int.MaxValue)]
         public IEnumerable<string> FilesToLoad { get; init; }
 
         /// <summary>
-        /// Výraz k přímému vyhodnocení. Pokud je ne-null, nebude spuštěn REPL, místo toho bude pouze vyhodnocen daný výraz a vypsán výsledek.
+        /// Expression to be evaluated. If non-null, no REPL will be run, instead the result will just be written to stdout.
         /// </summary>
         [Option('e', "eval", Required = false, HelpText ="Provide an expression to evaluate directly")]
         public string Eval { get; init; }
     }
 
     /// <summary>
-    /// Hlavní třída kontrolující běh terminálového kalkulátoru.
+    /// Main class responsible for operation of the commandline calculator.
     /// </summary>
     public class CmdMain
     {
@@ -49,21 +49,21 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
         private readonly string Prompt;
 
         /// <summary>
-        /// Podtřída nesoucí konstanty.
+        /// Subclass carrying constants
         /// </summary>
         public static class Const
         {
             /// <summary>
-            /// Výchozí 
+            /// Prompt that will be written by default by REPL when user input is being expected
             /// </summary>
             public const string DefaultPrompt = ">>> ";
         }
 
         /// <summary>
-        /// Inicializuje instanci kalkulátoru specifikovaným textovým výstupem.
+        /// Initializes the caluculator instance by specified text input.
         /// </summary>
-        /// <param name="output">Textový proud do nějž bude zapisován výstup kalkulátoru.</param>
-        /// <param name="prompt">Výzva jež se vždy vypíše na začátku řádky očekávající uživatelský vstup.</param>
+        /// <param name="output">Text stream to which the output shall be written (by default <see cref="System.Console.Out"/>).</param>
+        /// <param name="prompt">Prompt to be printed when requesting user input (by default <see cref="CmdMain.Const.DefaultPrompt"/>).</param>
         public CmdMain(TextWriter output=null, string prompt = null)
         {
             Prompt = prompt ?? Const.DefaultPrompt;
@@ -83,11 +83,11 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
         }
 
         /// <summary>
-        /// Provede jeden průběh aplikace.
+        /// Runs the program.
         /// <para/>
-        /// V závislosti na předaných argumentech buď vyhodnotí výraz a skončí, nebo započne REPL smyčku.
+        /// Depending on the arguments either evaluates an expression and exits or begins a REPL loop.
         /// </summary>
-        /// <param name="args">List argumentů</param>
+        /// <param name="args">List of arguments</param>
         public void Main(CmdOptions args)
         {
             foreach(var f in args.FilesToLoad) Load(f);
@@ -209,25 +209,25 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
         public static string HelpString =>
 @"Yoowzx Calc v0.1
 
-Příkazy:
-- help ... Vypíše tento přehled
+Commands:
+- help ... Prints this overview
 
-- exit ... Ukončí tento program
+- exit ... Exits the program
 
-- load [filepath] ... Načte definice z daného souboru
+- load [filepath] ... Loads definitions from given file
 
-- save [filepath] ... Uloží všechny v této relaci definované funkce do specifikovaného souboru. (Zavolej `list save` pro náhled funkcí, jež budou uloženy) 
+- save [filepath] ... Saves all the functions defined in this session to the given file. (Use `list save` for preview of what exactly will be saved)
 
-- list (save) ... Vypiš funkce, jež jsou k dispozici / jež by byly uloženy příkazem `save`
+- list (save) ... Print the functions that are currently available / that would be saved by the `save` command
 
-- (eval) [expression or function definition] ... Vyhodnoť matematický výraz
+- (eval) [expression or function definition] ... Evaluate mathematical expression
     
 
 
 " + new string('_', Console.WindowWidth-1)+
 @"
 
-Autor: Jakub Hroník
+Author: Jakub Hroník
 git: https://github.com/MarkusSecundus/YoowzxCalc";
 
     }
