@@ -1,16 +1,16 @@
 # ***YoowzxCalc***
-
-### Knihovna pro zpracování matematických výrazů v prostředí .NET vyvíjená s důrazem na výkon a flexibilitu použití.   
+ 
+### .NET library for processing of mathematical expressions developed with emphasis on performance and flexibility of use.
 \
-Parsuje výrazy v infixní notaci s podporou uživatelsky definovaných pomocných funkcí a rekurzivních volání.   
-Schopná z výrazů za běhu generovat CIL kód - běžící přímo na VM a tedy rychle - volatelný skrze delegáta.  
-Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku sloužící jako demo.
+Parses expressions in infix notation, with support of recursion and user defined functions.
+Works by emitting CIL bytecode at runtime - capable of running natively on the VM and thus quickly - callable via delegate.
+Also includes a programmable calculator for terminal that serves as demo.
 
 
 &nbsp;
 
-#### ***Obsah***
-  0. [Začínáme](#začínáme)
+#### ***Contents***
+  0. [First steps](#first-steps)
      - [Jak zkompilovat](#jak-zkompilovat)
      - [Jak používat](#jak-používat)
      - [Koncová rekurze](#koncová-rekurze) 
@@ -39,11 +39,11 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
 
 &nbsp;
 
-#### ***Poděkování:***
-  - Autorům .NET a jazyka C#
-  - Autorům knihovny [ReadLine](https://github.com/tonerdo/readline)
-  - Autorům knihovny [CommandLineParser](https://github.com/commandlineparser/commandline)
-  - Autorům parser-generátoru [ANTLR](https://www.antlr.org/)
+#### ***Credits:***
+  - All the contributors to .NET and C# language
+  - Creators of the [ReadLine](https://github.com/tonerdo/readline) library
+  - Creators of the [CommandLineParser](https://github.com/commandlineparser/commandline) library
+  - Creators of the [ANTLR](https://www.antlr.org/) parser-generator
 
 #### ***Autor***:
   - Jakub Hroník
@@ -51,7 +51,7 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
 
 -----------------------
 &nbsp;
-## ***Začínáme***
+## ***First steps***
 
 ### ***Jak zkompilovat***
 Otevřte solution v MS Visual Studio 2019 aktuální verze a zkompilujte ho. Napříč projektem je hojně využíváno novinek jazyka C# 9 - .NET 5.0 je tedy vyžadován.
