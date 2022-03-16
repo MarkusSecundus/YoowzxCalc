@@ -11,31 +11,31 @@ Also includes a programmable calculator for terminal that serves as demo.
 
 #### ***Contents***
   0. [First steps](#first-steps)
-     - [Jak zkompilovat](#jak-zkompilovat)
-     - [Jak používat](#jak-používat)
-     - [Koncová rekurze](#koncová-rekurze) 
-     - [Kešování výsledků](#kešování-výsledků)
-  1. [Výkon](#výkon)
-  2. [Gramatika](#gramatika)
-     - [Bílé znaky](#bílé-znaky)
-     - [Literály a identifikátory](#literály-a-identifikátory)
-     - [Operátory](#operátory)
-     - [Volání funkcí](#volání-funkcí)
-     - [Kompilační jednotka](#kompilační-jednotka)
-       - [Anotace](#anotace)
-       - [Příklady](#příklady)
-  3. [Kompilace](#kompilace)
-     - [Jak definovat operace](#jak-definovat-operace)
-       - [Rozlišení konstant](#rozlišení-konstant)
-       - [Validace identifikátorů](#validace-identifikátorů)
-       - [Definice operátorů](#definice-operátorů)
-       - [Standardní knihovna](#standardní-knihovna)
-       - [Registrace NumberOperatoru](#registrace-numberoperatoru)
-     - [Kompilační kontext](#kompilační-kontext)
-       - [Signatura funkce](#signatura-funkce)
-       - [Správa definic](#správa-definic)
-     - [Kompilátor](#kompilátor)
-  4. [Demo kalkulačka](#demo-kalkulačka)
+     - [How to build](#how-to-build)
+     - [How to use](#how-to-use)
+     - [Tail recursion](#tail-recursion) 
+     - [Caching return values](#caching-return-values)
+  1. [Performance](#performance)
+  2. [Grammar](#grammar)
+     - [Whitespace](#whitespace)
+     - [Literals and identifiers](#literals-and-identifiers)
+     - [Operators](#operators)
+     - [Functioncalls](#functioncalls)
+     - [Compilation unit](#compilation-unit)
+       - [Annotations](#annotations)
+       - [Examples](#examples)
+  3. [Compilation](#compilation)
+     - [How to define an operation](#how-to-define-an-operation)
+       - [Recognition of constants](#recognition-of-constants)
+       - [Validation of identifiers](#validation-of-identifiers)
+       - [Operator definitions](#operator-definitions)
+       - [Standard library](#standard-library)
+       - [How to register a NumberOperator](#how-to-register-a-numberoperator)
+     - [Compilation context](#compilation-context)
+       - [Function signature](#function-signature)
+       - [Management of definitions](#management-of-definitions)
+     - [Compiler](#compiler)
+  4. [Demo calculator](#demo-calculator)
 
 &nbsp;
 
@@ -56,30 +56,30 @@ Also includes a programmable calculator for terminal that serves as demo.
 ### ***How to build***
 Open the solution in an up-to-date version of MS Visual Studio 2019 and build it. Throughout the projects, features of C# 9 are used heavily - thus .NET 5.0 is required.  
 
-### ***Jak používat***
+### ***How to use***
 
 For straightforward use of the base functionality the facade [YoowzxCalculator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc/IYoowzxCalculator.cs) is provided.  
-It encompasses the whole expression processing pipeline - the initial parsing of text representation into abstract syntax tree (AST), subsequent generation of executable bytecode from the AST and also management of the context containing other functions callable from the expressions. For each of these segments, the user can provide custom implementation or just let the default one be used.  
+It encompasses the whole expression processing pipeline - initial parsing of text representation into abstract syntax tree (AST), subsequent generation of executable bytecode from the AST and also management of the context containing other functions callable from the expressions. For each of these segments, the user can provide custom implementation or just let the default one be used.  
 
 ***Instance of calculator operating on type `double` can be obtained like this:***
 ```c#
-IYoowzxCalc<double> calc = IYoowzxCalc<double>.Make(); 
+IYoowzxCalc<double> calc = IYoowzxCalc<double>.Make();  
 ```
-*V základu lze vytvořit kalkulátor nad typy `double`, `decimal` a `long`. Pro počítání nad jiným typem je třeba explicitní přidání podpory uživatelem (viz níže [`NumberOperator`](#registrace-numberoperatoru)).*  
+*Basic configuration supports creation of calculators operating on types `double`, `decimal` and `long`. For operating on other types, explicitly adding support by the user is required (see [`NumberOperator`](#registrace-numberoperatoru)).*  
 
-***Jakmile máme instanci kalkulátoru, můžeme vesele kompilovat výrazy:***
+***Nothing now stays in our way to compile some expressions:***
 ```c#
 Func<double> f1 = calc.Compile<Func<double>>("1 + 1");
-Console.WriteLine(f1()); //vypíše 3
+Console.WriteLine(f1()); //prints 3
 
-Func<double, double> f2 = calc.Compile<Func<double, double>>("f(číslo) := číslo * (3 + 4 ** 5e-1)");
-Console.WriteLine(f2(0)); //vypíše 0
+Func<double, double> f2 = calc.Compile<Func<double, double>>("f(some_number) := some_number * (3 + 4 ** 5e-1)");
+Console.WriteLine(f2(0)); //prints 0
 
 Func<double, double> fibonacci = calc.Compile<Func<double, double>>("fib(x) := x <= 1 ? x : fib(x-1) + fib(x-2)");
 for(int t=0;t<10;++t)
-    Console.WriteLine(fibonacci(t));    //vypíše prvních 10 fibonacciho čísel
+    Console.WriteLine(fibonacci(t));    //prints the first 10 fibonacci numbers
 ```
-Takto výraz pouze zkompilujeme, ale ať už byl pojmenovaný nebo ne, nikdy nebude přidán jako volatelná funkce do kontextu. (Jeho jméno však pořád má význam když chceme praktikovat rekurzi.)  
+This way the expression gets compiled, but no matter if it was given a name, it won't be implicitly added as a callable function to the context. (But the name still has value if we want to use recursion.)  
 
 ***Máme-li naopak několik výrazů, které chceme zkompilovat a rovnou přidat do kontextu, můžeme použít metodu `AddFunctions()`:***
 ```c#
@@ -103,7 +103,7 @@ Func<double, double, double> f2 = calc.Get<Func<double, double, double>>("f");
 ```
 _Pozor - Yoowzx podporuje přetěžování funkcí. V tomto případě pro hodnotu f1 bude hledána funkce s názvem "f" a jedním argumentem, pro f2 jiná funkce "f" s dvěma argumenty. Počet argumentů hledané funkce metoda Get() vykouká z typového parametru._  
 
-### ***Koncová rekurze***
+### ***Tail recursion***
 Yoowzx plně podporuje [optimalizaci koncové rekurze](https://en.wikipedia.org/wiki/Tail_call). Zadefinujeme-li tedy např. takto výpočet faktorialu, pro libovolně vysoké hodnoty argumentu nehrozí přetečení volacího zásobníku:
 ```c#
 calc.AddFunctions("fact(x, accumulator) := x <= 1? accumulator : fact(x-1, x*accumulator)",
@@ -112,7 +112,7 @@ calc.AddFunctions("fact(x, accumulator) := x <= 1? accumulator : fact(x-1, x*acc
 calc.Get<Func<double, double>>("fact")(800000); //doběhne bez pádu
 ```
 
-### ***Kešování výsledků***
+### ***Caching return values***
 Pomocí anotace "cached" lze kompilátoru nařídit, aby volání funkce pro danou hodnotu argumentů provedl jednou, výsledek uložil do keše, a příště ho z ní už jenom tahal.  
 Tím pádem např. takto definovaná funkce pro výpočet fibonacciho posloupnosti poběží v lineárním čase (resp. konstantním pro opětovná volání):
 ```c#
@@ -126,7 +126,7 @@ _Současná implementace kešování na funkcích, jež ji využívají, neumož
 
 ----------------------------
 &nbsp;
-## ***Výkon***
+## ***Performance***
 
 V modulu [MarkusSecundus.YoowzxCalc.Benchmarks](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Benchmarks) je umístěno pár jednoduchých benchmarků, porovnávajících produkty YC s ekvivalentními lambdami zkompilovanými přímo jako součást C# zdrojáku.  
 Z výstupu vidíme, že v současné verzi YC sice je nezanedbatelně pomalejší - ve scénářích, kde velkou roli hraje rekurzivní volání (Fibonacci, Factorial) cca 4krát, ve scénářích, kde důraz leží na aritmetice, již jen o cca 25% - pořád ale jde o mnohonásobné zrychlení oproti neJITovaným interpretovaným jazykům (typu CPython apod.).  
@@ -148,7 +148,7 @@ _Referenční výsledky měřeny na stock-taktovaném Core i7 9700KF._
 
 -----------------------------
 &nbsp;
-## ***Gramatika***
+## ***Grammar***
 Překlad textově zapsaného výrazu do počítačem přímočaře zpracovatelné formy (AST) je úkolem modulu MarkusSecundus.YoowzxCalc.DSL.  
 Podmodul ***[MarkusSecundus.YoowzxCalc.DSL.AST](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST)*** obsahuje definici jednotlivých uzlů AST a [mašinérii](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/IYCVisitor.cs) pro jejich zpracování pomocí [visitor patternu](https://en.wikipedia.org/wiki/Visitor_pattern).  
 Sestavení AST z textově zapsaného výrazu je úkolem [YCAstBuilder](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/IYCAstBuilder.cs)u. Jeho kanonická implementace (která respektuje níže popsanou gramatiku) je bezestavový singleton a lze ji získat jako `IYCAstBuilder.Instance`.  
@@ -159,10 +159,10 @@ YCFunctionDefinition root = IYCAstBuilder.Instance.Build(expression);
 ```
 Narazil-li parser na nějakou lexikální či syntaktickou chybu, vyhodí na konci svého běhu [výjimku](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/ParserExceptions/YCAggregateAstBuilderException.cs), nesoucí informace o všech chybách, ke kterým v překládaném textu došlo.
 
-### ***Bílé znaky***
+### ***Whitespace***
 Za bílé jsou považovány všechny znaky s ASCII kódem od 0 do ord(' ') včetně. Z hlediska gramatiky jsou ignorovány, slouží jako oddělovač.
 
-### ***Literály a identifikátory***
+### ***Literals and identifiers***
 Pro větší flexibilitu nejsou na úrovni gramatiky rozlišovány a jejich definice je velmi volná, s cílem umožnit např. zpracování výrazů nad textovými řetězci apod. bez nutnosti gramatiku přepisovat. 
 Jejich validace a rozlišení jsou ponechány na uživateli v rámci pozdějších fází zpracování výrazu (viz níže YCNumberOperator).  
 
@@ -183,7 +183,7 @@ Příkl. literálů:
   - `Abc1e+32"rew  "` (řetězec nespeciálních znaků následovaný číslem v exp. notaci následovaný řetězcem)
 
 
-### ***Operátory***
+### ***Operators***
 Yoowzx definuje klasicky používané, unární, binární a ternární, aritmetické a logické operátory s obvyklými prioritami a asociativitou.
 Každému operátoru odpovídá uzel AST, pro vyčerpávající výčet podporovaných operátorů náhlédněte tedy prosím zde:
   - [Unární operátory](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST/UnaryExpressions)
@@ -192,13 +192,13 @@ Každému operátoru odpovídá uzel AST, pro vyčerpávající výčet podporov
 
 
 
-### ***Volání funkcí***
+### ***Functioncalls***
 Volání funkcí probíhá klasickým způsobem známým např. z jazyka C:  
 Jméno funkce je libovolný literál, za ním následují kulaté závorky, obsahující příp. jednotlivé argumenty (libovolně složité výrazy) oddělené čárkami.  
 Na úrovni AST je reprezentováno uzlem [YCFunctioncallExpression](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/OtherExpressions/YCFunctioncallExpression.cs).
 
 
-### ***Kompilační jednotka***
+### ***Compilation unit***
 Výstupem kompilace je objekt typu [YCFunctionDefinition](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/YCFunctionDefinition.cs).  
 Jeho zápis vypadá nějak takto:
 ```c
@@ -208,7 +208,7 @@ definice_funkce: list_anotací? jméno_funkce '(' seznam_jmen_argumentů ')' ':=
 V případě funkce s nulovým počtem argumentů lze příp. prázdné závorky vynechat.  
 Popř. lze vynechat i jméno funkce s výrazem přiřadítka a zůstat se samotným (volitelně oanotovaným) výrazem - v takovém případě bude jako jméno funkce použita (zaručeně non-null) hodnota `YCFunctionDefinition.AnonymousFunctionName`.
 
-#### ***Anotace***
+#### ***Annotations***
 Někdy se hodí moci k definici funkce přiložit ještě dodatečná data, sloužící např. jako řidicí direktiva pro kompilátor apod. .  
 List anotací se zapisuje do hranatých závorek a jednotlivé anotace v něm jsou oddělené čárkami. Anotace může být buď prázdná - samotný literál, nebo může mít hodnotu uvozenou dvojtečkou a danou druhým literálem. Gramatika tedy vypadá takto:
 ```c
@@ -217,7 +217,7 @@ anotace: LITERÁL | LITERÁL ':' LITERÁL ;
 ```
 
 
-#### ***Příklady***
+#### ***Examples***
 Validní definice která projde kompilátorem může vypadat např. takto:
   - `f(x) := x*x + 1`
   - `Funkce1(arg1, arg2, arg3, arg4, arg5) := arg1==1? (arg1 + arg2 - (30 - arg1)*arg4)**((arg4)**2.14e-3) : Funkce1(1,1,1,1,arg3)`
@@ -229,30 +229,30 @@ Validní definice která projde kompilátorem může vypadat např. takto:
 
 &nbsp;
 -----------------------------
-## ***Kompilace***
+## ***Compilation***
 Jakmile je postaven abstraktní syntaktický strom, nic už nám nebrání začít se zabývat jeho kompilací na spustitelný kód.  
 Mašinérii s tím související obsahuje modul ***[MarkusSecundus.YoowzxCalc.Compilation](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Compilation)***.
 
-### ***Jak definovat operace***
+### ***How to define an operation***
 Chceme-li být schopni přeložit matematický výraz na spustitelný kód, musíme nejprve vědět, co vůbec která v něm zapsaná operace znamená, a také jak rozlišit konstantu od identifikátoru a jak vypadá platný identifikátor. To všechno kompilátoru řekneme skrze instanci rozhranní ***[IYCNumberOperator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/IYCNumberOperator.cs)***.  
 
 Pracujeme-li s typem `double`, `decimal` nebo `long`, nemusíme se namáhat - pro ty už je defaultní implementace připravena - jako podtřída statické třídy [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs). Tyto výchozí implementace definují operátory intuitivním způsobem - operátor `+` odpovídá sčítání, `%` modulení, `**` mocnění apod., konstantou je vše, co projde metodou `TryParse` na odpovídajícím číselném typu při invariantní kultuře, validní identifikátor matchuje na regex `[[:alpha:]_][[:alnum:]_]*`, operátor pro typ `double` navíc zahrnuje ve standardní knihovně všechny funkce ze třídy `System.Math`.  
 
 Chcete-li napsat vlastní číselný operátor, doporučuji se podívat pro inspiraci právě na tyto předpřipravené implementace. Celkově to ale je poměrně přímočarý proces.
 
-#### ***Rozlišení konstant***
+#### ***Recognition of constants***
 První metodou, jíž je třeba dodat, je `TryParse`. Jejím úkolem je z textového zápisu určit, zda reprezentuje konstantu, a její případnou hodnotu. Všechny literály jsou nejprve testovány na konstantu a teprve pokud neprojdou, stanou se kandidátem na identifikátor.
 
-#### ***Validace identifikátorů***
+#### ***Validation of identifiers***
 Pokud literál není vyhodnocen jako konstanta, stane se kandidátem na identifikátor. Metoda `ValidateIdentifier` má pak za úkol rozhodnout, zda identifikátorem vskutku je, příp. lidsky čitelným způsobem popsat odchylky od identifikátorového formátu, jichž se dopouští. Třída [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs) poskytuje pár statických metod a polí, které by se při její implementaci mohly hodit.
 
-#### ***Definice operátorů***
+#### ***Operator definitions***
 Nyní zbývá už jen doplnit metody odpovídající jednotlivým operátorům definovaným v gramatice, což by měl být naprosto přímočarý proces.
 
-#### ***Standardní knihovna***
+#### ***Standard library***
 Volitelně ještě můžeme dodat množinu funkcí jakožto standardní knihovnu. Každá funkce v ní definovaná bude kompilátorem automaticky viditelná, aniž by se musela nacházet v kompilačním kontextu. Pokud se v kontextu nachází funkce se stejnou signaturou, zastíní funkci ve standardní knihovně.
 
-#### ***Registrace NumberOperatoru***
+#### ***How to register a NumberOperator***
 Volitelně ještě může mít smysl vytvořený number operator zaregistrovat jako kanonický operátor k použití nad daným číselným typem.  
 Jejich seznam vede opět třída [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs) a registrujeme v ní factory dodávající vždy novou instanci. Je-li náš operátor bezestavový singleton, může to vypadat nějak takto:
 ```c#
@@ -280,13 +280,13 @@ Přesně takto získává defaultní operátor fasáda [YoowzxCalculator](#zač�
 
 &nbsp;
 
-### ***Kompilační kontext***
+### ***Compilation context***
 Z našeho výrazu je možné libovolně volat externí pojmenované funkce. Vzniká tedy problém, jak kompilátoru dodat jejich definice, aby mohl ona volání vytvořit.
 
-#### ***Signatura funkce***
+#### ***Function signature***
 Nejprve si ale musíme rozmyslet, jak vůbec funkci jednoznačně identifikovat. YoowzxCalc pro větší uživatelské pohodlí podporuje přetěžování funkcí se stejným jménem, ale různými argumenty. K jednoznačné identifikaci tedy slouží struktura [YCFunctionSignature&lt;TNumber&gt;](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/YCFunctionSignature.cs) - nese jméno funkce, počet a typ (jako generický parametr) argumentů. Ve třídě [YCCompilerUtils](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Util/YCCompilerUtils.cs) najdete extension-metody, kterými lze signaturu jednoduše získat z instance `System.Delegate` nebo z uzlů AST.
 
-#### ***Správa definic***
+#### ***Management of definitions***
 Správa seznamu definic je úkolem objektu [IYCFunctioncallContext](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Contexts/IYCFunctioncallContext.cs).  
 Prázdnou instanci jeho kanonické implementace pro funkce nad typem `double` získáme takto:
 ```c#
@@ -321,7 +321,7 @@ ctx = ctx.ResolveSymbols((signature, del));
 
 _Vedlejším efektem tohoto chování je fakt, že volání neexistující funkce zákonitě nemůže ústit v kompilační chybu, ale vždy až běhovou při pokusu onu neexistující funkci zavolat._
 
-### ***Kompilátor***
+### ***Compiler***
 Nyní konečně známe vše, co potřebujeme, abychom mohli přistoupit k vlastní kompilaci.  
 Ta je úkolem objektu [IYCCompiler](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/IYCCompiler.cs).  
 Máme-li již instanci operátoru, kompilátor získáme následovně:
@@ -349,7 +349,7 @@ Nyní jsme konečně získali spustitelného delegáta reprezentujícího náš 
 
 -----------------------------
 &nbsp;
-## ***Demo kalkulačka***
+## ***Demo calculator***
 Balíček [MarkusSecundus.YoowzxCalc.Cmd](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Cmd) obsahuje spustitelnou kalkulačku pro příkazovou řádku operující v klasické REPL smyčce nad typem `double` a sloužící jako ukázka demonstrující některé možnosti této knihovny.  
 
 Pro podrobnější instrukce k jejímu použití kalkulačku spusťte v interaktivním režimu a zavolejte příkaz `help`.
