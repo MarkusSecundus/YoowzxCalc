@@ -152,16 +152,16 @@ _Reference results were measured on a factory-clocked Core i7 9700KF._
 ## ***Grammar***
 Translation of text-written expression into machine-processible form (AST) is responsibility of the module `MarkusSecundus.YoowzxCalc.DSL`.
 The submodule ***[MarkusSecundus.YoowzxCalc.DSL.AST](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST)*** carries definitions of individual AST nodes and the [machinery](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/IYCVisitor.cs) necessary to process them using the [Visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern).  
-Sestavení AST z textově zapsaného výrazu je úkolem [YCAstBuilder](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/IYCAstBuilder.cs)u. Jeho kanonická implementace (která respektuje níže popsanou gramatiku) je bezestavový singleton a lze ji získat jako `IYCAstBuilder.Instance`.  
-Máme-li tedy textově zapsaný výraz, AST z něj získáme nějak takto:
+Building AST from text-written expression is the responsibility of [YCAstBuilder](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/IYCAstBuilder.cs). Its cannonical implementation (which respects the grammar described below) is a stateless singleton a can be obtained as `IYCAstBuilder.Instance`.  
+If we have a text-written expression, AST can be created like this:
 ```c#
 string expression;
 YCFunctionDefinition root = IYCAstBuilder.Instance.Build(expression);
 ```
-Narazil-li parser na nějakou lexikální či syntaktickou chybu, vyhodí na konci svého běhu [výjimku](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/ParserExceptions/YCAggregateAstBuilderException.cs), nesoucí informace o všech chybách, ke kterým v překládaném textu došlo.
+Should the parser come across a lexical or syntax error, it will throw an [exception](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/ParserExceptions/YCAggregateAstBuilderException.cs), carrying info about all the errors encountered.
 
 ### ***Whitespace***
-Za bílé jsou považovány všechny znaky s ASCII kódem od 0 do ord(' ') včetně. Z hlediska gramatiky jsou ignorovány, slouží jako oddělovač.
+All the characters with ASCII code 0 to ord(' ') (inclusive) are considered whitespace. From the grammar point of view they are ignored and serve as token separators.
 
 ### ***Literals and identifiers***
 Pro větší flexibilitu nejsou na úrovni gramatiky rozlišovány a jejich definice je velmi volná, s cílem umožnit např. zpracování výrazů nad textovými řetězci apod. bez nutnosti gramatiku přepisovat. 
