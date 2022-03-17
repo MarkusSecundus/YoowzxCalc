@@ -65,7 +65,7 @@ It encompasses the whole expression processing pipeline - initial parsing of tex
 ```c#
 IYoowzxCalc<double> calc = IYoowzxCalc<double>.Make();  
 ```
-*Basic configuration supports creation of calculators operating on types `double`, `decimal` and `long`. For operating on other types, explicitly adding support by the user is required (see [`NumberOperator`](#registrace-numberoperatoru)).*  
+*Basic configuration supports creation of calculators operating on types `double`, `decimal` and `long`. For operating on other types, explicitly adding support by the user is required (see [`NumberOperator`](#how-to-register-a-numberoperator)).*  
 
 ***Nothing now stays in our way to compile some expressions:***
 ```c#
@@ -77,59 +77,60 @@ Console.WriteLine(f2(0)); //prints 0
 
 Func<double, double> fibonacci = calc.Compile<Func<double, double>>("fib(x) := x <= 1 ? x : fib(x-1) + fib(x-2)");
 for(int t=0;t<10;++t)
-    Console.WriteLine(fibonacci(t));    //prints the first 10 fibonacci numbers
+    Console.WriteLine(fibonacci(t));    //prints the first 10 fibonacci numbers  
 ```
-This way the expression gets compiled, but no matter if it was given a name, it won't be implicitly added as a callable function to the context. (But the name still has value if we want to use recursion.)  
+This way the expression gets compiled, but no matter if it was given a name, it won't be implicitly added as a callable function to the context. (Though the name still has value if we want to use recursion.)  
 
-***Máme-li naopak několik výrazů, které chceme zkompilovat a rovnou přidat do kontextu, můžeme použít metodu `AddFunctions()`:***
+***Conversely, if we have some expressions that we want to just compile and add to the context, we can use the method `AddFunctions()`:***  
 ```c#
 calc.AddFunctions("fib(x) := x<= 1 ? x : fib(x-1) + fib(x-2)",
                   "Pi := 4",
                   "Fib_10 := fib(10)");
 ```
-Jakmile je funkce součástí kontextu, můžeme ji volat z jiných výrazů.  
+As soon as the function becomes member of Context, it can be called from other expressions.  
 
-***Někdy by se ale hodilo moci zpřístupnit k volání sofistikovanější funkci definovanou přímo v C#:***
+***This way, we can add any function that exists in the C# environment:***  
 ```c#
 calc.AddFunction<Func<double>>("Pi", () => 4)
     .AddFunction<Func<double, double>>("Sin", Math.Sin)
     .AddFunction<Func<double, double>>("Print", x=> { Console.WriteLine(x); return x; });
 ```   
 
-***Jakmile se funkce jednou nachází v kontextu, ať již do něj byla přidána odkudkoliv, dokážeme ji z něj získat:***
+***Function present in Context can be obtained by its signature:***  
 ```c#
 Func<double, double> f1 = calc.Get<Func<double, double>>("f");
 Func<double, double, double> f2 = calc.Get<Func<double, double, double>>("f");
 ```
-_Pozor - Yoowzx podporuje přetěžování funkcí. V tomto případě pro hodnotu f1 bude hledána funkce s názvem "f" a jedním argumentem, pro f2 jiná funkce "f" s dvěma argumenty. Počet argumentů hledané funkce metoda Get() vykouká z typového parametru._  
+_Achtung - Yoowzx supports function overloading. In this case, for the variable f1 a function named "f" with one parameter will be sought; completely different function "f" with two parameters for f2. Number of arguments of the sought function is deduced from the type parameter._  
 
 ### ***Tail recursion***
-Yoowzx plně podporuje [optimalizaci koncové rekurze](https://en.wikipedia.org/wiki/Tail_call). Zadefinujeme-li tedy např. takto výpočet faktorialu, pro libovolně vysoké hodnoty argumentu nehrozí přetečení volacího zásobníku:
+Yoowzx fully supports the [Tail recursion optimization](https://en.wikipedia.org/wiki/Tail_call). Should we thus define e.g. computation of factorial this way, there's no need to worry about stack overflow:  
 ```c#
 calc.AddFunctions("fact(x, accumulator) := x <= 1? accumulator : fact(x-1, x*accumulator)",
                   "fact(x) := fact(x, 1)");
 
-calc.Get<Func<double, double>>("fact")(800000); //doběhne bez pádu
+calc.Get<Func<double, double>>("fact")(800000); //finishes without crash
 ```
 
 ### ***Caching return values***
-Pomocí anotace "cached" lze kompilátoru nařídit, aby volání funkce pro danou hodnotu argumentů provedl jednou, výsledek uložil do keše, a příště ho z ní už jenom tahal.  
-Tím pádem např. takto definovaná funkce pro výpočet fibonacciho posloupnosti poběží v lineárním čase (resp. konstantním pro opětovná volání):
+Using the annotation "cached", the compiler can be ordered to cache return values of the function.  
+Thus e.g. this function for computing fibonacci numbers will run in linear time (resp. constant for repeated calls):
 ```c#
 calc.AddFunctions("[cached] fib(x) := x <= 1 ? x : fib(x-1) + fib(x-2)");
 
 calc.Get<Func<double, double>>("fib")(1000); //doběhne dříve než skončí vesmír
 ```
-_Kešování je podporováno pro všechny funkce bez ohledu na to, jak mnoho argumentů berou._  
+_Caching is supported for all functions no matter the number of parameters they have_  
 
-_Současná implementace kešování na funkcích, jež ji využívají, neumožňuje optimalizaci koncové rekurze. Na řešení se pracuje._
+_The current implementation of caching prevents functions using it from taking advantage of the tail recursion optimisation. The solution is being worked on._  
 
 ----------------------------
 &nbsp;
 ## ***Performance***
 
-V modulu [MarkusSecundus.YoowzxCalc.Benchmarks](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Benchmarks) je umístěno pár jednoduchých benchmarků, porovnávajících produkty YC s ekvivalentními lambdami zkompilovanými přímo jako součást C# zdrojáku.  
-Z výstupu vidíme, že v současné verzi YC sice je nezanedbatelně pomalejší - ve scénářích, kde velkou roli hraje rekurzivní volání (Fibonacci, Factorial) cca 4krát, ve scénářích, kde důraz leží na aritmetice, již jen o cca 25% - pořád ale jde o mnohonásobné zrychlení oproti neJITovaným interpretovaným jazykům (typu CPython apod.).  
+The module [MarkusSecundus.YoowzxCalc.Benchmarks](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Benchmarks) contains a few simple benchmarks, comparing the products of YC with equivalent lambdas compiled directly as part of C# source code.  
+It can be seen from the output that the current version of YC is more than negligibly slower - aprox. 4times in heavily functioncall-dependent scenarios (Fibonacci, Factorial), around 25% in scenarios that depend rather on arithmetics.  
+But still we get drastic speedup compared to non-JITted interpreter languages (like CPython etc.).  
 
 |                  Method |       Mean |    Error |   StdDev |
 |-------------------------|------------|----------|----------|
@@ -143,7 +144,7 @@ Z výstupu vidíme, že v současné verzi YC sice je nezanedbatelně pomalejš�
 |              Sum_CSharp | 2,125.0 us | 12.02 us | 11.24 us |
 
   
-_Referenční výsledky měřeny na stock-taktovaném Core i7 9700KF._
+_Reference results were measured on a factory-clocked Core i7 9700KF._
 
 
 -----------------------------
@@ -276,7 +277,7 @@ Instanci kanonického operátoru nyní získáme takto:
 ```c#
 IYCNumberOperator<MyNumberType> op = YCBasicNumberOperators.Get<MyNumberType>();
 ```
-Přesně takto získává defaultní operátor fasáda [YoowzxCalculator](#začínáme), pokud jí žádný nedodáme explicitně. Nyní ji tedy můžeme bez problémů používat pro náš nový typ. 
+Přesně takto získává defaultní operátor fasáda [YoowzxCalculator](#how-to-use), pokud jí žádný nedodáme explicitně. Nyní ji tedy můžeme bez problémů používat pro náš nový typ. 
 
 &nbsp;
 
@@ -302,7 +303,7 @@ IYCFunctioncallContext<double> ctx;
 YCFunctionSignature<double> signature;
 SettableOnce<Delegate> unresolved = ctx.GetUnresolvedFunction(signature);
 ```
-Přesně toto dělá kompilátor pokaždé, když narazí na funkci, jež není k nalezení v hešmapě `Functions` ani ve [standardní knihovně](#standardní-knihovna).  
+Přesně toto dělá kompilátor pokaždé, když narazí na funkci, jež není k nalezení v hešmapě `Functions` ani ve [standardní knihovně](#standard-library).  
 Do `unresolved` nyní, pokud vskutku je nerozřešena (což není garantováno - zjistíme příp. skrze `unresolved.IsSet`), pokud bychom vážně chtěli, můžeme ručně uložit delegáta a rozřešit ji tím, normálně takto:
 ```c#
 Delegate value;
