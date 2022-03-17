@@ -101,7 +101,7 @@ calc.AddFunction<Func<double>>("Pi", () => 4)
 Func<double, double> f1 = calc.Get<Func<double, double>>("f");
 Func<double, double, double> f2 = calc.Get<Func<double, double, double>>("f");
 ```
-_Achtung - Yoowzx supports function overloading. In this case, for the variable f1 a function named "f" with one parameter will be sought; completely different function "f" with two parameters for f2. Number of arguments of the sought function is deduced from the type parameter._  
+_Achtung! - Yoowzx supports function overloading. In this case, for the variable f1 a function named "f" with one parameter will be sought; completely different function "f" with two parameters for f2. `Get<>()` deduces the number of arguments from its type parameter._  
 
 ### ***Tail recursion***
 Yoowzx fully supports the [Tail recursion optimization](https://en.wikipedia.org/wiki/Tail_call). Should we thus define e.g. computation of factorial this way, there's no need to worry about stack overflow:  
@@ -150,8 +150,8 @@ _Reference results were measured on a factory-clocked Core i7 9700KF._
 -----------------------------
 &nbsp;
 ## ***Grammar***
-Překlad textově zapsaného výrazu do počítačem přímočaře zpracovatelné formy (AST) je úkolem modulu MarkusSecundus.YoowzxCalc.DSL.  
-Podmodul ***[MarkusSecundus.YoowzxCalc.DSL.AST](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST)*** obsahuje definici jednotlivých uzlů AST a [mašinérii](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/IYCVisitor.cs) pro jejich zpracování pomocí [visitor patternu](https://en.wikipedia.org/wiki/Visitor_pattern).  
+Translation of text-written expression into machine-processible form (AST) is responsibility of the module `MarkusSecundus.YoowzxCalc.DSL`.
+The submodule ***[MarkusSecundus.YoowzxCalc.DSL.AST](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST)*** carries definitions of individual AST nodes and the [machinery](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/IYCVisitor.cs) necessary to process them using the [Visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern).  
 Sestavení AST z textově zapsaného výrazu je úkolem [YCAstBuilder](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/IYCAstBuilder.cs)u. Jeho kanonická implementace (která respektuje níže popsanou gramatiku) je bezestavový singleton a lze ji získat jako `IYCAstBuilder.Instance`.  
 Máme-li tedy textově zapsaný výraz, AST z něj získáme nějak takto:
 ```c#
