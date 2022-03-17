@@ -80,13 +80,15 @@ for(int t=0;t<10;++t)
     Console.WriteLine(fibonacci(t));    //prints the first 10 fibonacci numbers  
 ```
 This way the expression gets compiled, but no matter if it was given a name, it won't be implicitly added as a callable function to the context. (Though the name still has value if we want to use recursion.)  
-
+  
 ***Conversely, if we have some expressions that we want to just compile and add to the context, we can use the method `AddFunctions()`:***  
 ```c#
 calc.AddFunctions("fib(x) := x<= 1 ? x : fib(x-1) + fib(x-2)",
                   "Pi := 4",
                   "Fib_10 := fib(10)");
 ```
+_The grammar defines that for functions with no parameters the parentheses can be omitted. Thus constants are the same as parameterless functions._  
+  
 As soon as the function becomes member of Context, it can be called from other expressions.  
 
 ***This way, we can add any function that exists in the C# environment:***  
