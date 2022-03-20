@@ -155,7 +155,7 @@ _Reference results were measured on a factory-clocked Core i7 9700KF._
 Translation of text-written expression into machine-processible form (AST) is responsibility of the module `MarkusSecundus.YoowzxCalc.DSL`.
 The submodule ***[MarkusSecundus.YoowzxCalc.DSL.AST](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST)*** carries definitions of individual AST nodes and the [machinery](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/IYCVisitor.cs) necessary to process them using the [Visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern).  
 Building AST from text-written expression is the responsibility of [YCAstBuilder](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/IYCAstBuilder.cs). Its cannonical implementation (which respects the grammar described below) is a stateless singleton a can be obtained as `IYCAstBuilder.Instance`.  
-If we have a text-written expression, AST can be created like this:
+If we have a text-written expression, AST can be created this way:
 ```c#
 string expression;
 YCFunctionDefinition root = IYCAstBuilder.Instance.Build(expression);
@@ -166,24 +166,24 @@ Should the parser come across a lexical or syntax error, it will throw an [excep
 All the characters with ASCII code 0 to ord(' ') (inclusive) are considered whitespace. From the grammar point of view they are ignored and serve as token separators.
 
 ### ***Literals and identifiers***
-Pro větší flexibilitu nejsou na úrovni gramatiky rozlišovány a jejich definice je velmi volná, s cílem umožnit např. zpracování výrazů nad textovými řetězci apod. bez nutnosti gramatiku přepisovat. 
-Jejich validace a rozlišení jsou ponechány na uživateli v rámci pozdějších fází zpracování výrazu (viz níže YCNumberOperator).  
+Fore more flexibility, they are considered the same on the grammar level and their definition is very loose so as to enable e.g. implementing expressions on text strings etc. without need to modify the grammar.
+Their validation and distinction are left up to the user in later phases of expression evaluation (see [YCNumberOperator](#how-to-register-a-numberoperator)).
 
-Na úrovni AST je reprezentuje uzel [YCLiteralExpression](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/PrimaryExpression/YCLiteralExpression.cs).
+On AST level, they are represented by [YCLiteralExpression](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/PrimaryExpression/YCLiteralExpression.cs) nodes.
 
-Literál je libovolně dlouhý řetězec literálových prvků. Literálový prvek matchuje na jeden z těchto regulárních výrazů:
-  - `libovolný_nespecielní_newhitespace_znak`   //specielní jsou všechny znaky s přiřazenou konkrétní rolí v gramatice - znaky operátorů apod.
-  - `"([^"]|\")"`   //textový řetězec v uvozovkách - může obsahovat i specielní a bílé znaky; uvozovky též, pokud jsou odescapované
-  - `'([^']|\')'`   //textový řetězec v apostrofech - může obsahovat i specielní a bílé znaky; apostrofy též, pokud jsou odescapované
-  - `[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?`    //reálně číslo v exponenciální notaci - může obsahovat specielní znak `+` nebo `-`  
+Literal is an arbitrarily long string of literal segments. A literal segment matches one of the following regexes:
+  - `any_nonspecial_nonwhitespace_char`   //special are all characters with a concrete role explicitly mentioned somewhere in the grammar definition - operator characters ('+', '-',...) etc.
+  - `"([^"]|\")"`   //text string in quotes - can contain special and whitespace chars; contained quotes must be escaped out
+  - `'([^']|\')'`   //text string in apostrophes - can contain special and whitespace chars; contained apostrophes must be escaped out)
+  - `[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?`    //real number, optionally in exponential notation - may contain special char `+` or `-`  
 
 &nbsp;
 
-Příkl. literálů: 
-  - `321.092` (řetězec nespeciálních znaků)
-  - `"Toto je text: \"qw\"""Jiný řetězec"` (dvojice řetězců hned vedle sebe, neoddělených bílým znakem)
-  - `@'Další exemplář textu: "REwqefds"'` (nespeciální znak následovaný řetězcem)
-  - `Abc1e+32"rew  "` (řetězec nespeciálních znaků následovaný číslem v exp. notaci následovaný řetězcem)
+Literal examples: 
+  - `321.092` (string of nonspecial chars)
+  - `"This is text: \"qw\"""Another string"` (pair of quoted strings right next to each other - not separated by whitespace)
+  - `@'Another example of text: "REwqefds"'` (nonspecial char followed by apostrophe string)
+  - `Abc1e+32"rew  "` (string of nonspecial chars followed by a number in exp. notation followed by a quote string)
 
 
 ### ***Operators***
