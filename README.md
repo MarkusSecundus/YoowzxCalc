@@ -152,82 +152,83 @@ _Reference results were measured on a factory-clocked Core i7 9700KF._
 -----------------------------
 &nbsp;
 ## ***Grammar***
-Translation of text-written expression into machine-processible form (AST) is responsibility of the module `MarkusSecundus.YoowzxCalc.DSL`.
+Translation of text-written expression into machine-processible form (AST) is responsibility of the module `MarkusSecundus.YoowzxCalc.DSL`.  
 The submodule ***[MarkusSecundus.YoowzxCalc.DSL.AST](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST)*** carries definitions of individual AST nodes and the [machinery](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/IYCVisitor.cs) necessary to process them using the [Visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern).  
 Building AST from text-written expression is the responsibility of [YCAstBuilder](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/IYCAstBuilder.cs). Its cannonical implementation (which respects the grammar described below) is a stateless singleton a can be obtained as `IYCAstBuilder.Instance`.  
-If we have a text-written expression, AST can be created this way:
+If we have a text-written expression, AST can be created this way:  
 ```c#
-string expression;
-YCFunctionDefinition root = IYCAstBuilder.Instance.Build(expression);
+string expression;  
+YCFunctionDefinition root = IYCAstBuilder.Instance.Build(expression);  
 ```
-Should the parser come across a lexical or syntax error, it will throw an [exception](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/ParserExceptions/YCAggregateAstBuilderException.cs), carrying info about all the errors encountered.
-
-### ***Whitespace***
-All the characters with ASCII code 0 to ord(' ') (inclusive) are considered whitespace. From the grammar point of view they are ignored and serve as token separators.
-
-### ***Literals and identifiers***
-Fore more flexibility, they are considered the same on the grammar level and their definition is very loose so as to enable e.g. implementing expressions on text strings etc. without need to modify the grammar.
-Their validation and distinction are left up to the user in later phases of expression evaluation (see [YCNumberOperator](#how-to-register-a-numberoperator)).
-
-On AST level, they are represented by [YCLiteralExpression](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/PrimaryExpression/YCLiteralExpression.cs) nodes.
-
-Literal is an arbitrarily long string of literal segments. A literal segment matches one of the following regexes:
-  - `any_nonspecial_nonwhitespace_char`   //special are all characters with a concrete role explicitly mentioned somewhere in the grammar definition - operator characters ('+', '-',...) etc.
-  - `"([^"]|\")"`   //text string in quotes - can contain special and whitespace chars; contained quotes must be escaped out
-  - `'([^']|\')'`   //text string in apostrophes - can contain special and whitespace chars; contained apostrophes must be escaped out)
+Should the parser come across a lexical or syntax error, it will throw an [exception](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/ParserExceptions/YCAggregateAstBuilderException.cs), carrying info about all the errors encountered.  
+  
+### ***Whitespace***  
+All the characters with ASCII code 0 to ord(' ') (inclusive) are considered whitespace. From the grammar point of view they are ignored and serve as token separators.  
+  
+### ***Literals and identifiers***  
+Fore more flexibility, they are considered the same on the grammar level and their definition is very loose so as to enable e.g. implementing expressions on text strings etc. without need to modify the grammar.  
+Their validation and distinction are left up to the user in later phases of expression evaluation (see [YCNumberOperator](#how-to-register-a-numberoperator)).  
+  
+On AST level, they are represented by [YCLiteralExpression](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/PrimaryExpression/YCLiteralExpression.cs) nodes.  
+  
+Literal is an arbitrarily long string of literal segments. A literal segment matches one of the following regexes:  
+  - `any_nonspecial_nonwhitespace_char`   //special are all characters with a concrete role explicitly mentioned somewhere in the grammar definition - operator characters ('+', '-',...) etc.  
+  - `"([^"]|\")"`   //text string in quotes - can contain special and whitespace chars; contained quotes must be escaped out  
+  - `'([^']|\')'`   //text string in apostrophes - can contain special and whitespace chars; contained apostrophes must be escaped out)  
   - `[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?`    //real number, optionally in exponential notation - may contain special char `+` or `-`  
 
 &nbsp;
 
-Literal examples: 
-  - `321.092` (string of nonspecial chars)
-  - `"This is text: \"qw\"""Another string"` (pair of quoted strings right next to each other - not separated by whitespace)
-  - `@'Another example of text: "REwqefds"'` (nonspecial char followed by apostrophe string)
-  - `Abc1e+32"rew  "` (string of nonspecial chars followed by a number in exp. notation followed by a quote string)
+Literal examples:  
+  - `321.092` (string of nonspecial chars)  
+  - `"This is text: \"qw\"""Another string"` (pair of quoted strings right next to each other - not separated by whitespace)  
+  - `@'Another example of text: "REwqefds"'` (nonspecial char followed by apostrophe string)  
+  - `Abc1e+32"rew  "` (string of nonspecial chars followed by a number in exp. notation followed by a quote string)  
 
 
 ### ***Operators***
-Yoowzx definuje klasicky používané, unární, binární a ternární, aritmetické a logické operátory s obvyklými prioritami a asociativitou.
-Každému operátoru odpovídá uzel AST, pro vyčerpávající výčet podporovaných operátorů náhlédněte tedy prosím zde:
-  - [Unární operátory](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST/UnaryExpressions)
-  - [Binární operátory](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST/BinaryExpressions)
-  - [Ternární operátor](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/OtherExpressions/YCConditionalExpression.cs)
+Yoowzx defines all the classically used, unary, binary and ternary, arithmetic and logical operators with priorities and associativity as usual.  
+Each operator has its corresponding AST node - thus for exhaustive list of supported operators please see:  
+  - [Unary operators](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST/UnaryExpressions)  
+  - [Binary operators](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST/BinaryExpressions)  
+  - [Ternary operators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/OtherExpressions/YCConditionalExpression.cs)  
 
 
 
 ### ***Functioncalls***
-Volání funkcí probíhá klasickým způsobem známým např. z jazyka C:  
-Jméno funkce je libovolný literál, za ním následují kulaté závorky, obsahující příp. jednotlivé argumenty (libovolně složité výrazy) oddělené čárkami.  
-Na úrovni AST je reprezentováno uzlem [YCFunctioncallExpression](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/OtherExpressions/YCFunctioncallExpression.cs).
+Function invocation works as usual.  
+Function name is an arbitrary literal followed by parentheses, enclosing a comma-separated list of zero or more arguments (arbitrarily complex expressions).  
+In AST it's represented by the [YCFunctioncallExpression](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/OtherExpressions/YCFunctioncallExpression.cs) node.  
 
 
-### ***Compilation unit***
-Výstupem kompilace je objekt typu [YCFunctionDefinition](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/YCFunctionDefinition.cs).  
-Jeho zápis vypadá nějak takto:
+### ***Compilation unit***  
+Result of compilation is an object of type [YCFunctionDefinition](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/YCFunctionDefinition.cs).  
+In grammar it's defined as:  
 ```c
-definice_funkce: list_anotací? jméno_funkce '(' seznam_jmen_argumentů ')' ':=' výraz ;
+function_definition: annotation_list? function_name '(' argument_names_list ')' ':=' expression ;  
 ```
-"Jméno funkce" je libovolný literál, "seznam jmen argumentů" je (příp. prázdný) list literálů oddělených znakem `,` a "výraz" pak libovolně složitý výraz reprezentující tělo definované funkce.  
-V případě funkce s nulovým počtem argumentů lze příp. prázdné závorky vynechat.  
-Popř. lze vynechat i jméno funkce s výrazem přiřadítka a zůstat se samotným (volitelně oanotovaným) výrazem - v takovém případě bude jako jméno funkce použita (zaručeně non-null) hodnota `YCFunctionDefinition.AnonymousFunctionName`.
+`function_name` is an arbitrary literal, `argument_names_list` is (eventl. empty) comma-separated list of literals and `expression` is some expression describing the body of the defined function.  
+If the function has zero parameters, the empty parentheses can voluntarily be omitted.  
+Eventually one can omit even the function name with ':=' operator and be left with just (optionally annotated) the lone expression - in such case, `YCFunctionDefinition.AnonymousFunctionName` (guaranteed non-null) will be used as function name.  
 
-#### ***Annotations***
-Někdy se hodí moci k definici funkce přiložit ještě dodatečná data, sloužící např. jako řidicí direktiva pro kompilátor apod. .  
-List anotací se zapisuje do hranatých závorek a jednotlivé anotace v něm jsou oddělené čárkami. Anotace může být buď prázdná - samotný literál, nebo může mít hodnotu uvozenou dvojtečkou a danou druhým literálem. Gramatika tedy vypadá takto:
+#### ***Annotations***  
+Sometimes it may be handy to attach some additional data serving e.g. as a compiler directive etc. .  
+Annotation list is written in square brackets, individual elements comma-separated. An annotation can either be empty - lone literal - or it can have a value (another literal) assigned - marked by the colon char.  
+This is how the grammar looks:  
 ```c
-list_anotací: '[' anotace (',' anotace)* ']' ;
-anotace: LITERÁL | LITERÁL ':' LITERÁL ;
+annotations_list: '[' annotation (',' annotation)* ']' ;
+annotation: LITERAL | LITERAL ':' LITERAL ;
 ```
 
 
 #### ***Examples***
-Validní definice která projde kompilátorem může vypadat např. takto:
+A valid definition that gets accepted by the compiler can look e.g. this:
   - `f(x) := x*x + 1`
-  - `Funkce1(arg1, arg2, arg3, arg4, arg5) := arg1==1? (arg1 + arg2 - (30 - arg1)*arg4)**((arg4)**2.14e-3) : Funkce1(1,1,1,1,arg3)`
-  - `f(a, b, a) := a*b*a` //kompilátor netestuje duplicitu funkčních argumentů
-  - `[anotace1, anotace2: něco] f() := 1`  
-  - `[anotace1, anotace2: něco] f := 1`
-  - `[anotace1, anotace2: něco] 1`
+  - `Func1(arg1, arg2, arg3, arg4, arg5) := arg1==1? (arg1 + arg2 - (30 - arg1)*arg4)**((arg4)**2.14e-3) : Func1(1,1,1,1,arg3)`
+  - `f(a, b, a) := a*b*a` //the compiler doesn't test for duplicities within function parameters
+  - `[annotation1, annotation2: something] f() := 1`  
+  - `[annotation1, annotation2: something] f := 1`
+  - `[annotation1, annotation2: something] 1`
 
 
 &nbsp;
