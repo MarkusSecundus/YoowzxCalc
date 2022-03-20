@@ -214,28 +214,28 @@ Eventually one can omit even the function name with ':=' operator and be left wi
 #### ***Annotations***  
 Sometimes it may be handy to attach some additional data serving e.g. as a compiler directive etc. .  
 Annotation list is written in square brackets, individual elements comma-separated. An annotation can either be empty - lone literal - or it can have a value (another literal) assigned - marked by the colon char.  
-This is how the grammar looks:  
-```c
-annotations_list: '[' annotation (',' annotation)* ']' ;
-annotation: LITERAL | LITERAL ':' LITERAL ;
+This is how the grammar looks:    
+```c  
+annotations_list: '[' annotation (',' annotation)* ']' ;  
+annotation: LITERAL | LITERAL ':' LITERAL ;  
 ```
+  
+  
+#### ***Examples***  
+A valid definition that gets accepted by the compiler can look e.g. this:  
+  - `f(x) := x*x + 1`  
+  - `Func1(arg1, arg2, arg3, arg4, arg5) := arg1==1? (arg1 + arg2 - (30 - arg1)*arg4)**((arg4)**2.14e-3) : Func1(1,1,1,1,arg3)`  
+  - `f(a, b, a) := a*b*a` //the compiler doesn't test for duplicities within function parameters  
+  - `[annotation1, annotation2: something] f() := 1`    
+  - `[annotation1, annotation2: something] f := 1`  
+  - `[annotation1, annotation2: something] 1`  
 
 
-#### ***Examples***
-A valid definition that gets accepted by the compiler can look e.g. this:
-  - `f(x) := x*x + 1`
-  - `Func1(arg1, arg2, arg3, arg4, arg5) := arg1==1? (arg1 + arg2 - (30 - arg1)*arg4)**((arg4)**2.14e-3) : Func1(1,1,1,1,arg3)`
-  - `f(a, b, a) := a*b*a` //the compiler doesn't test for duplicities within function parameters
-  - `[annotation1, annotation2: something] f() := 1`  
-  - `[annotation1, annotation2: something] f := 1`
-  - `[annotation1, annotation2: something] 1`
-
-
-&nbsp;
------------------------------
-## ***Compilation***
-Jakmile je postaven abstraktní syntaktický strom, nic už nám nebrání začít se zabývat jeho kompilací na spustitelný kód.  
-Mašinérii s tím související obsahuje modul ***[MarkusSecundus.YoowzxCalc.Compilation](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Compilation)***.
+&nbsp;  
+-----------------------------  
+## ***Compilation***  
+The AST is finally built and now nothing stays in out way to start dealing with its compilation to executable code.  
+The machinery geared towards that matter is placed in the ***[MarkusSecundus.YoowzxCalc.Compilation](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Compilation)*** module.  
 
 ### ***How to define an operation***
 Chceme-li být schopni přeložit matematický výraz na spustitelný kód, musíme nejprve vědět, co vůbec která v něm zapsaná operace znamená, a také jak rozlišit konstantu od identifikátoru a jak vypadá platný identifikátor. To všechno kompilátoru řekneme skrze instanci rozhranní ***[IYCNumberOperator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/IYCNumberOperator.cs)***.  
