@@ -169,6 +169,35 @@ namespace MarkusSecundus.Util
 
         internal static class Caching
         {
+
+            internal static Expression CacheAnything(Expression callable, FunctionParametersInfo parameters)
+            {
+                var tupleType = TupleUtils.GetValueTupleType(parameters.Args);
+                var cacheType = typeof(Dictionary<,>).MakeGenericType(tupleType, parameters.Ret);
+                var cacheInstance = Expression.Constant(Activator.CreateInstance(cacheType));
+
+                var functionArgs = parameters.Args.Select(Expression.Parameter).ToArray();
+
+                var cacheResultVariable = Expression.Parameter(parameters.Ret);
+                var cacheKeyVariable = getTupleCreation(tupleType, functionArgs);
+
+                IDictionary<object, object> DUMMY_DICT = null;
+
+                return Expression.Lambda
+                (
+                    Expression.Block(new ParameterExpression[] { cacheResultVariable },
+                        Expression.IfThenElse(
+                            Expression.Call(cacheInstance, nameof(DUMMY_DICT.TryGetValue), null, cacheKeyVariable, cacheResultVariable),
+                            cacheResultVariable,
+                            Expression.Invoke(callable, functionArgs)
+                            )
+                        )
+                );
+            }
+
+
+
+
             internal static Delegate Autocached(Delegate function)
             {
                 var parameters = function.GetFunctionParameters();
