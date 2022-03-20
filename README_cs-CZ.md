@@ -173,7 +173,7 @@ Literál je libovolně dlouhý řetězec literálových prvků. Literálový prv
   - `libovolný_nespecielní_newhitespace_znak`   //specielní jsou všechny znaky s přiřazenou konkrétní rolí v gramatice - znaky operátorů apod.
   - `"([^"]|\")"`   //textový řetězec v uvozovkách - může obsahovat i specielní a bílé znaky; uvozovky též, pokud jsou odescapované
   - `'([^']|\')'`   //textový řetězec v apostrofech - může obsahovat i specielní a bílé znaky; apostrofy též, pokud jsou odescapované
-  - `[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?`    //reálně číslo v exponenciální notaci - může obsahovat specielní znak `+` nebo `-`  
+  - `[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?`    //reálné číslo, volitelně v exponenciální notaci - může obsahovat specielní znak `+` nebo `-`  
 
 &nbsp;
 
