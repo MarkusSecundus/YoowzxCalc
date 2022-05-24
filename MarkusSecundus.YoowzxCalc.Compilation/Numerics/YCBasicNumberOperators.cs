@@ -1,4 +1,5 @@
-﻿using MarkusSecundus.YoowzxCalc.Compiler;
+﻿using MarkusSecundus.Util;
+using MarkusSecundus.YoowzxCalc.Compiler;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -34,7 +35,12 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
         /// <typeparam name="TNumber">Number type to be operated</typeparam>
         /// <returns>An instance of <see cref="IYCNumberOperator{TNumber}"/> registered for given <typeparamref name="TNumber"/> type</returns>
         /// <exception cref="KeyNotFoundException">If there is no operator provider registered for given number type</exception>
-        public static IYCNumberOperator<TNumber> Get<TNumber>() => ((Func<IYCNumberOperator<TNumber>>)_table[typeof(TNumber)])();
+        public static IYCNumberOperator<TNumber> Get<TNumber>()
+        {
+            if (!_table.TryGetValue(typeof(TNumber), out var ret))
+                throw new KeyNotFoundException($"No NumberOperator found for the type {typeof(TNumber)}!\n Try adding one by calling Register<{typeof(TNumber)}>(..) or choose one that's available.\n List of number types currently available: [{_table.Keys.MakeString(", ")}]");
+            return ((Func<IYCNumberOperator<TNumber>>)ret)();
+        }
 
         static YCBasicNumberOperators()
         {
@@ -88,7 +94,7 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             /// </summary>
             public static Double Instance { get; } = new();
 
-            public bool TryParse(string repr, out double value) => double.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
+            public bool TryParseConstant(string repr, out double value) => double.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
             public FormatException ValidateIdentifier(string identifier) => ValidateIdentifierFormat(identifier);
 
@@ -172,7 +178,7 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             /// </summary>
             public static Decimal Instance { get; } = new();
 
-            public bool TryParse(string repr, out decimal value) => decimal.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
+            public bool TryParseConstant(string repr, out decimal value) => decimal.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
             public FormatException ValidateIdentifier(string identifier) => ValidateIdentifierFormat(identifier);
 
@@ -209,7 +215,7 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             /// </summary>
             public static Long Instance { get; } = new();
 
-            public bool TryParse(string repr, out long value) => long.TryParse(repr, Const.IntegerNumberStyle, CultureInfo.InvariantCulture, out value);
+            public bool TryParseConstant(string repr, out long value) => long.TryParse(repr, Const.IntegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
             public FormatException ValidateIdentifier(string identifier) => ValidateIdentifierFormat(identifier);
 

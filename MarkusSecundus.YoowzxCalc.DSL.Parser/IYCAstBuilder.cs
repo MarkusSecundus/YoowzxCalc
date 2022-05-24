@@ -1,4 +1,5 @@
-﻿using MarkusSecundus.YoowzxCalc.DSL.AST;
+﻿using Antlr4.Runtime;
+using MarkusSecundus.YoowzxCalc.DSL.AST;
 using MarkusSecundus.YoowzxCalc.DSL.Parser.ParserExceptions;
 using System;
 using System.Collections.Generic;
@@ -99,5 +100,14 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser
         /// <exception cref="YCAggregateAstBuilderException">Encompassing all lexer and parser errors that have occured</exception>
         /// <returns>AST describing the expression</returns>
         public YCFunctionDefinition Build(TextReader source);
+
+        /// <summary>
+        /// Parses expression.
+        /// Allows for any custom lexer with the expected output token format (for cannonical lexer see <see cref="CalculatorDSLLexer"/>).
+        /// </summary>
+        /// <param name="lexer">Custom lexer providing the stream of tokens to parse</param>
+        /// <exception cref="YCAggregateAstBuilderException">Encompassing all lexer and parser errors that have occured</exception>
+        /// <returns>AST describing the expression</returns>
+        public YCFunctionDefinition Build(Lexer lexer);
     }
 }

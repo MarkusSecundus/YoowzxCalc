@@ -12,9 +12,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
+using static MarkusSecundus.Util.ActionOnDisposeHelper;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.Parser
 {
+    public partial class CalculatorDSLLexer
+    {
+        
+    }
+
     /// <summary>
     /// Canonical implementation of <see cref="IYCAstBuilder"/>
     /// </summary>
@@ -23,16 +29,16 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser
         public YCFunctionDefinition Build(string source) => Build(new AntlrInputStream(source));
         public YCFunctionDefinition Build(Stream source) => Build(new AntlrInputStream(source));
         public YCFunctionDefinition Build(TextReader source) => Build(new AntlrInputStream(source));
+        public YCFunctionDefinition Build(AntlrInputStream source) => Build(new CalculatorDSLLexer(source));
 
-
-        private static YCFunctionDefinition Build(AntlrInputStream source)
+        public YCFunctionDefinition Build(Lexer lexer)
         {
-            CalculatorDSLLexer lexer = new CalculatorDSLLexer(source);
             CalculatorDSLParser parser = new CalculatorDSLParser(new CommonTokenStream(lexer));
 
             YCAggregateAstBuilderException.Builder e = new();
 
             lexer.AddErrorListener(e.LexicalErrorListener);
+            using var _ = OnDispose(() =>   lexer.RemoveErrorListener(e.LexicalErrorListener)  );
             parser.AddErrorListener(e.SyntaxErrorListener);
 
             var l = new ParserListener();

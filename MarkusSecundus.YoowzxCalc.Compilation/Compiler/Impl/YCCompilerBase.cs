@@ -93,7 +93,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             public override Expression Visit(YCLiteralExpression expr, VisitContext ctx)
             {
 
-                if (ctx.Op.TryParse(expr.Value, out var constant))
+                if (ctx.Op.TryParseConstant(expr.Value, out var constant))
                     return Expression.Constant(constant);
                 else
                 {

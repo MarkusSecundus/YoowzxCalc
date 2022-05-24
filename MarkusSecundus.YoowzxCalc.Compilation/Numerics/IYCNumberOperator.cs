@@ -20,7 +20,7 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
         /// <param name="repr">Text representation of a number.</param>
         /// <param name="value">Result value. Will be set to the respective value if the conversion succeeds or to <c>default(TNumber)</c> if it failed.</param>
         /// <returns>Whether the conversion was successfull - aka. the string is a valid constant representator.</returns>
-        public bool TryParse(string repr, out TNumber value);
+        public bool TryParseConstant(string repr, out TNumber value);
 
         /// <summary>
         /// Determines whether the string represents a valid identifier in the calculator grammar.

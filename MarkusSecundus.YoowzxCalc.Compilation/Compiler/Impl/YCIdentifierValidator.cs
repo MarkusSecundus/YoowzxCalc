@@ -61,7 +61,7 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
 
         public override void Visit(YCLiteralExpression expr, YCIdentifierValidatorArgs<TNumber> ctx)
         {
-            if (!ctx.Op.TryParse(expr.Value, out _))
+            if (!ctx.Op.TryParseConstant(expr.Value, out _))
             {
                 checkIdentifierValidity(expr.Value, ctx);
             }
