@@ -240,19 +240,18 @@ The machinery geared towards that matter is placed in the ***[MarkusSecundus.Yoo
 ### ***How to define an operation***
 To be capable of translating a mathematical expression to executable code, we first need to define what the individual operations written in it actually mean, as well as how to distinguish a constant from an identifier and what even is a valid identifier. All of those things are told to the compiler through an instance of interface ***[IYCNumberOperator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/IYCNumberOperator.cs)***.  
 
-When operating on type `double`, `decimal` or `long`, no effort is required - for those there are already default implementations prepared - as subclasses of static class [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs). Such default implementations implement all the operators the intuitive way - operator `+` means addition, `%` modulus, `**` power, etc., constant is anything that gets accepted by the `TryParse` method on the corresponding type using invariant culture, valid identifier matches regex `[[:alpha:]_][[:alnum:]_]*`. The operator for type `double` also includes all functions from `System.Math` as members of its standard library.
+When operating on type `double`, `decimal` or `long`, no effort is required - for those there are already default implementations prepared - as subclasses of static class [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs). Such default implementations implement all the operators the intuitive way - operator `+` means addition, `%` modulus, `**` power, etc., constant is anything that gets accepted by the `TryParse` method on the corresponding type using invariant culture, valid identifier matches regex `[[:alpha:]_][[:alnum:]_]*`. The operator for type `double` also includes all functions from `System.Math` as members of its standard library.  
 
 When implementing your own number operator, it may be a good idea to look at the premade implementations for inspiration. Although it should overall be a very straightforward process.  
 
 #### ***Recognition of constants***
-The first method to be supplied is `TryParse`. Its task is 
-První metodou, jíž je třeba dodat, je `TryParse`. Jejím úkolem je z textového zápisu určit, zda reprezentuje konstantu, a její případnou hodnotu. Všechny literály jsou nejprve testovány na konstantu a teprve pokud neprojdou, stanou se kandidátem na identifikátor.
+The first method to be supplied is `TryParseConstant`. Its task is to resolve whether a text string represents a constant and eventually to determine its value. All literals are first tested for being constant and only if they do not pass, they become identifier candidates.  
 
 #### ***Validation of identifiers***
-Pokud literál není vyhodnocen jako konstanta, stane se kandidátem na identifikátor. Metoda `ValidateIdentifier` má pak za úkol rozhodnout, zda identifikátorem vskutku je, příp. lidsky čitelným způsobem popsat odchylky od identifikátorového formátu, jichž se dopouští. Třída [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs) poskytuje pár statických metod a polí, které by se při její implementaci mohly hodit.
+If a literal isn't resolved to be a constant, it becomes identifier candidate. The method `ValidateIdentifier` is responsible for determining if it indeed is an identifier, providing human-readable summary of perpetrated violations of the identifier format if it is not. The class [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs) provides a few static methods and fields that could come in handy while implementing this method.  
 
 #### ***Operator definitions***
-Nyní zbývá už jen doplnit metody odpovídající jednotlivým operátorům definovaným v gramatice, což by měl být naprosto přímočarý proces.
+The only thing remaining is to fill out all the methods corresponding to particular grammar defined operators which should be a totally straightforward process.  
 
 #### ***Standard library***
 Volitelně ještě můžeme dodat množinu funkcí jakožto standardní knihovnu. Každá funkce v ní definovaná bude kompilátorem automaticky viditelná, aniž by se musela nacházet v kompilačním kontextu. Pokud se v kontextu nachází funkce se stejnou signaturou, zastíní funkci ve standardní knihovně.
