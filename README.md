@@ -339,14 +339,15 @@ Also worth mention is the method `GetUnresolvedSymbolsList` - it returns a strea
 Unintentional consequence of this behavior is the fact that calling non-existent function cannot result in a compile error, but always only runtime one on the attempt to call the function._  
 
 ### ***Compiler***
-Nyní konečně známe vše, co potřebujeme, abychom mohli přistoupit k vlastní kompilaci.  
-Ta je úkolem objektu [IYCCompiler](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/IYCCompiler.cs).  
-Máme-li již instanci operátoru, kompilátor získáme následovně:
+Now we finally have everything we need to approach the compilation itself.  
+That is the task of [IYCCompiler](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/IYCCompiler.cs).  
+
+If we alredy have an instance of number operator, the compiler can be obtained like this:  
 ```c#
 IYCNumberOperator<MyNumberType> op;
 IYCCompiler<MyNumberType> compiler = IYCCompiler<MyNumberType>.Make(op);
 ```
-Použití je víceméně přímočaré - zavoláme metodu `Compile`, jako argumenty jí předáme kontext a AST výrazu, jenž chceme zkompilovat - takto:
+The usage is quite straightforward - just call the method `Compile`, passing the context and expression AST as arguments:  
 ```c#
 IYCFunctioncallContext<MyNumberType> ctx;
 
@@ -354,6 +355,7 @@ YCFunctionDefinition toCompile;
 IYCCompilationResult<MyNumberType> result = compiler.Compile(ctx, toCompile);
 ```
 
+Because of implementation reasons, we don't 
 Z implementačních důvodů takto ještě nezískáme přímo spustitelného delegáta, ale polotovar, který je nutné finalizovat jedním z těchto způsobů:
 ```c#
 Delegate weaklyTypedResult = result.Finalize();
