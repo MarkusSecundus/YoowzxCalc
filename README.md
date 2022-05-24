@@ -155,7 +155,7 @@ _Reference results were measured on a factory-clocked Core i7 9700KF._
 ## ***Grammar***
 Translation of text-written expression into machine-processible form (AST) is responsibility of the module `MarkusSecundus.YoowzxCalc.DSL`.  
 The submodule ***[MarkusSecundus.YoowzxCalc.DSL.AST](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.DSL.AST)*** carries definitions of individual AST nodes and the [machinery](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/IYCVisitor.cs) necessary to process them using the [Visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern).  
-Building AST from text-written expression is the responsibility of [YCAstBuilder](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/IYCAstBuilder.cs). Its cannonical implementation (which respects the grammar described below) is a stateless singleton a can be obtained as `IYCAstBuilder.Instance`.  
+Building AST from text-written expression is the responsibility of [YCAstBuilder](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.Parser/IYCAstBuilder.cs). Its cannonical implementation (which respects the grammar described below) is a stateless singleton and can be obtained as `IYCAstBuilder.Instance`.  
 If we have a text-written expression, AST can be created this way:  
 ```c#
 string expression;  
@@ -168,7 +168,7 @@ All the characters with ASCII code 0 to ord(' ') (inclusive) are considered whit
   
 ### ***Literals and identifiers***  
 Fore more flexibility, they are considered the same on the grammar level and their definition is very loose so as to enable e.g. implementing expressions on text strings etc. without need to modify the grammar.  
-Their validation and distinction are left up to the user in later phases of expression evaluation (see [YCNumberOperator](#how-to-register-a-numberoperator)).  
+Their validation and distinction is left up to the user in later phases of expression evaluation (see [YCNumberOperator](#how-to-register-a-numberoperator)).  
   
 On AST level, they are represented by [YCLiteralExpression](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.DSL.AST/PrimaryExpression/YCLiteralExpression.cs) nodes.  
   
