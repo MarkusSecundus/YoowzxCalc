@@ -355,14 +355,13 @@ YCFunctionDefinition toCompile;
 IYCCompilationResult<MyNumberType> result = compiler.Compile(ctx, toCompile);
 ```
 
-Because of implementation reasons, we don't 
-Z implementačních důvodů takto ještě nezískáme přímo spustitelného delegáta, ale polotovar, který je nutné finalizovat jedním z těchto způsobů:
+Because of implementation reasons, we don't directly get the delegate, but another object, that needs to be finalized into the delegate in one of these ways:  
 ```c#
 Delegate weaklyTypedResult = result.Finalize();
 Func<MyNumberType> stronglyTypedResult = result.Finalize<Func<MyNumberType>>();
 ```
 
-Nyní jsme konečně získali spustitelného delegáta reprezentujícího náš výraz! Ještě zbývá zkontrolovat a příp. doplnit nevyřešené symboly, které se kompilací objevily v kontextu, a můžeme ho vesele začít používat, jak jen se nám zachce.
+We finally obtained a delegate that represents our expression! Now the only thing remaining is to check, evtl. fill in unresolved symbols and we can happily start using it.  
 
 
 
