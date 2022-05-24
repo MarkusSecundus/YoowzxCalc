@@ -316,7 +316,7 @@ IYCFunctioncallContext<double> ctx;
 YCFunctionSignature<double> signature;
 SettableOnce<Delegate> unresolved = ctx.GetUnresolvedFunction(signature);
 ```
-Which is exactly what the compiler does each time it comes across a function that can be found neither in the `Functions` hashmap, nor in the [standard library](#standard-library).  
+...which is exactly what the compiler does each time it comes across a function that can be found neither in the `Functions` hashmap, nor in the [standard library](#standard-library).  
 Now, if `unresolved` indeed is unresolved (not guarranteed - check via `unresolved.IsSet`), we can manually assign a delegate to it, thus resolve it:  
 ```c#
 Delegate value;
