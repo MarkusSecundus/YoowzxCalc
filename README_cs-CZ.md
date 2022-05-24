@@ -8,6 +8,8 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
 
 
 &nbsp;
+ - _[EN verze Readme](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/README.md)_
+&nbsp;
 
 #### ***Obsah***
   0. [Začínáme](#začínáme)

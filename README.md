@@ -7,6 +7,7 @@ Works by emitting CIL bytecode at runtime - capable of running natively on the V
 Also includes a programmable calculator for terminal that serves as demo.  
 
 
+ - _[CZ version of Readme](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/README_cs-CZ.md)_
 &nbsp;
 
 #### ***Contents***
