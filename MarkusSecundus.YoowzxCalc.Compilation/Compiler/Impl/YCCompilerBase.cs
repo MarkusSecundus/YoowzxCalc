@@ -13,13 +13,16 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using MarkusSecundus.YoowzxCalc.Compilation.Compiler.Attributes;
 
 namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
+    [YCCompilerBase]
     class YCCompilerBase<TNumber> : IYCCompiler<TNumber>
     {
         private readonly IYCNumberOperator<TNumber> Op;
 
+        [YCCompilerBaseFactory]
         public YCCompilerBase(IYCNumberOperator<TNumber> numberOperator)
             => Op = numberOperator;
 
