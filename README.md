@@ -316,17 +316,19 @@ IYCFunctioncallContext<double> ctx;
 YCFunctionSignature<double> signature;
 SettableOnce<Delegate> unresolved = ctx.GetUnresolvedFunction(signature);
 ```
-Přesně toto dělá kompilátor pokaždé, když narazí na funkci, jež není k nalezení v hešmapě `Functions` ani ve [standardní knihovně](#standard-library).  
-Do `unresolved` nyní, pokud vskutku je nerozřešena (což není garantováno - zjistíme příp. skrze `unresolved.IsSet`), pokud bychom vážně chtěli, můžeme ručně uložit delegáta a rozřešit ji tím, normálně takto:
+Which is exactly what the compiler does each time it comes across a function that can be found neither in the `Functions` hashmap, nor in the [standard library](#standard-library).  
+Now, if `unresolved` indeed is unresolved (not guarranteed - check via `unresolved.IsSet`), we can manually assign a delegate to it, thus resolve it:  
 ```c#
 Delegate value;
 unresolved.Value = value;
 ```
-V praxi to ale skoro jistě dělat nebudeme - místo toho využijeme metody `ResolveSymbols` na kontextu - nějak takto:
+However, in practice we most certainly won't do it this way - instead using the method `ResolveSymbols` on context - like this:  
  ```c#
 ctx = ctx.ResolveSymbols((signature, del));
  ```
- Ta bere jako varargs libovolný počet dvojic `(signatura, delegát)`, všechny najednou rozřeší a vrátí novou instanci kontextu, jež má všechny rozřešené symboly přidány do svých `Functions` (včetně symbolů, jež byly vedeny jako unresolved, ale měly hodnotu už nastavenou odjinud než z argumentů `ResolveSymbols`). Definice předaná sem jako argument bude v pořádku přidána do výsledného kontextu i tehdy, když vůbec nebyla vedena jako unresolved - tímto způsobem tedy jsme schopni do kontextu přímočaře přidávat i úplně nové definice.  
+ It takes an arbitrary number of `(signature, delegate)` pairs as varargs, resolves all of them at once and returns a new instance of context, where all the resolved symbols are added to `Functions` (including the 'unresolved' whose value was already resolved from somewhere else than the arguments of `ResolveSymbols`).   
+ A definition provided in the arguments will be added into the result context even when it wasn't established as 'unresolved' - making this a straightforward way of adding brand new definitions into the context.   
+
 
  _Jakmile je symbol jednou rozřešen, pokus o změnu jeho hodnoty vyústí v běhovou chybu - to je záměr. Já, jakožto autor, si jsem plně vědom, že tím zavírám cestu k mnoha zajímavým a zajisté i velmi užitečným trikům, kterých by nebýt toho bylo možné dosáhnout, avšak v důsledku toho, jak je zbytek YC implementován, by to vedlo v některých okrajových případech k velmi komplexnímu chování, které, upřímně, nemám nervy dokumentovat.  
  Pokud to uživatel opravdu nutně potřebuje, neměl by pro něj být velký problém naimplementovat nad YC další vrstvu, jež mu to umožní, příp. obstarat si na vlastní nebezpečí verzi `MarkusSecundus.Util.dll` s odebranými checky v `SettableOnce`, je-li vážně zoufalý._
