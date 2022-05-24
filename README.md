@@ -254,7 +254,7 @@ If a literal isn't resolved to be a constant, it becomes identifier candidate. T
 The only thing remaining is to fill out all the methods corresponding to particular grammar defined operators which should be a totally straightforward process.  
 
 #### ***Standard library***
-Volitelně ještě můžeme dodat množinu funkcí jakožto standardní knihovnu. Každá funkce v ní definovaná bude kompilátorem automaticky viditelná, aniž by se musela nacházet v kompilačním kontextu. Pokud se v kontextu nachází funkce se stejnou signaturou, zastíní funkci ve standardní knihovně.
+Voluntarily, we can also provide a set of functions to serve as standard library. The functions defined there will automatically be visible to the compiler without needing to be present in compilation context. When a function with the same signature appears in context, it shadows the one in standard library.  
 
 #### ***How to register a NumberOperator***
 Volitelně ještě může mít smysl vytvořený number operator zaregistrovat jako kanonický operátor k použití nad daným číselným typem.  
