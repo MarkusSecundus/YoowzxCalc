@@ -238,27 +238,36 @@ The AST is finally built and now nothing stays in out way to start dealing with 
 The machinery geared towards that matter is placed in the ***[MarkusSecundus.YoowzxCalc.Compilation](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Compilation)*** module.  
 
 ### ***How to define an operation***
-To be capable of translating a mathematical expression to executable code, we first need to define what the individual operations written in it actually mean, as well as how to distinguish a constant from an identifier and what even is a valid identifier. All of those things are told to the compiler through an instance of interface ***[IYCNumberOperator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/IYCNumberOperator.cs)***.  
+To be capable of translating a mathematical expression to executable code, we first need to define what the individual operations written in it actually mean, as well as how to distinguish a constant from an identifier and what even is a valid identifier.  
+All of those things are told to the compiler through an instance of interface ***[IYCNumberOperator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/IYCNumberOperator.cs)***.  
 
-When operating on type `double`, `decimal` or `long`, no effort is required - for those there are already default implementations prepared - as subclasses of static class [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs). Such default implementations implement all the operators the intuitive way - operator `+` means addition, `%` modulus, `**` power, etc., constant is anything that gets accepted by the `TryParse` method on the corresponding type using invariant culture, valid identifier matches regex `[[:alpha:]_][[:alnum:]_]*`. The operator for type `double` also includes all functions from `System.Math` as members of its standard library.  
+When operating on type `double`, `decimal` or `long`, no effort is required - for those there are already default implementations prepared - as subclasses of static class [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs).  
+Such default implementations implement all the operators the intuitive way - operator `+` means addition, `%` modulus, `**` power, etc., constant is anything that gets accepted by the `TryParse` method on the corresponding type using invariant culture, valid identifier matches regex `[[:alpha:]_][[:alnum:]_]*`.  
+The operator for type `double` also includes all functions from `System.Math` as members of its standard library.  
 
 When implementing your own number operator, it may be a good idea to look at the premade implementations for inspiration. Although it should overall be a very straightforward process.  
 
 #### ***Recognition of constants***
-The first method to be supplied is `TryParseConstant`. Its task is to resolve whether a text string represents a constant and eventually to determine its value. All literals are first tested for being constant and only if they do not pass, they become identifier candidates.  
+The first method to be supplied is `TryParseConstant`.  
+Its task is to resolve whether a text string represents a constant and eventually to determine its value.  
+All literals are first tested for being constant and only if they do not pass, they become identifier candidates.  
 
 #### ***Validation of identifiers***
-If a literal isn't resolved to be a constant, it becomes identifier candidate. The method `ValidateIdentifier` is responsible for determining if it indeed is an identifier, providing human-readable summary of perpetrated violations of the identifier format if it is not. The class [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs) provides a few static methods and fields that could come in handy while implementing this method.  
+If a literal isn't resolved to be a constant, it becomes identifier candidate.  
+The method `ValidateIdentifier` is responsible for determining if it indeed is an identifier, providing human-readable summary of perpetrated violations of the identifier format if it is not.  
+The class [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs) provides a few static methods and fields that could come in handy while implementing this method.  
 
 #### ***Operator definitions***
-The only thing remaining is to fill out all the methods corresponding to particular grammar defined operators which should be a totally straightforward process.  
+The only thing remaining is to fill out all the methods that correspond to particular grammar-defined operators, which should be a totally straightforward process.  
 
 #### ***Standard library***
-Voluntarily, we can also provide a set of functions to serve as standard library. The functions defined there will automatically be visible to the compiler without needing to be present in compilation context. When a function with the same signature appears in context, it shadows the one in standard library.  
+Voluntarily, we can also provide a set of functions to serve as standard library.  
+The functions defined there will automatically be visible to the compiler without needing to be present in compilation context. When a function with the same signature appears in context, it shadows the one in standard library.  
 
 #### ***How to register a NumberOperator***
-Volitelně ještě může mít smysl vytvořený number operator zaregistrovat jako kanonický operátor k použití nad daným číselným typem.  
-Jejich seznam vede opět třída [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs) a registrujeme v ní factory dodávající vždy novou instanci. Je-li náš operátor bezestavový singleton, může to vypadat nějak takto:
+It may also make sense to register the just created number operator as canonical operator for the given numeric type.  
+Maintaining their list is another responsibility of [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs) and the registration is done by providing a factory creating new operator instances.  
+If our operator is a stateless singleton, it may look e.g. like this:  
 ```c#
 
 struct MyNumberType { }
@@ -276,19 +285,20 @@ class EntryPoint
     }
 }
 ```
-Instanci kanonického operátoru nyní získáme takto:
+An instance of cannonical operator can now be obtained like this:  
 ```c#
 IYCNumberOperator<MyNumberType> op = YCBasicNumberOperators.Get<MyNumberType>();
 ```
-Přesně takto získává defaultní operátor fasáda [YoowzxCalculator](#how-to-use), pokud jí žádný nedodáme explicitně. Nyní ji tedy můžeme bez problémů používat pro náš nový typ. 
+Which is exactly how the facade [YoowzxCalculator](#how-to-use) gets it. Thus, we can now use it for our new type without worries.  
 
 &nbsp;
 
 ### ***Compilation context***
-Z našeho výrazu je možné libovolně volat externí pojmenované funkce. Vzniká tedy problém, jak kompilátoru dodat jejich definice, aby mohl ona volání vytvořit.
-
+Expression may contain arbitrary calls of external named functions. A question occurs, how do we supply their definitions to the compiler, so that the calls can be created?  
 #### ***Function signature***
-Nejprve si ale musíme rozmyslet, jak vůbec funkci jednoznačně identifikovat. YoowzxCalc pro větší uživatelské pohodlí podporuje přetěžování funkcí se stejným jménem, ale různými argumenty. K jednoznačné identifikaci tedy slouží struktura [YCFunctionSignature&lt;TNumber&gt;](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/YCFunctionSignature.cs) - nese jméno funkce, počet a typ (jako generický parametr) argumentů. Ve třídě [YCCompilerUtils](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Util/YCCompilerUtils.cs) najdete extension-metody, kterými lze signaturu jednoduše získat z instance `System.Delegate` nebo z uzlů AST.
+First thing that needs to be clarified is what uniquely identifies a function. For greater user convenience, YoowzxCalc is made to support function overloading (same name, different arguments).  
+Thus, the structure [YCFunctionSignature&lt;TNumber&gt;](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/YCFunctionSignature.cs) serves for identification - it contains the function name, number of arguments and their type (as a generic parameter).   
+The class [YCCompilerUtils](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Util/YCCompilerUtils.cs) contains extension methods through which the signature can easily be obtained from both `System.Delegate` and AST nodes.  
 
 #### ***Management of definitions***
 Správa seznamu definic je úkolem objektu [IYCFunctioncallContext](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Contexts/IYCFunctioncallContext.cs).  
