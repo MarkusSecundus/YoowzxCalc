@@ -2,6 +2,7 @@
 using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
 using MarkusSecundus.YoowzxCalc.Compiler.Impl;
 using MarkusSecundus.YoowzxCalc.DSL.AST;
+using System.Collections.Generic;
 
 namespace MarkusSecundus.YoowzxCalc.Compiler
 {
@@ -18,7 +19,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
         /// <param name="toCompile">AST representing the expression to be compiled</param>
         /// <returns>Semi final compilation product that needs few final touches to turn into a runnable delegate</returns>
         /// <exception cref="System.FormatException">If the AST is not valid</exception>
-        public IYCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile);
+        public YCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile);
 
         /// <summary>
         /// Create a new instance of cannonical implementation of <see cref="IYCCompiler{TNumber}"/>
@@ -34,17 +35,12 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
         /// <returns>New instance of a compiler for the requested number type</returns>
         public static IYCCompiler<TNumber> MakeBase(IYCNumberOperator<TNumber> op) => new YCCompilerBase<TNumber>(op);
 
-        /// <summary>
-        /// Wraps the provided compiler instance into a decorator that ensures autocaching will be always performed.
-        /// </summary>
-        /// <param name="baseCompiler">Compiler to be used as base the caching decorator points to</param>
-        /// <returns>Compiler wrapped into autocaching decorator</returns>
-        public static IYCCompiler<TNumber> MakeCached(IYCCompiler<TNumber> baseCompiler) => new YCCompilerWithCaching<TNumber>(baseCompiler);
-
 
         /// <summary>
         /// Name of the annotation that specifies given function should have results cached.
         /// </summary>
         public const string CachingRequestAnnotation = "cached";
+
+
     }
 }

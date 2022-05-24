@@ -24,7 +24,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             => Op = numberOperator;
 
 
-        public IYCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
+        public YCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
         {
             var args = toCompile.Arguments.Select(name => (name, Expression.Parameter(typeof(TNumber), name)).AsKV()).ToArray();
 
