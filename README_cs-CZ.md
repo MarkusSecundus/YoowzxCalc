@@ -7,7 +7,6 @@ Schopná z výrazů za běhu generovat CIL kód - běžící přímo na VM a ted
 Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku sloužící jako demo.
 
 
-&nbsp;
  - _[EN verze Readme](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/README.md)_
 &nbsp;
 
