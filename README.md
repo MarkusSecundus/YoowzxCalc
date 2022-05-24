@@ -330,12 +330,13 @@ ctx = ctx.ResolveSymbols((signature, del));
  A definition provided in the arguments will be added into the result context even when it wasn't established as 'unresolved' - making this a straightforward way of adding brand new definitions into the context.   
 
 
- _Jakmile je symbol jednou rozřešen, pokus o změnu jeho hodnoty vyústí v běhovou chybu - to je záměr. Já, jakožto autor, si jsem plně vědom, že tím zavírám cestu k mnoha zajímavým a zajisté i velmi užitečným trikům, kterých by nebýt toho bylo možné dosáhnout, avšak v důsledku toho, jak je zbytek YC implementován, by to vedlo v některých okrajových případech k velmi komplexnímu chování, které, upřímně, nemám nervy dokumentovat.  
- Pokud to uživatel opravdu nutně potřebuje, neměl by pro něj být velký problém naimplementovat nad YC další vrstvu, jež mu to umožní, příp. obstarat si na vlastní nebezpečí verzi `MarkusSecundus.Util.dll` s odebranými checky v `SettableOnce`, je-li vážně zoufalý._
+_Once a symbol is resolved, any attempt to change it results in an exception - that's intentional.  
+I, as the author, am completely aware that I'm closing the gate to many interesting and maybe even some useful tricks that could be achied otherwise, however, in consequence of the way YC is implemented, it would lead in some edge cases to very complex behavior that I honestly don't have the nerve to document.
+If the user desperately needs it, it shouldn't be such a big deal to implement another layer above YC that makes it possible, or possibly at his own risk obtain a custom version of `MarkusSecundus.Util.dll` with checks in [SettableOnce](https://github.com/MarkusSecundus/YoowzxCalc/blob/translate_doccoments_to_english/MarkusSecundus.Util/SettableOnce.cs) removed if the despair is really deep._
 
- Někdy by se mohla hodit metoda `GetUnresolvedSymbolsList` - ta vrací proud těch symbolů, jež jsou vedeny jako unresolved a skutečně ještě rozřešeny nebyly.
+Also worth mention is the method `GetUnresolvedSymbolsList` - it returns a stream of symbols that are established as unresolved and really havent't been resolved yet.  
 
-_Vedlejším efektem tohoto chování je fakt, že volání neexistující funkce zákonitě nemůže ústit v kompilační chybu, ale vždy až běhovou při pokusu onu neexistující funkci zavolat._
+Unintentional consequence of this behavior is the fact that calling non-existent function cannot result in a compile error, but always only runtime one on the attempt to call the function._  
 
 ### ***Compiler***
 Nyní konečně známe vše, co potřebujeme, abychom mohli přistoupit k vlastní kompilaci.  
