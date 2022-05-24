@@ -238,13 +238,14 @@ The AST is finally built and now nothing stays in out way to start dealing with 
 The machinery geared towards that matter is placed in the ***[MarkusSecundus.YoowzxCalc.Compilation](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Compilation)*** module.  
 
 ### ***How to define an operation***
-Chceme-li být schopni přeložit matematický výraz na spustitelný kód, musíme nejprve vědět, co vůbec která v něm zapsaná operace znamená, a také jak rozlišit konstantu od identifikátoru a jak vypadá platný identifikátor. To všechno kompilátoru řekneme skrze instanci rozhranní ***[IYCNumberOperator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/IYCNumberOperator.cs)***.  
+To be capable of translating a mathematical expression to executable code, we first need to define what the individual operations written in it actually mean, as well as how to distinguish a constant from an identifier and what even is a valid identifier. All of those things are told to the compiler through an instance of interface ***[IYCNumberOperator](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/IYCNumberOperator.cs)***.  
 
-Pracujeme-li s typem `double`, `decimal` nebo `long`, nemusíme se namáhat - pro ty už je defaultní implementace připravena - jako podtřída statické třídy [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs). Tyto výchozí implementace definují operátory intuitivním způsobem - operátor `+` odpovídá sčítání, `%` modulení, `**` mocnění apod., konstantou je vše, co projde metodou `TryParse` na odpovídajícím číselném typu při invariantní kultuře, validní identifikátor matchuje na regex `[[:alpha:]_][[:alnum:]_]*`, operátor pro typ `double` navíc zahrnuje ve standardní knihovně všechny funkce ze třídy `System.Math`.  
+When operating on type `double`, `decimal` or `long`, no effort is required - for those there are already default implementations prepared - as subclasses of static class [YCBasicNumberOperators](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Numerics/YCBasicNumberOperators.cs). Such default implementations implement all the operators the intuitive way - operator `+` means addition, `%` modulus, `**` power, etc., constant is anything that gets accepted by the `TryParse` method on the corresponding type using invariant culture, valid identifier matches regex `[[:alpha:]_][[:alnum:]_]*`. The operator for type `double` also includes all functions from `System.Math` as members of its standard library.
 
-Chcete-li napsat vlastní číselný operátor, doporučuji se podívat pro inspiraci právě na tyto předpřipravené implementace. Celkově to ale je poměrně přímočarý proces.
+When implementing your own number operator, it may be a good idea to look at the premade implementations for inspiration. Although it should overall be a very straightforward process.  
 
 #### ***Recognition of constants***
+The first method to be supplied is `TryParse`. Its task is 
 První metodou, jíž je třeba dodat, je `TryParse`. Jejím úkolem je z textového zápisu určit, zda reprezentuje konstantu, a její případnou hodnotu. Všechny literály jsou nejprve testovány na konstantu a teprve pokud neprojdou, stanou se kandidátem na identifikátor.
 
 #### ***Validation of identifiers***
