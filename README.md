@@ -368,6 +368,6 @@ We finally obtained a delegate that represents our expression! Now the only thin
 -----------------------------
 &nbsp;
 ## ***Demo calculator***
-Balíček [MarkusSecundus.YoowzxCalc.Cmd](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Cmd) obsahuje spustitelnou kalkulačku pro příkazovou řádku operující v klasické REPL smyčce nad typem `double` a sloužící jako ukázka demonstrující některé možnosti této knihovny.  
+The package [MarkusSecundus.YoowzxCalc.Cmd](https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.YoowzxCalc.Cmd) contains a command line calculator, operating clasically in REPL over the type `double`, that serves as a demo showcasing some abilities of this library.    
 
-Pro podrobnější instrukce k jejímu použití kalkulačku spusťte v interaktivním režimu a zavolejte příkaz `help`.
+For detailed instructions about its usage please run the calculator in interactive mode and call the `help` command.  
