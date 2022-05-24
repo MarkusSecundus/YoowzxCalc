@@ -294,23 +294,23 @@ Which is exactly how the facade [YoowzxCalculator](#how-to-use) gets it. Thus, w
 &nbsp;
 
 ### ***Compilation context***
-Expression may contain arbitrary calls of external named functions. A question occurs, how do we supply their definitions to the compiler, so that the calls can be created?  
+Expression may contain arbitrary calls of external named functions. A question occurs - how do we supply their definitions to the compiler, so that the calls can be created?  
 #### ***Function signature***
-First thing that needs to be clarified is what uniquely identifies a function. For greater user convenience, YoowzxCalc is made to support function overloading (same name, different arguments).  
-Thus, the structure [YCFunctionSignature&lt;TNumber&gt;](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/YCFunctionSignature.cs) serves for identification - it contains the function name, number of arguments and their type (as a generic parameter).   
+For greater user convenience, YoowzxCalc is made to support function overloading (same name, different arguments).  
+The structure [YCFunctionSignature&lt;TNumber&gt;](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/YCFunctionSignature.cs) serves for unique identification of functions - it contains the function name, number of arguments and their type (as a generic parameter).   
 The class [YCCompilerUtils](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Util/YCCompilerUtils.cs) contains extension methods through which the signature can easily be obtained from both `System.Delegate` and AST nodes.  
 
 #### ***Management of definitions***
-Správa seznamu definic je úkolem objektu [IYCFunctioncallContext](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Contexts/IYCFunctioncallContext.cs).  
-Prázdnou instanci jeho kanonické implementace pro funkce nad typem `double` získáme takto:
+Management of definitions is responsibility of [IYCFunctioncallContext](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Contexts/IYCFunctioncallContext.cs).  
+Any empty instance of its cannonical implementation for operating on type `double` can be obtained this way:
 ```c#
 IYCFunctioncallContext<double> ctx = IYCFunctioncallContext<double>.Make();
 ```
-Hešmapu funkcí, jež se v něm již napevno nacházejí, získáme skrze property `ctx.Functions`.  
+Hashmap of functions contained in there can be accessed through the `ctx.Functions` property.  
 
-Ne vždy jsme ale schopni pro všechny funkce, jež chceme volat, mít těla již zkompilovaná a připravená. Představte si např., že pracujeme na umělé inteligenci ke hře a pokoušíme se v kalkulátoru naimplementovat klasickým učebnicovým způsobem algoritmus [MiniMax](https://en.wikipedia.org/wiki/Minimax). Máme dvě funkce, které se mají volat vzájemně - první volá druhou, druhá volá první, tedy cyklická závislost.  
-Zkompilovat obě funkce najednou, aby jedna o druhé vzájemně věděly, není v silách YC - přineslo by to do něj extrémní a zbytečnou komplexitu. Přímočarý způsob, jak takovou situaci rozřešit, je umožnit volání funkcí, jež ještě nebyly definovány - vytvořit prázdný wrapper, na který odkážeme místo toho, a počítat, že příslušná definice do něj bude dodána později. Přesně tak to YC dělá a k tomu slouží ostatek mašinerie, kterou má [IYCFunctioncallContext](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Contexts/IYCFunctioncallContext.cs) na starosti.  
-Wrapper pro potencielně nerozřešený symbol s danou signaturou získáme takto:
+Not always are we able to have the bodies of all functions we intend to call compiled and prepared in advance. Take e.g. this situation: we are working on an AI for a game and are trying to implement the classical textbook version of [MiniMax](https://en.wikipedia.org/wiki/Minimax) algorithm inside the calculator. We have two functions that call one another, cyclic dependency.  
+Compiling both the functions at once, so that they directly know about each other, is not in power of YC - supporting such scenario would bring extreme and unnecessary complexity. Straightforward approach to solving this problem is to allow calling functions that haven't been defined yet - create an empty wrapper to which the call is directed, and assume the definition will be put there later. Which is exactly how YC does it and what the rest of the machinery, that[IYCFunctioncallContext](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/MarkusSecundus.YoowzxCalc.Compilation/Compiler/Contexts/IYCFunctioncallContext.cs) provides, is meant for.  
+A wrapper for a potentionally unresolved symbol with given signature can be obtained like this:  
 ```c#
 IYCFunctioncallContext<double> ctx;
 YCFunctionSignature<double> signature;
