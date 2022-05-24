@@ -94,7 +94,7 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             /// </summary>
             public static Double Instance { get; } = new();
 
-            public bool TryParse(string repr, out double value) => double.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
+            public bool TryParseConstant(string repr, out double value) => double.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
             public FormatException ValidateIdentifier(string identifier) => ValidateIdentifierFormat(identifier);
 
@@ -178,7 +178,7 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             /// </summary>
             public static Decimal Instance { get; } = new();
 
-            public bool TryParse(string repr, out decimal value) => decimal.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
+            public bool TryParseConstant(string repr, out decimal value) => decimal.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
             public FormatException ValidateIdentifier(string identifier) => ValidateIdentifierFormat(identifier);
 
@@ -215,7 +215,7 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             /// </summary>
             public static Long Instance { get; } = new();
 
-            public bool TryParse(string repr, out long value) => long.TryParse(repr, Const.IntegerNumberStyle, CultureInfo.InvariantCulture, out value);
+            public bool TryParseConstant(string repr, out long value) => long.TryParse(repr, Const.IntegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
             public FormatException ValidateIdentifier(string identifier) => ValidateIdentifierFormat(identifier);
 

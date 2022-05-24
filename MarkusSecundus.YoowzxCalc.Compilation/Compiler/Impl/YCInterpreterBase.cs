@@ -69,7 +69,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
             public override TNumber Visit(YCLiteralExpression expr, VisitContext ctx)
             {
-                if(ctx.Op.TryParse(expr.Value, out var constant))
+                if(ctx.Op.TryParseConstant(expr.Value, out var constant))
                     return constant;
                 else
                 {
