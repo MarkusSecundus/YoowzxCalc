@@ -11,5 +11,4 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Attributes
         public YCCompilerBaseAttribute(params Type[] targetTypes) : base(targetTypes) { }
 
     }
-    public class YCCompilerBaseFactoryAttribute : YCCompilerAbstractAttribute.AbstractFactoryAttribute { }
 }

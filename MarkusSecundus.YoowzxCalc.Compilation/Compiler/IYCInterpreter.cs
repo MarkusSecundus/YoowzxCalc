@@ -6,6 +6,7 @@ using MarkusSecundus.YoowzxCalc.DSL.AST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl;
 
 namespace MarkusSecundus.YoowzxCalc.Compiler
 {

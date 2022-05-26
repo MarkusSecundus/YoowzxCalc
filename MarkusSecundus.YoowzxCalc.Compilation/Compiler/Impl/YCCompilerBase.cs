@@ -22,10 +22,11 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
     {
         private readonly IYCNumberOperator<TNumber> Op;
 
-        [YCCompilerBaseFactory]
         public YCCompilerBase(IYCNumberOperator<TNumber> numberOperator)
             => Op = numberOperator;
 
+
+        [YCCompilerFactory] private static YCCompilerBase<TNumber> __factory(IYCNumberOperator<TNumber> numberOperator) => new(numberOperator);
 
         public YCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
         {

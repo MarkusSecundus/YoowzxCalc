@@ -3,6 +3,7 @@ using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
 using MarkusSecundus.YoowzxCalc.Compiler.Impl;
 using MarkusSecundus.YoowzxCalc.DSL.AST;
 using System.Collections.Generic;
+using MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl;
 
 namespace MarkusSecundus.YoowzxCalc.Compiler
 {
@@ -26,7 +27,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
         /// </summary>
         /// <param name="op">Number operator to be used</param>
         /// <returns>New instance of a compiler for the requested number type</returns>
-        public static IYCCompiler<TNumber> Make(IYCNumberOperator<TNumber> op) => new YCCompiler<TNumber>(op);
+        public static IYCCompiler<TNumber> Make(IYCNumberOperator<TNumber> op) => LazyInitializerForCompilerChain.Value.Make(op);
 
         /// <summary>
         /// Create a new instance of basic <see cref="IYCCompiler{TNumber}"/> implementation that does not care about function metadata or anything like that and just does the bare compilation.
@@ -42,5 +43,9 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
         public const string CachingRequestAnnotation = "cached";
 
 
+        private static class LazyInitializerForCompilerChain
+        {
+            public static YCCompilerChain<TNumber> Value = new();
+        }
     }
 }
