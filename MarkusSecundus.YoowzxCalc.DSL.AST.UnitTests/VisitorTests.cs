@@ -21,7 +21,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests
             GreaterOrEqual, GreaterThan, LessOrEqual, LessThan, IsEqual, IsNotEqual,
             LogicalAnd, LogicalOr,
             Conditional, Functioncall,
-            Literal
+            Literal,
+            AnyUnary, AnyBinary, AnyPrimary,
+            AnyExpression
         }
 
         public class TestVisitor : YCVisitorBase<VisitorStates, int>
