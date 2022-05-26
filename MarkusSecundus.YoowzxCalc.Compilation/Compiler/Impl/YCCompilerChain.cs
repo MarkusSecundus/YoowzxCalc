@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
 {
-    public class YCCompilerChain
+    public static class YCCompilerChain
     {
         private static List<Assembly> _assembliesToSearch = new() { typeof(YCCompilerChain).Assembly };
         public static IReadOnlyList<Assembly> AssembliesToSearch => _assembliesToSearch;
