@@ -216,24 +216,65 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
                     un<YCUnaryPlusExpression>(lit("b"))
                 ))
             );
+            Assert.AreEqual(    //exponential operator has even bigger precedence than unaries
+                bld("+!a ** +b"),
+                def(un<YCUnaryPlusExpression>(un<YCUnaryLogicalNotExpression>(
+                    bin<YCExponentialExpression>(lit("a"),un<YCUnaryPlusExpression>(lit("b")))
+                )))
+            );
         }
 
         [Test]
         public void TernaryOperatorPrecedence()
         {
-
+            Assert.AreEqual(
+                bld("a+b ? a | b : a ** b"),
+                def(cond(
+                    bin<YCAddExpression>(lit("a"), lit("b")),
+                    bin<YCLogicalOrExpression>(lit("a"), lit("b")),
+                    bin<YCExponentialExpression>(lit("a"), lit("b"))
+                ))
+            );
         }
 
         [Test]
         public void CommaInFunctioncallPrecedence()
         {
-
+            Assert.AreEqual(
+                bld("f(a?b:c, 1?2:3, 1&2)"),
+                def(fnc("f", 
+                    cond(lit("a"), lit("b"), lit("c")),
+                    cond(lit("1"), lit("2"), lit("3")),
+                    bin<YCLogicalAndExpression>(lit("1"), lit("2"))
+                ))
+            );
         }
 
         [Test]
         public void BracketsUltimatePrecedence()
         {
-
+            Assert.AreEqual(
+                bld("1*(2+3)"),
+                def(bin<YCMultiplyExpression>(lit("1"), bin<YCAddExpression>(lit("2"), lit("3"))))
+            );
+            Assert.AreEqual(
+                bld("(1+2)*3"),
+                def(bin<YCMultiplyExpression>(bin<YCAddExpression>(lit("1"), lit("2")), lit("3")))
+            );
+            Assert.AreEqual(
+                bld("(+!a) ** +b"),
+                def(bin<YCExponentialExpression>(
+                    un<YCUnaryPlusExpression>(un<YCUnaryLogicalNotExpression>(lit("a"))),
+                    un<YCUnaryPlusExpression>(lit("b"))
+                ))
+            );
+            Assert.AreEqual(
+                bld("(1 ? 2 : 3) ** (4|2)"),
+                def(bin<YCExponentialExpression>(
+                    cond(lit("1"), lit("2"), lit("3")),
+                    bin<YCLogicalOrExpression>(lit("4"), lit("2"))
+                ))
+            );
         }
     }
 }
