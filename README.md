@@ -121,7 +121,7 @@ Thus e.g. this function for computing fibonacci numbers will run in linear time 
 ```c#
 calc.AddFunctions("[cached] fib(x) := x <= 1 ? x : fib(x-1) + fib(x-2)");
 
-calc.Get<Func<double, double>>("fib")(1000); //doběhne dříve než skončí vesmír
+calc.Get<Func<double, double>>("fib")(1000); //manages to finish sooner than existence of the universe
 ```
 _Caching is supported for all functions no matter the number of parameters they have_  
 
