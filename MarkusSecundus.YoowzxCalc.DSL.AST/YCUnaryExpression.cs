@@ -37,6 +37,6 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
 
         public override string ToString() => ToString_canonicalImpl();
 
-        protected override int ComputeHashCode() => Child.GetHashCode();
+        protected override int ComputeHashCode() => Child?.GetHashCode()??0;
     }
 }

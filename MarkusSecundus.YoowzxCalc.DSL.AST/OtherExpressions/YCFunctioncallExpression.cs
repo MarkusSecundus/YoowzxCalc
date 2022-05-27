@@ -19,10 +19,18 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions
         /// </summary>
         public string Name { get; init; }
 
+
         /// <summary>
         /// List of argument subexpressions in order from left to right.
         /// </summary>
-        public IReadOnlyList<YCExpression> Arguments { get; init; }
+        public IReadOnlyList<YCExpression> Arguments 
+        { 
+            get => _arguments; 
+            init => _arguments = value is ListComparedByContents<YCExpression> e
+                ? e
+                : new ListComparedByContents<YCExpression>(value);
+        }
+        private ListComparedByContents<YCExpression> _arguments;
 
         public override YCExpression this[int childIndex] => Arguments[childIndex];
 
