@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Company />
     <Authors>MarkusSecundus</Authors>
     <Description>An unorganized mess of random utility classes and extension methods that I use in other projects of mine</Description>
