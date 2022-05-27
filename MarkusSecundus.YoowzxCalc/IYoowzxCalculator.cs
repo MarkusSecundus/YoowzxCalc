@@ -108,7 +108,7 @@ namespace MarkusSecundus.YoowzxCalc
         /// <param name="astBuilder">Instance of AstBuilder. If null, a new instance of cannonical implementation will be created.</param>
         /// <param name="compiler">Instance of compiler. If null, a new instance of cannonical implementation will be created with NumberOperated obtained from <c><see cref="YCBasicNumberOperators.Get{TNumber}()"/></c>.</param>
         /// <param name="context">Instance of kontextu. If null, a new instance of cannonical implementation will be created.</param>
-        /// <returns>Nová instance kanonické implementace kalkulátoru.</returns>
+        /// <returns>New instance of calculator's cannonical implementation</returns>
         public static IYoowzxCalculator<TNumber> Make(IYCAstBuilder astBuilder = null, IYCCompiler<TNumber> compiler = null, IYCInterpretationContext<TNumber> context = null)
             => new YoowzxCalculator<TNumber>() { AstBuilder = astBuilder, Compiler = compiler, Context = context };
     }
