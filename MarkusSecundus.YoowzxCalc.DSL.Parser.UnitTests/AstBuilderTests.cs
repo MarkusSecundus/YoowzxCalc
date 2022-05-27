@@ -99,6 +99,23 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
                 def(lit("1"), name: "f", annot: new() { { "a1", "'Something: (g)'" }, { "b", YCFunctionDefinition.EmptyAnnotationValue}, { "c", "132.2e-1" } })
             );
         }
+        
+        [Test]
+        public void AnonymousFunctionAnnotations()
+        {
+            Assert.AreEqual(
+                bld("[a1]  1"),
+                def(lit("1"),  annot: new() { { "a1", YCFunctionDefinition.EmptyAnnotationValue } })
+            );
+            Assert.AreEqual(
+                bld("[a1: 'Something: (g)'] 1"),
+                def(lit("1"),  annot: new() { { "a1", "'Something: (g)'" } })
+            );
+            Assert.AreEqual(
+                bld("[a1: 'Something: (g)', b, c:132.2e-1] 1"),
+                def(lit("1"), annot: new() { { "a1", "'Something: (g)'" }, { "b", YCFunctionDefinition.EmptyAnnotationValue}, { "c", "132.2e-1" } })
+            );
+        }
 
 
         #endregion
