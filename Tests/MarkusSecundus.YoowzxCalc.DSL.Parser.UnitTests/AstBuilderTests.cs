@@ -4,6 +4,7 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.BinaryExpressions;
 using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
 using MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression;
 using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
+using MarkusSecundus.YoowzxCalc.DSL.Parser.ParserExceptions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,8 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
 
         YCExpression fnc(string name, params YCExpression[] args)
             => new YCFunctioncallExpression { Name = name, Arguments = args };
+
+        void syntax_error(string s) => Assert.Throws<YCAggregateAstBuilderException>(()=>bld(s));
 
         #endregion
 
@@ -86,6 +89,10 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
         [Test]
         public void FunctionAnnotations()
         {
+            Assert.AreEqual(
+                bld("[] f := 1"),
+                bld("   f := 1")
+            );
             Assert.AreEqual(
                 bld("[a1] f := 1"),
                 def(lit("1"), name: "f", annot: new() { { "a1", YCFunctionDefinition.EmptyAnnotationValue } })
@@ -344,6 +351,61 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
             );
         }
 
+
+
+        #endregion
+
+        #region SYNTAX_ERRORS
+
+        [Test]
+        public void MustNotOmitFunctionBody()
+        {
+            syntax_error("");
+            syntax_error("f(x) :=");
+            syntax_error("[annotation1]");
+        }
+
+        [Test]
+        public void BracketsMustMakeAPair()
+        {
+            syntax_error("( 1 + 2");
+            syntax_error("( 1 + 2(");
+            syntax_error("( 1 ))");
+
+            syntax_error("[ 1");
+            syntax_error("[[ 1");
+            syntax_error("[]] 1");
+            syntax_error("[a]] 1");
+        }
+
+        [Test]
+        public void MissingOperands()
+        {
+            syntax_error("*2");
+            syntax_error("1+");
+            syntax_error("1?2:");
+            syntax_error("1 < ?3 : 4");
+        }
+
+        [Test]
+        public void MissingOperators()
+        {
+            syntax_error("1?2");
+            syntax_error("1 2");
+        }
+
+        [Test]
+        public void CommaAtArgsListEnd()
+        {
+            syntax_error("f(a,) := 1");
+            syntax_error("f(,) := 1");
+            syntax_error("f(,)");
+            syntax_error("f(1,)");
+            syntax_error("f(a,b,c,d,d,)");
+            syntax_error("[,]1");
+            syntax_error("[1,]1");
+            syntax_error("[1,2,3,4:43,]1");
+        }
 
 
         #endregion

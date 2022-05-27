@@ -100,6 +100,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
             SingleTokenParsedAssert("103.432E+123", Lex.IDENTIFIER);
             SingleTokenParsedAssert("103.432E-123", Lex.IDENTIFIER);
             SingleTokenParsedAssert("1E-123", Lex.IDENTIFIER);
+            AssertTokensEqual("1.32E-", Lex.IDENTIFIER, Lex.MINUS); //minus must be followed by numbers
         }
 
         [Test]
