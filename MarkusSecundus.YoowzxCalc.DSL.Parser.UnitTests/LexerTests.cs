@@ -27,6 +27,10 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
         }
 
 
+
+
+
+
         [Test]
         public void SkipsWhitespace()
         {
@@ -49,6 +53,54 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
             AssertTokensEqual("dsa re re", Lex.IDENTIFIER, Lex.IDENTIFIER, Lex.IDENTIFIER);
         }
 
+        [Test]
+        public void BasicIdentifierFormat()
+        {
+            SingleTokenParsedAssert("_", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("__", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("abcdef", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("_abcdef", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("abcdef_", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("abcdefghijklmnopqrstuvwxyz", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("ABCDEF", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("abcdefABCDEF", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("ABCDEFGHIJKLMNOPQRSTUVWXYZ", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("abcdef0123456789_", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_", Lex.IDENTIFIER);
+        }
+        [Test]
+        public void UnicodeCharsAreValidPartOfIdentifier()
+        {
+            SingleTokenParsedAssert("řžáýÍÁÝ43eěŽŘČŘČú_end", Lex.IDENTIFIER);
+
+            var bld = new StringBuilder();
+            for (int i = 257; i < 2000; i += 1) //all unicode chars are - trying with a reasonable subset to not totally wreck performance
+                bld.Append((char)i);
+            SingleTokenParsedAssert(bld.ToString(), Lex.IDENTIFIER);
+        }
+
+
+        [Test]
+        public void BasicNumberFormat()
+        {
+            SingleTokenParsedAssert("0123456789", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("9876543210", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("0123456789.0123456789", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("0123456789.01234567897894561230890465", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("0123456789.", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("0", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("1.1", Lex.IDENTIFIER);
+        }
+        [Test]
+        public void NumbersAllowScientificNotation()
+        {
+            SingleTokenParsedAssert("103.432e123", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("103.432E123", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("103.432E+123", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("103.432E-123", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("1E-123", Lex.IDENTIFIER);
+        }
 
         [Test]
         public void WhitespacePreservedInString()
@@ -74,16 +126,6 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
             SingleTokenParsedAssert("\"Escaped quote: \\\" \"", Lex.IDENTIFIER);
         }
 
-        [Test]
-        public void UnicodeCharsAreValidPartOfIdentifier()
-        {
-            SingleTokenParsedAssert("řžáýÍÁÝ43eěŽŘČŘČú_end", Lex.IDENTIFIER);
-
-            var bld = new StringBuilder();
-            for (int i = 257; i < 2000; i += 1) //all unicode chars are - trying with a reasonable subset to not totally wreck performance
-                bld.Append((char)i);
-            SingleTokenParsedAssert(bld.ToString(), Lex.IDENTIFIER);
-        }
 
         [Test]
         public void WhitespacelessStreamsSeparatedInNaturalWay()
@@ -92,16 +134,6 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
                 "aa+=:=(1e+13:'This is a text string!'[)",
                 Lex.IDENTIFIER, Lex.PLUS, Lex.COMPARE_EQ, Lex.ASSIGN, Lex.LPAR, Lex.IDENTIFIER, Lex.COLON, Lex.IDENTIFIER, Lex.LBRA, Lex.RPAR
             );
-        }
-
-        [Test]
-        public void AllowsScientificNumberNotation()
-        {
-            SingleTokenParsedAssert("103.432e123", Lex.IDENTIFIER);
-            SingleTokenParsedAssert("103.432E123", Lex.IDENTIFIER);
-            SingleTokenParsedAssert("103.432E+123", Lex.IDENTIFIER);
-            SingleTokenParsedAssert("103.432E-123", Lex.IDENTIFIER);
-            SingleTokenParsedAssert("1E-123", Lex.IDENTIFIER);
         }
 
 
