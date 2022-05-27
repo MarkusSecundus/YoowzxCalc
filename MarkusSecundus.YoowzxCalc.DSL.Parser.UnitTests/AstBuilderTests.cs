@@ -16,6 +16,8 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
     //For convenience assumes lexer to work correctly
     internal class AstBuilderTests
     {
+        #region HELPERS
+
         IYCAstBuilder Builder = IYCAstBuilder.Instance;
 
         YCFunctionDefinition bld(string s) => Builder.Build(s);
@@ -41,6 +43,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
         YCExpression fnc(string name, params YCExpression[] args)
             => new YCFunctioncallExpression { Name = name, Arguments = args };
 
+        #endregion
+
+        #region FUNCTION_DEFINITION
 
         [Test]
         public void SimpleConstantParse()
@@ -54,6 +59,43 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
         {
             Assert.AreEqual(bld("ff_() := 1"), def(lit("1"), name: "ff_"));
         }
+        [Test]
+        public void FunctionDefinition_CanOmitBracesWhenNoArgs()
+        {
+            Assert.AreEqual(
+                bld("f := 1"),
+                bld("f() := 1")
+            );
+        }
+
+
+
+        [Test]
+        public void FunctionArgsDefinition()
+        {
+            Assert.AreEqual(
+                bld("f(a) := 1"),
+                def(lit("1"), name:"f", args: new[] {"a"})
+            );
+            Assert.AreEqual(
+                bld("f(a, b, c) := 1"),
+                def(lit("1"), name:"f", args: new[] {"a", "b", "c"})
+            );
+        }
+
+        [Test]
+        public void FunctionAnnotations()
+        {
+            Assert.AreEqual(
+                bld("[a1] f := 1"),
+                def(lit("1"), name: "f", annot: new() { { "a1", YCFunctionDefinition.EmptyAnnotationValue } })
+            );
+        }
+
+
+        #endregion
+
+        #region OPERATORS
 
         [Test]
         public void BasicBinaryOperators()
@@ -276,5 +318,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
                 ))
             );
         }
+
+
+
+        #endregion
     }
 }
