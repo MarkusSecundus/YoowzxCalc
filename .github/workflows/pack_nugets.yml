@@ -1,0 +1,31 @@
+name: .NET
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 5.0.x
+    - name: Pack nugets
+      run: dotnet pack MarkusSecundus.YoowzxCalc -o ./nugets
+    - name: Zip nugets
+      uses: papeloto/action-zip@v1
+      with:
+        files: ./nugets
+        dest: zips/nugets.zip
+    - name: Release
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest_release"
+        prerelease: false
+        files: |
+          zips/nugets.zip
