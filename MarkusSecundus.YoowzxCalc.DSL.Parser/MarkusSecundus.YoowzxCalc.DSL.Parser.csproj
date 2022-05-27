@@ -3,6 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>MarkusSecundus</Authors>
+    <Product>MarkusSecundus.YoowzxCalc</Product>
+    <Description>Submodule of YoowzxCalc expression parser responsible for parsing text to Yoowzx intermediate representation (AST)</Description>
+    <PackageProjectUrl>https://github.com/MarkusSecundus/YoowzxCalc</PackageProjectUrl>
+    <PackageLicenseExpression><license type="expression">MIT</license></PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
