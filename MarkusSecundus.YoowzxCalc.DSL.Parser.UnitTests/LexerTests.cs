@@ -17,7 +17,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
 
         private void AssertTokensEqual(string text, params int[] types)
         {
-            CollectionAssert.AreEqual(lex(text).GetAllTokens().Select(t => t.Type), types);
+            CollectionAssert.AreEqual(types, lex(text).GetAllTokens().Select(t => t.Type));
         }
 
         private void SingleTokenParsedAssert(string text, int type, string inner=null)
@@ -53,9 +53,36 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
         [Test]
         public void WhitespacePreservedInString()
         {
-            const string inner = "'Toto je  text  '", s = " \t   " + inner + "\n";
+            string inner;
 
-            SingleTokenParsedAssert(s, Lex.IDENTIFIER, inner);
+            inner = "'Toto je  text  '";
+            SingleTokenParsedAssert($" \t   {inner}\n ", Lex.IDENTIFIER, inner);
+
+            inner = "\"Toto je  text  \"";
+            SingleTokenParsedAssert($" \t   {inner}\n ", Lex.IDENTIFIER, inner);
+        }
+        [Test]
+        public void SpecialCharsAreNotSpecialInString()
+        {
+            SingleTokenParsedAssert("'Toto je symbol: ?%12+[]  '", Lex.IDENTIFIER);
+        }
+
+        [Test]
+        public void StringsSupportQuoteEscaping()
+        {
+            SingleTokenParsedAssert("'Escaped quote: \\' '", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("\"Escaped quote: \\\" \"", Lex.IDENTIFIER);
+        }
+
+        [Test]
+        public void UnicodeCharsAreValidPartOfIdentifier()
+        {
+            SingleTokenParsedAssert("řžáýÍÁÝ43eěŽŘČŘČú_end", Lex.IDENTIFIER);
+
+            var bld = new StringBuilder();
+            for (int i = 257; i < 2000; i += 1) //all unicode chars are - trying with a reasonable subset to not totally wreck performance
+                bld.Append((char)i);
+            SingleTokenParsedAssert(bld.ToString(), Lex.IDENTIFIER);
         }
 
         [Test]
@@ -64,7 +91,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
             AssertTokensEqual(
                 "aa+=:=(1e+13:'This is a text string!'[)",
                 Lex.IDENTIFIER, Lex.PLUS, Lex.COMPARE_EQ, Lex.ASSIGN, Lex.LPAR, Lex.IDENTIFIER, Lex.COLON, Lex.IDENTIFIER, Lex.LBRA, Lex.RPAR
-                );
+            );
         }
 
         [Test]
@@ -77,5 +104,16 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
             SingleTokenParsedAssert("1E-123", Lex.IDENTIFIER);
         }
 
+
+        [Test]
+        public void CompositeIdentifiers()
+        {
+            SingleTokenParsedAssert("@'Toto je text'", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("$\"Toto je text\"", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("143l", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("std::cout.value1", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("'This is a text string'::type132E-31", Lex.IDENTIFIER);
+            SingleTokenParsedAssert("\"\"'''Te  x t'132@'rew'\"  ?:+ \"4.rew23.4332'+'", Lex.IDENTIFIER);
+        }
     }
 }
