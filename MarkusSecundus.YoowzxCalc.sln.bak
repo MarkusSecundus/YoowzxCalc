@@ -21,12 +21,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdPartyLibraries", "Thir
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.Benchmarks", "MarkusSecundus.YoowzxCalc.Benchmarks\MarkusSecundus.YoowzxCalc.Benchmarks.csproj", "{F25777BF-5883-4C50-A30F-A008CF3DDB07}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests", "Tests\MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests\MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests.csproj", "{95A6AAB8-183A-4BE4-A8F1-5BF064570984}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests", "MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests\MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests.csproj", "{95A6AAB8-183A-4BE4-A8F1-5BF064570984}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7704DD38-1DA2-4157-9DEB-00D4ADD6EDEF} = {7704DD38-1DA2-4157-9DEB-00D4ADD6EDEF}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests", "Tests\MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests\MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests.csproj", "{91097259-17B9-44C4-9484-1474AEAAD7C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests", "MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests\MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests.csproj", "{91097259-17B9-44C4-9484-1474AEAAD7C3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7704DD38-1DA2-4157-9DEB-00D4ADD6EDEF} = {7704DD38-1DA2-4157-9DEB-00D4ADD6EDEF}
 		{02DB16FD-476F-49AB-842B-D4F24178C164} = {02DB16FD-476F-49AB-842B-D4F24178C164}
