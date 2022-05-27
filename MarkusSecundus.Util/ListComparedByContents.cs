@@ -35,5 +35,7 @@ namespace MarkusSecundus.Util
         public override bool Equals(object obj) => obj is ListComparedByContents<T> l && Enumerable.SequenceEqual(Base, l.Base);
 
         public override int GetHashCode() => CollectionsUtils.SequenceHashCode(Base);
+
+        public override string ToString() => Base.ToString();
     }
 }

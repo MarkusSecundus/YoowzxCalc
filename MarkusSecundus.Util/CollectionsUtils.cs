@@ -178,13 +178,36 @@ namespace MarkusSecundus.Util
         /// <typeparam name="T">Type of the provided sequence elements</typeparam>
         /// <param name="self">Seqence to compute hash code of</param>
         /// <returns>Good position sensitive hash code for the sequence</returns>
-        public static int SequenceHashCode<T>(this IEnumerable<T> self)
+        public static int SequenceHashCode<T>(this IEnumerable<T> self, Func<int,int, int> hashCombine=null)
         {
+            hashCombine ??= HashCode.Combine;
             int ret = 0;
             if(self != null) foreach (var t in self)
-                ret = HashCode.Combine(ret, t.GetHashCode());
+                ret = hashCombine(ret, t.GetHashCode());
             return ret;
         }
+
+        /// <summary>
+        /// A function for combining hash codes in commutative (order independent) way
+        /// </summary>
+        /// <param name="a">One of the hash codes</param>
+        /// <param name="b">Other one of the hash codes</param>
+        /// <returns>Combined hash code</returns>
+        public static int CombineHashCodeCommutative(int a, int b) => a ^ b;
+
+
+        /// <summary>
+        /// Determines whether two sequences have the same elements, order independent.
+        /// 
+        /// Not guarranteed to work correctly on repeating sequences.
+        /// </summary>
+        /// <typeparam name="T">Type of elements</typeparam>
+        /// <param name="self">One of the compared sequences</param>
+        /// <param name="other">Another one of the compared sequences</param>
+        /// <returns>If the two sequences have same elements</returns>
+        public static bool UnorderedSequenceEqual<T>(this IReadOnlyCollection<T> self, IReadOnlyCollection<T> other)
+            => (self.Count == other.Count) && self.All(other.Contains);
+
 
         /// <summary>
         /// Checks whether there is an element that is contained in the collection multiple times
@@ -199,9 +222,6 @@ namespace MarkusSecundus.Util
 
             return self.Count != self.Distinct(comparer).Count();
         }
-
-
-
 
         /// <summary>
         /// For convenience purposes - <see cref="System.Collections.Generic.IReadOnlyList{T}"/> variant that has <code>GetEnumerator()</code> methods preimplemented as default methods using the indexer property on <code>this</code>

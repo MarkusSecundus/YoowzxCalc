@@ -46,9 +46,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         public abstract YCExpression this[int childIndex] { get; }
 
 
-        private int? _hashCode;
+        //private int? _hashCode;
 
-        public override int GetHashCode() => _hashCode ??= ComputeHashCode();
+        public override int GetHashCode() => ComputeHashCode();//_hashCode ??= ComputeHashCode();
         /// <summary>
         /// Perform computation of this's hashcode. 
         /// <para/>

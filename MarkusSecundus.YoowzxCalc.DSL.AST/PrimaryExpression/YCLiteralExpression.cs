@@ -1,4 +1,6 @@
-﻿namespace MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression
+﻿using MarkusSecundus.Util;
+
+namespace MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression
 {
     /// <summary>
     /// Node representing a constant or a variable defined by an arbitrary string value.
@@ -17,6 +19,6 @@
 
         public override string ToString() => $"{Value}";
 
-        protected override int ComputeHashCode() => Value.GetHashCode();
+        protected override int ComputeHashCode() => Value?.GetHashCode()??0;
     }
 }

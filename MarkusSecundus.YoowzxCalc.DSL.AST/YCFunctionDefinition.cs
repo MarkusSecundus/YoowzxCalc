@@ -26,12 +26,29 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         /// <summary>
         /// Names of all the arguments in order from left to right
         /// </summary>
-        public IReadOnlyList<string> Arguments { get; init; }
+        public IReadOnlyList<string> Arguments 
+        { 
+            get => _arguments; 
+            init => _arguments = value is ListComparedByContents<string>e
+                ? e
+                : new ListComparedByContents<string>(value); 
+        }
+        private ListComparedByContents<string> _arguments;
 
         /// <summary>
         /// Annotations applied to the function.
         /// </summary>
-        public IReadOnlyDictionary<string, string> Annotations { get; init; } = CollectionsUtils.EmptyDictionary<string, string>();
+        public IReadOnlyDictionary<string, string> Annotations 
+        { 
+            get => _annotations; 
+            init => _annotations = value is DictionaryComparedByContents<string, string> d
+                ? d
+                : new DictionaryComparedByContents<string, string>(value); 
+        }
+        private DictionaryComparedByContents<string, string> _annotations = EmptyAnnotations;
+
+        private static DictionaryComparedByContents<string, string> EmptyAnnotations = new DictionaryComparedByContents<string, string>(CollectionsUtils.EmptyDictionary<string, string>());
+
 
         /// <summary>
         /// Expression representing the actual function body.
