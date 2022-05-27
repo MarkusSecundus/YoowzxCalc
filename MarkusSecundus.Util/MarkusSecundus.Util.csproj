@@ -1,13 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Company />
     <Authors>MarkusSecundus</Authors>
     <Description>An unorganized mess of random utility classes and extension methods that I use in other projects of mine</Description>
     <PackageProjectUrl>https://github.com/MarkusSecundus/YoowzxCalc/tree/master/MarkusSecundus.Util</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
 </Project>

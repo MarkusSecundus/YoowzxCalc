@@ -11,6 +11,7 @@ Compiles expressions to IL for good performance. Supports custom functions, defi
     <PackageReleaseNotes>initial release</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>calc;Calculator;ExpressionTrees;ANTLR;Expression;Expressions;MathematicalExpression;parser;functional;recursion;evaluatormath;library;customisable;number;.net50</PackageTags>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
