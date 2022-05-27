@@ -46,8 +46,6 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         public abstract YCExpression this[int childIndex] { get; }
 
 
-
-
         private int? _hashCode;
 
         public override int GetHashCode() => _hashCode ??= ComputeHashCode();
