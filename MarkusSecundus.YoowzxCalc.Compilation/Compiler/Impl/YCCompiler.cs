@@ -15,19 +15,20 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
     {
         private readonly YCCompilerBase<TNumber> Base;
 
+        private readonly IYCCompiler<TNumber> Decorated;
+
         public YCCompiler(IYCNumberOperator<TNumber> numberOperator)
-            => Base = new(numberOperator);
-
-        public IYCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
         {
-            IYCCompiler<TNumber> compiler = Base;
-            if (toCompile.Annotations.ContainsKey(IYCCompiler<TNumber>.CachingRequestAnnotation))
-                compiler = new YCCompilerWithCaching<TNumber>(compiler);
+            Base = new(numberOperator);
+            Decorated = new YCCompilerWithCaching<TNumber>(Base);
+        }
 
+        public YCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
+        {
             if (toCompile.Annotations.TryGetValue("debug_print", out var message))
                 Console.WriteLine($"Compiler: {message}");
             
-            return compiler.Compile(ctx, toCompile);
+            return Decorated.Compile(ctx, toCompile);
         }
     }
 }

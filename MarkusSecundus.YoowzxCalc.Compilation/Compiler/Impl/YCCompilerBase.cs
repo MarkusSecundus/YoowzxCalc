@@ -13,9 +13,11 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using MarkusSecundus.YoowzxCalc.Compilation.Compiler.Attributes;
 
 namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
+    [YCCompilerBase]
     class YCCompilerBase<TNumber> : IYCCompiler<TNumber>
     {
         private readonly IYCNumberOperator<TNumber> Op;
@@ -24,7 +26,9 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             => Op = numberOperator;
 
 
-        public IYCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
+        [YCCompilerFactory] private static YCCompilerBase<TNumber> __factory(IYCNumberOperator<TNumber> numberOperator) => new(numberOperator);
+
+        public YCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
         {
             var args = toCompile.Arguments.Select(name => (name, Expression.Parameter(typeof(TNumber), name)).AsKV()).ToArray();
 
