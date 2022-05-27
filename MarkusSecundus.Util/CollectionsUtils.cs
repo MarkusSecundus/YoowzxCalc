@@ -78,8 +78,6 @@ namespace MarkusSecundus.Util
         }
 
 
-
-
         /// <summary>
         /// Create an enumerable containing the one specified item
         /// </summary>
