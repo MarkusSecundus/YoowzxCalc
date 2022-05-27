@@ -62,13 +62,20 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         public bool IsAnonymous => object.ReferenceEquals(Name, AnonymousFunctionName);
 
         /// <summary>
+        /// Determines whether the given annotation value represents an empty annotation.
+        /// </summary>
+        /// <param name="annotationValue">Value of an annotation to be checked for emptiness</param>
+        /// <returns>Whether the given annotation has a value</returns>
+        public bool AnnotationValueIsEmpty(string annotationValue) => ReferenceEquals(annotationValue, EmptyAnnotationValue);
+
+        /// <summary>
         /// Constant to be used as name placeholder for all anonymous functions.
         /// Function f is anonymous iff <c>ReferenceEquals(AnonymousFunctionName, f.Name)</c>
         /// </summary>
         public static readonly string AnonymousFunctionName = new string("<#anonymous>");
 
         /// <summary>
-        /// Constant to be used as placeholder for all functions with no annotations.
+        /// Constant to be used as placeholder for annotations without a value.
         /// Annotation n of function f is empty iff <c>ReferenceEquals(EmptyAnnotationValue, f.Annotations[n])</c>
         /// </summary>
         public static readonly string EmptyAnnotationValue = new string(string.Empty);
