@@ -3,6 +3,7 @@ using MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions;
 using MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression;
 using MarkusSecundus.YoowzxCalc.DSL.AST.UnaryExpressions;
 using NUnit.Framework;
+using System.Linq;
 
 namespace MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests
 {
@@ -66,6 +67,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests
                 => Assert.AreEqual(bin<TExpr>(left.Item1, left.Item2), bin<TExpr>(right.Item1, right.Item2));
         }
 
+        [Test]
         public void Binaries_Equals_False_OnDifferentType()
         {
             test<YCAddExpression, YCSubtractExpression>(lit("asdsa"), lit("ewqeww"));
@@ -80,6 +82,53 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests
             void test<TExpr1, TExpr2>(YCExpression a1, YCExpression a2) 
                 where TExpr1 : YCBinaryExpression, new() where TExpr2: YCBinaryExpression, new()
                 => Assert.AreNotEqual(bin<TExpr1>(a1, a2), bin<TExpr2>(a1, a2));
+        }
+
+
+        [Test]
+        public void Functioncall_Equals_True_OnEqualNameAndArgs()
+        {
+            YCFunctioncallExpression 
+                e1 = new YCFunctioncallExpression { Name = "f1", Arguments = new[] { lit("a"), lit("b") } },
+                e2 = new YCFunctioncallExpression { Name = "f1", Arguments = new[] { lit("a"), lit("b") }.ToList() };
+
+            Assert.AreEqual(e1, e1);
+            Assert.AreEqual(e1, e2);
+            Assert.AreEqual(e2, e1);
+        }
+
+
+        [Test]
+        public void Functioncall_Equals_False_OnDifferentName()
+        {
+            YCFunctioncallExpression
+                e1 = new YCFunctioncallExpression { Name = "f1", Arguments = new[] { lit("a"), lit("b") } },
+                e2 = new YCFunctioncallExpression { Name = "f2", Arguments = new[] { lit("a"), lit("b") } };
+
+            Assert.AreNotEqual(e1, e2);
+            Assert.AreNotEqual(e2, e1);
+        }
+
+        [Test]
+        public void Functioncall_Equals_False_OnDifferentArgsCount()
+        {
+            YCFunctioncallExpression
+                e1 = new YCFunctioncallExpression { Name = "f1", Arguments = new[] { lit("a"), lit("b"), lit("b") } },
+                e2 = new YCFunctioncallExpression { Name = "f1", Arguments = new[] { lit("a"), lit("b") } };
+
+            Assert.AreNotEqual(e1, e2);
+            Assert.AreNotEqual(e2, e1);
+        }
+
+        [Test]
+        public void Functioncall_Equals_False_OnDifferentArgs()
+        {
+            YCFunctioncallExpression
+                e1 = new YCFunctioncallExpression { Name = "f1", Arguments = new[] { lit("a"), lit("bb")} },
+                e2 = new YCFunctioncallExpression { Name = "f1", Arguments = new[] { lit("a"), lit("b") } };
+
+            Assert.AreNotEqual(e1, e2);
+            Assert.AreNotEqual(e2, e1);
         }
     }
 }
