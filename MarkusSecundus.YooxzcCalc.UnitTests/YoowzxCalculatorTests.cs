@@ -37,14 +37,8 @@ namespace MarkusSecundus.YooxzcCalc.UnitTests
         {
             public Delegate Value;
 
-            public IYCCompilationResult<num> Compile(IYCCompilationContext<num> ctx, YCFunctionDefinition toCompile)
-                => new MockResult { Value = Value };
-
-            public class MockResult : IYCCompilationResult<num>
-            {
-                public Delegate Value;
-                TDelegate IYCCompilationResult<num>.Finalize<TDelegate>() => (TDelegate)Value;
-            }
+            public YCCompilationResult<int> Compile(IYCCompilationContext<int> ctx, YCFunctionDefinition toCompile)
+                => new YCCompilationResult<num>(Value, new SettableOnce<Delegate>());
         }
 
         public class MockContext : IYCInterpretationContext<num>
