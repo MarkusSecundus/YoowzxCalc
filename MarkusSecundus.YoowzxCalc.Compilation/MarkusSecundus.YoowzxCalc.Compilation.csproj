@@ -4,6 +4,12 @@
     <TargetFramework>net5.0</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>MarkusSecundus</Authors>
+    <Product>MarkusSecundus.YoowzxCalc</Product>
+    <Description>Submodule of YoowzxCalc expression parser responsible for compiling expression from intermidiate AST representation to executable code</Description>
+    <PackageProjectUrl>https://github.com/MarkusSecundus/YoowzxCalc</PackageProjectUrl>
+    <PackageReleaseNotes>initial release</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

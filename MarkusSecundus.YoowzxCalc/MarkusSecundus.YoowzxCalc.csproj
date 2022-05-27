@@ -3,6 +3,12 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>MarkusSecundus</Authors>
+    <Product>MarkusSecundus.YoowzxCalc</Product>
+    <Description>Library for evaluating mathematical expressions from strings. Provides compilation to IL code, support of custom functions, definitions, recursion and other goodness.</Description>
+    <PackageProjectUrl>https://github.com/MarkusSecundus/YoowzxCalc</PackageProjectUrl>
+    <PackageReleaseNotes>initial release</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
