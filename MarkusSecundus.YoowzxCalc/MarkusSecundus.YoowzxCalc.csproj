@@ -5,10 +5,13 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>MarkusSecundus</Authors>
     <Product>MarkusSecundus.YoowzxCalc</Product>
-    <Description>Library for evaluating mathematical expressions from strings. Provides compilation to IL code, support of custom functions, definitions, recursion and other goodness.</Description>
+    <Description>Easy to use and customisable library for evaluating mathematical expressions from strings. 
+Compiles expressions to IL code for good performance.
+Supports custom functions, definitions, recursion, call caching and other goodness.</Description>
     <PackageProjectUrl>https://github.com/MarkusSecundus/YoowzxCalc</PackageProjectUrl>
     <PackageReleaseNotes>initial release</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>calc;Calculator;ExpressionTrees;Expression;Expressions;MathematicalExpression;parser;functional;recursion;evaluatormath;library;customisable;number;.net50</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
