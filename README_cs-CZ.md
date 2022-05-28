@@ -12,6 +12,7 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
 
 #### ***Obsah***
   0. [Začínáme](#začínáme)
+     - [NuGet balík](#nuget-balík) 
      - [Jak zkompilovat](#jak-zkompilovat)
      - [Jak používat](#jak-používat)
      - [Koncová rekurze](#koncová-rekurze) 
@@ -53,6 +54,12 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
 -----------------------
 &nbsp;
 ## ***Začínáme***
+
+### ***NuGet balík***
+Aktuální sestavení je dostupné jak v místních [Github Releases](https://github.com/MarkusSecundus/YoowzxCalc/releases), tak na [nuget.org](https://www.nuget.org/packages/MarkusSecundus.YoowzxCalc/):  
+```powershell
+Install-Package MarkusSecundus.YoowzxCalc
+```
 
 ### ***Jak zkompilovat***
 Otevřte solution v MS Visual Studio 2019 aktuální verze a zkompilujte ho. Napříč projektem je hojně využíváno novinek jazyka C# 9 - .NET 5.0 je tedy vyžadován.

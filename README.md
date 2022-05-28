@@ -12,6 +12,7 @@ Also includes a programmable calculator for terminal that serves as demo.
 
 #### ***Contents***
   0. [First steps](#first-steps)
+     - [NuGet package](#nuget-package) 
      - [How to build](#how-to-build)
      - [How to use](#how-to-use)
      - [Tail recursion](#tail-recursion) 
@@ -54,8 +55,14 @@ Also includes a programmable calculator for terminal that serves as demo.
 &nbsp;
 ## ***First steps***
 
+### ***NuGet package***
+Current build is available both locally on [Github Releases](https://github.com/MarkusSecundus/YoowzxCalc/releases) and on [nuget.org](https://www.nuget.org/packages/MarkusSecundus.YoowzxCalc/):  
+```powershell
+PM> Install-Package MarkusSecundus.YoowzxCalc
+```
+
 ### ***How to build***
-Open the solution in an up-to-date version of MS Visual Studio 2019 and build it. Throughout the projects, features of C# 9 are used heavily - thus .NET 5.0 is required.  
+Open the solution in an up-to-date version of MS Visual Studio 2019+ and build it. Throughout the projects, features of C# 9 are used heavily - thus .NET 5.0 is required.  
 
 ### ***How to use***
 
