@@ -1,4 +1,4 @@
-name: .NET
+name: PublishNugets
 
 on:
   workflow_dispatch:
