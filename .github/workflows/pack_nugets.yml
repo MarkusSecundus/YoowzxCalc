@@ -37,7 +37,7 @@ jobs:
         filename: 'Directory.Build.props'
         expression: '//Project/PropertyGroup/Version/text()'
         
-    - name: Release
+    - name: Github Release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -46,3 +46,6 @@ jobs:
         files: |
           zips/core.zip
           zips/all.zip
+          
+    - name: Publish to Nuget
+      run: dotnet nuget push "./nugets/core/*.nupkg" -s "nuget.org" -k "${{ secrets.NUGET_TOKEN }}"
