@@ -23,7 +23,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             Decorated = new YCCompilerWithCaching<TNumber>(Base);
         }
 
-        public YCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
+        public YCCompilationResult<TNumber> Compile(IYCReadOnlyCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
         {
             if (toCompile.Annotations.TryGetValue("debug_print", out var message))
                 Console.WriteLine($"Compiler: {message}");

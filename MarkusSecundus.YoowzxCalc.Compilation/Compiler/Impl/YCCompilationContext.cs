@@ -7,16 +7,16 @@ using System.Linq;
 
 namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
-    class YCFunctioncallContext<TNumber> : IYCFunctioncallContext<TNumber>
+    class YCCompilationContext<TNumber> : IYCCompilationContext<TNumber>
     {
-        public YCFunctioncallContext(IReadOnlyDictionary<YCFunctionSignature<TNumber>, Delegate> initialFunctions, IEnumerable<KeyValuePair<YCFunctionSignature<TNumber>, SettableOnce<Delegate>>> unresolved=null)
+        public YCCompilationContext(IReadOnlyDictionary<YCFunctionSignature<TNumber>, Delegate> initialFunctions, IEnumerable<KeyValuePair<YCFunctionSignature<TNumber>, SettableOnce<Delegate>>> unresolved=null)
         {
             Functions = initialFunctions;
             if(unresolved != null)
                 foreach (var (key, value) in unresolved) this.unresolved[key] = value;
         }
 
-        public YCFunctioncallContext() : this(CollectionsUtils.EmptyDictionary<YCFunctionSignature<TNumber>, Delegate>()) { }
+        public YCCompilationContext() : this(CollectionsUtils.EmptyDictionary<YCFunctionSignature<TNumber>, Delegate>()) { }
 
 
         public IReadOnlyDictionary<YCFunctionSignature<TNumber>, Delegate> Functions { get; }
@@ -29,7 +29,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
 
 
-        public IYCFunctioncallContext<TNumber> ResolveSymbols(IEnumerable<KeyValuePair<YCFunctionSignature<TNumber>, Delegate>> symbolsToBeResolved)
+        public IYCCompilationContext<TNumber> ResolveSymbols(IEnumerable<KeyValuePair<YCFunctionSignature<TNumber>, Delegate>> symbolsToBeResolved)
         {
             foreach (var symbol in symbolsToBeResolved)
                 unresolved[symbol.Key].Value = symbol.Value;
@@ -43,7 +43,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             foreach (var f in unresolved) if(f.Value.IsSet) bld[f.Key] = f.Value.Value;
             var newCtx = bld.ToImmutable();
 
-            return new YCFunctioncallContext<TNumber>(newCtx, unresolved.Where(sign=>!newCtx.ContainsKey(sign.Key)));
+            return new YCCompilationContext<TNumber>(newCtx, unresolved.Where(sign=>!newCtx.ContainsKey(sign.Key)));
         }
 
         public IEnumerable<YCFunctionSignature<TNumber>> GetUnresolvedSymbolsList() => unresolved.Where(s => !s.Value.IsSet).Select(s => s.Key);

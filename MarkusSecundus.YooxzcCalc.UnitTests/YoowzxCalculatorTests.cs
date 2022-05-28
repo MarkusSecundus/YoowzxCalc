@@ -37,13 +37,15 @@ namespace MarkusSecundus.YooxzcCalc.UnitTests
         {
             public Delegate Value;
 
-            public YCCompilationResult<int> Compile(IYCCompilationContext<int> ctx, YCFunctionDefinition toCompile)
+            public YCCompilationResult<int> Compile(IYCReadOnlyCompilationContext<int> ctx, YCFunctionDefinition toCompile)
                 => new YCCompilationResult<num>(Value, new SettableOnce<Delegate>());
         }
 
-        public class MockContext : IYCInterpretationContext<num>
+        public class MockContext : IYCReadOnlyCompilationContext<num>
         {
             public IReadOnlyDictionary<YCFunctionSignature<num>, Delegate> Functions { get; set; }
+
+            public SettableOnce<Delegate> GetUnresolvedFunction(YCFunctionSignature<int> signature) => new SettableOnce<Delegate>();
         }
 
         public IYCAstBuilder AstBuilder(YCFunctionDefinition d) => new MockAstBuilder { Value = d };

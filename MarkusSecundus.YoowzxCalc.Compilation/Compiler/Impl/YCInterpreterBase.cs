@@ -14,14 +14,14 @@ using MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl;
 
 namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
-    class YCInterpreterBase<TNumber> : IYCInterpreter<TNumber>
+    class YCInterpreterBase<TNumber> //: IYCInterpreter<TNumber>
     {
         private readonly IYCNumberOperator<TNumber> Op;
 
         public YCInterpreterBase(IYCNumberOperator<TNumber> numberOperator)
             => Op = numberOperator;
 
-        public TNumber Interpret(IYCInterpretationContext<TNumber> ctx, YCFunctionDefinition toInterpret, IEnumerable<TNumber> args)
+        public TNumber Interpret(IYCReadOnlyCompilationContext<TNumber> ctx, YCFunctionDefinition toInterpret, IEnumerable<TNumber> args)
         {
             YCIdentifierValidator<TNumber>.Instance.Validate(toInterpret, Op);
 
@@ -44,7 +44,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
         private record VisitContext
         (
-            IYCInterpretationContext<TNumber> CoreContext,
+            IYCReadOnlyCompilationContext<TNumber> CoreContext,
             YCInterpreterBase<TNumber> Father,
             YCFunctionDefinition ThisFunction,
             ImmutableDictionary<string, TNumber> Args

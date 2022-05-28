@@ -13,6 +13,15 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
     public interface IYCNumberOperator<TNumber>
     {
         /// <summary>
+        /// Gets an instance of default number operator implementation if one exists for this <typeparamref name="TNumber"/> type.
+        /// <br/>
+        /// Convenience shortcut for <see cref="YCBasicNumberOperators.Get{TNumber}"/>
+        /// </summary>
+        /// <returns>An instance registered for this <typeparamref name="TNumber"/> type</returns>
+        /// <exception cref="KeyNotFoundException">If there is no operator provider registered for given number type</exception>
+        public static IYCNumberOperator<TNumber> Make() => YCBasicNumberOperators.Get<TNumber>();
+
+        /// <summary>
         /// Tries to convert provided string to its numeric value.
         /// <para/>
         /// Every string that matches this is considered to be a constant. The ones that do not are then considered identifier-candidate

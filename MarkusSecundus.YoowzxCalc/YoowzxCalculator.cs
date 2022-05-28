@@ -19,17 +19,17 @@ namespace MarkusSecundus.YoowzxCalc
     {
         private static IYCAstBuilder DefaultAstBuilder => IYCAstBuilder.Instance;
         private static IYCCompiler<TNumber> DefaultCompiler => IYCCompiler<TNumber>.Make(YCBasicNumberOperators.Get<TNumber>());
-        private static IYCFunctioncallContext<TNumber> DefaultContext => IYCFunctioncallContext<TNumber>.Make();
+        private static IYCCompilationContext<TNumber> DefaultContext => IYCCompilationContext<TNumber>.Make();
 
         private IYCAstBuilder _astBuilder;
         private IYCCompiler<TNumber> _compiler;
-        private IYCFunctioncallContext<TNumber> _context;
-        public IYCFunctioncallContext<TNumber> Context_impl { get => _context ??= DefaultContext; set => _context = value ; }
+        private IYCCompilationContext<TNumber> _context;
+        public IYCCompilationContext<TNumber> Context_impl { get => _context ??= DefaultContext; set => _context = value ; }
 
 
         public IYCAstBuilder AstBuilder { get => _astBuilder??=DefaultAstBuilder; init => _astBuilder = value; }
         public IYCCompiler<TNumber> Compiler { get => _compiler??=DefaultCompiler; init => _compiler = value; }
-        public IYCInterpretationContext<TNumber> Context { get => Context_impl; init => Context_impl = (value is IYCFunctioncallContext<TNumber> c)?c: IYCFunctioncallContext<TNumber>.Make().ResolveSymbols((value??DefaultContext).Functions); }
+        public IYCReadOnlyCompilationContext<TNumber> Context { get => Context_impl; init => Context_impl = (value is IYCCompilationContext<TNumber> c)?c: IYCCompilationContext<TNumber>.Make().ResolveSymbols((value??DefaultContext).Functions); }
 
 
         

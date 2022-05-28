@@ -20,7 +20,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
         /// <param name="toCompile">AST representing the expression to be compiled</param>
         /// <returns>Semi final compilation product that needs few final touches to turn into a runnable delegate</returns>
         /// <exception cref="System.FormatException">If the AST is not valid</exception>
-        public YCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile);
+        public YCCompilationResult<TNumber> Compile(IYCReadOnlyCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile);
 
         /// <summary>
         /// Create a new instance of cannonical implementation of <see cref="IYCCompiler{TNumber}"/>

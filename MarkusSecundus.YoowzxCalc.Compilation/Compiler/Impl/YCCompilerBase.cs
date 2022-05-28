@@ -28,7 +28,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
         [YCCompilerFactory] private static YCCompilerBase<TNumber> __factory(IYCNumberOperator<TNumber> numberOperator) => new(numberOperator);
 
-        public YCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
+        public YCCompilationResult<TNumber> Compile(IYCReadOnlyCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
         {
             var args = toCompile.Arguments.Select(name => (name, Expression.Parameter(typeof(TNumber), name)).AsKV()).ToArray();
 
@@ -57,7 +57,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
         private record VisitContext
         (
-            IYCCompilationContext<TNumber> CoreContext,
+            IYCReadOnlyCompilationContext<TNumber> CoreContext,
             YCCompilerBase<TNumber> Father,
             YCFunctionSignature<TNumber> ThisFunctionSignature,
             ImmutableDictionary<string, ParameterExpression> Args

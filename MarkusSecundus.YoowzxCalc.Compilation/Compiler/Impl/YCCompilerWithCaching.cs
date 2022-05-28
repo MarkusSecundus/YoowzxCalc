@@ -19,7 +19,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
         [YCCompilerFactory] private static YCCompilerWithCaching<TNumber> _factory(IYCCompiler<TNumber> baseCompiler) => new YCCompilerWithCaching<TNumber>(baseCompiler);
 
-        public YCCompilationResult<TNumber> Compile(IYCCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
+        public YCCompilationResult<TNumber> Compile(IYCReadOnlyCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
         {
             var product = _base.Compile(ctx, toCompile);
 
