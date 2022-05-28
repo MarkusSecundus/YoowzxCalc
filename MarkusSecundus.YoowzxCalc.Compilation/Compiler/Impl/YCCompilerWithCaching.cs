@@ -5,7 +5,7 @@ using MarkusSecundus.YoowzxCalc.DSL.AST;
 
 namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
-    [YCCompilerDecorator]
+    [YCCompilerChainDecorator]
     class YCCompilerWithCaching<TNumber> : IYCCompiler<TNumber>
     {
         public bool Force { get; }
@@ -17,7 +17,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             => (_base, Force) = (baseCompiler, force);
 
 
-        [YCCompilerFactory] private static YCCompilerWithCaching<TNumber> _factory(IYCCompiler<TNumber> baseCompiler) => new YCCompilerWithCaching<TNumber>(baseCompiler);
+        [YCCompilerChainFactory] private static YCCompilerWithCaching<TNumber> _factory(IYCCompiler<TNumber> baseCompiler) => new YCCompilerWithCaching<TNumber>(baseCompiler);
 
         public YCCompilationResult<TNumber> Compile(IYCReadOnlyCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
         {

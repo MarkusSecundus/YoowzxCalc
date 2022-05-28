@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Attributes
 {
-    public class YCCompilerBaseAttribute : YCCompilerAbstractAttribute
+    public class YCCompilerChainDecoratorAttribute : YCCompilerChainAbstractAttribute
     {
-        public YCCompilerBaseAttribute(params Type[] targetTypes) : base(targetTypes) { }
+        public YCCompilerChainDecoratorAttribute(params Type[] targetTypes) : base(targetTypes) { }
 
     }
 }

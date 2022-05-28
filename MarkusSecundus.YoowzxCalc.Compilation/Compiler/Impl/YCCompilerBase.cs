@@ -17,7 +17,7 @@ using MarkusSecundus.YoowzxCalc.Compilation.Compiler.Attributes;
 
 namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 {
-    [YCCompilerBase]
+    [YCCompilerChainBase]
     class YCCompilerBase<TNumber> : IYCCompiler<TNumber>
     {
         private readonly IYCNumberOperator<TNumber> Op;
@@ -26,7 +26,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             => Op = numberOperator;
 
 
-        [YCCompilerFactory] private static YCCompilerBase<TNumber> __factory(IYCNumberOperator<TNumber> numberOperator) => new(numberOperator);
+        [YCCompilerChainFactory] private static YCCompilerBase<TNumber> __factory(IYCNumberOperator<TNumber> numberOperator) => new(numberOperator);
 
         public YCCompilationResult<TNumber> Compile(IYCReadOnlyCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
         {

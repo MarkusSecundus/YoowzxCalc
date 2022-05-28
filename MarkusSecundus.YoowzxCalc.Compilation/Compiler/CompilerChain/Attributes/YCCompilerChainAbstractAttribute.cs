@@ -7,14 +7,16 @@ using System.Threading.Tasks;
 namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-    public abstract class YCCompilerAbstractAttribute : Attribute
+    public abstract class YCCompilerChainAbstractAttribute : Attribute
     {
         public bool IsGeneral => TargetTypes == null || TargetTypes.Count <= 0;
         public IReadOnlyCollection<Type> TargetTypes { get; }
 
         public bool IsRelevantToType(Type t) => IsGeneral || TargetTypes.Contains(t);
 
-        public YCCompilerAbstractAttribute(params Type[] targetTypes)
+        public int Priority { get; init; } = default;
+
+        public YCCompilerChainAbstractAttribute(params Type[] targetTypes)
         {
             TargetTypes = targetTypes.Length > 0 ? targetTypes : null;
         }

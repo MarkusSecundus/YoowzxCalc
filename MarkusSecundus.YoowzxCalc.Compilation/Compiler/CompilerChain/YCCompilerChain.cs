@@ -1,6 +1,7 @@
 ﻿using MarkusSecundus.Util;
 using MarkusSecundus.YoowzxCalc.Compilation.Compiler.Attributes;
 using MarkusSecundus.YoowzxCalc.Compiler;
+using MarkusSecundus.YoowzxCalc.Compiler.Impl;
 using MarkusSecundus.YoowzxCalc.Numerics;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,19 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
         private static List<Assembly> _assembliesToSearch = new() { typeof(YCCompilerChain).Assembly };
         public static IReadOnlyList<Assembly> AssembliesToSearch => _assembliesToSearch;
 
-        public static void AddAssembly(Assembly a) => _assembliesToSearch.Add(a);
+        public static bool IsFrozen { get; private set; } = false;
+        internal static void Freeze() => IsFrozen = true;
+
+        public static void AddAssembly(Assembly a)
+        {
+            if (IsFrozen) throw new InvalidOperationException("Compiler Chain is already frozen!");
+            _assembliesToSearch.Add(a);
+        }
+
+        public static IYCCompiler<TNumber> Make<TNumber>(IYCNumberOperator<TNumber> op) => YCCompilerChain<TNumber>.InstanceLazyInitializer.Instance.Make(op);
     }
 
-    public class YCCompilerChain<TNumber>
+    class YCCompilerChain<TNumber>
     {
         public delegate IYCCompiler<TNumber> BaseSupplierDelegate(IYCNumberOperator<TNumber> op);
         public delegate IYCCompiler<TNumber> DecoratorDelegate(IYCCompiler<TNumber> baseCompiler);
@@ -38,27 +48,36 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
             return ret;
         }
 
-
-        public YCCompilerChain(BaseSupplierDelegate baseCompiler=null, IEnumerable<DecoratorDelegate> decorators=null, IEnumerable<Assembly> assembliesToSearch=null)
+        public static class InstanceLazyInitializer
         {
-            assembliesToSearch ??= YCCompilerChain.AssembliesToSearch;
-
-            SearchAssemblies(assembliesToSearch, out var basesList, out var decoratorsList, shouldFindBases: (baseCompiler == null));
-
-            baseCompiler ??= basesList[0].Delegate;
-
-            var decoratorsBld = ImmutableList.CreateBuilder<DecoratorDelegate>();
-            if(decorators!=null)decoratorsBld.AddRange(decorators);
-            decoratorsBld.AddRange(decoratorsList.Select(p=>p.Delegate));
-
-            BaseSupplier = baseCompiler;
-            Decorators = decoratorsBld.ToImmutable();
+            public static YCCompilerChain<TNumber> Instance = new();
         }
 
+        public YCCompilerChain()
+        {
+            YCCompilerChain.Freeze();
+            SearchAssemblies(YCCompilerChain.AssembliesToSearch, out var basesList, out var decoratorsList);
+
+            basesList.Sort(CompareByPriority);
+            decoratorsList.Sort(CompareByPriority);
+
+            if (basesList.Count <= 0)
+                throw new FormatException($"No Compiler Base found in assemblies [{YCCompilerChain.AssembliesToSearch.MakeString()}]");
+
+            var maxPriority = basesList[0].Priority;
+            if (basesList.Count > 1 && maxPriority == basesList[1].Priority)
+                throw new FormatException($"Multiple Compiler Bases with highest priority '{basesList[0].Priority}': [{basesList.Where(e=>e.Priority==maxPriority).Select(e=>e.Type).MakeString()}]");
+
+            BaseSupplier = basesList[0].Delegate;
+            Decorators = decoratorsList.Select(p => p.Delegate).ToImmutableArray();
+        }
+
+        private int CompareByPriority<TValue>((int Priority, Type Type, TValue) a, (int Priority, Type Type, TValue) b)
+            => -a.Priority.CompareTo(b.Priority);
 
         private void SearchAssemblies(IEnumerable<Assembly> assembliesToSearch,
-            out List<(Type Type, BaseSupplierDelegate Delegate)> baseSuppliers, out List<(Type Type, DecoratorDelegate Delegate)> decorators,
-            bool shouldFindBases=true, bool shouldFindDecorators=true)
+            out List<(int Priority, Type Type, BaseSupplierDelegate Delegate)> baseSuppliers, out List<(int Priority, Type Type, DecoratorDelegate Delegate)> decorators
+            )
         {
             baseSuppliers = new();
             decorators = new();
@@ -67,22 +86,20 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
                 foreach(var type in assembly.DefinedTypes)
                 {
                     Type parametrizedType = type.IsGenericType && !type.IsConstructedGenericType ? null : type;
-                    if(shouldFindBases)
                     {
-                        var att = type.GetCustomAttribute<YCCompilerBaseAttribute>();
+                        var att = type.GetCustomAttribute<YCCompilerChainBaseAttribute>();
                         if (isRelevant(att))
                         {
-                            var factory = GetFactory<YCCompilerFactoryAttribute, BaseSupplierDelegate>(doParametrizeType<YCCompilerFactoryAttribute>(), typeof(IYCNumberOperator<TNumber>));
-                            baseSuppliers.Add((type, factory));
+                            var factory = GetFactory<YCCompilerChainFactoryAttribute, BaseSupplierDelegate>(doParametrizeType<YCCompilerChainFactoryAttribute>(), typeof(IYCNumberOperator<TNumber>));
+                            baseSuppliers.Add((att.Priority, type, factory));
                         }
                     }
-                    if(shouldFindDecorators)
                     {
-                        var att = type.GetCustomAttribute<YCCompilerDecoratorAttribute>();
+                        var att = type.GetCustomAttribute<YCCompilerChainDecoratorAttribute>();
                         if (isRelevant(att))
                         {
-                            var factory = GetFactory<YCCompilerFactoryAttribute, DecoratorDelegate>(doParametrizeType<YCCompilerFactoryAttribute>(), typeof(IYCCompiler<TNumber>));
-                            decorators.Add((type, factory));
+                            var factory = GetFactory<YCCompilerChainFactoryAttribute, DecoratorDelegate>(doParametrizeType<YCCompilerChainFactoryAttribute>(), typeof(IYCCompiler<TNumber>));
+                            decorators.Add((att.Priority, type, factory));
                         }
                     }
                     Type doParametrizeType<TAttr>()
@@ -90,7 +107,7 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
                         try { return parametrizedType ??= type.MakeGenericType(typeof(TNumber)); }
                         catch { throw new FormatException($"Failed to parametrize generic type {type.FullName} even though it is annotated as {typeof(TAttr).Name}"); }
                     }
-                    bool isRelevant(YCCompilerAbstractAttribute att) => att != null && att.IsRelevantToType(typeof(TNumber));
+                    bool isRelevant(YCCompilerChainAbstractAttribute att) => att != null && att.IsRelevantToType(typeof(TNumber));
                 }
             }
         }
