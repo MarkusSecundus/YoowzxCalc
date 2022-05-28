@@ -34,9 +34,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5409495C-D378-4A01-9F75-A328588A1F65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkusSecundus.YoowzxCalc.Compilation.UnitTests", "MarkusSecundus.YoowzxCalc.Compilation.UnitTests\MarkusSecundus.YoowzxCalc.Compilation.UnitTests.csproj", "{BF05176A-2823-4765-8661-B59C00E5E628}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkusSecundus.YoowzxCalc.Compilation.UnitTests", "Tests\MarkusSecundus.YoowzxCalc.Compilation.UnitTests\MarkusSecundus.YoowzxCalc.Compilation.UnitTests.csproj", "{BF05176A-2823-4765-8661-B59C00E5E628}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkusSecundus.YooxzcCalc.UnitTests", "MarkusSecundus.YooxzcCalc.UnitTests\MarkusSecundus.YooxzcCalc.UnitTests.csproj", "{2AE9A0A3-4317-4FC6-A1A8-7EC22834A9B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkusSecundus.YooxzcCalc.UnitTests", "Tests\MarkusSecundus.YooxzcCalc.UnitTests\MarkusSecundus.YooxzcCalc.UnitTests.csproj", "{2AE9A0A3-4317-4FC6-A1A8-7EC22834A9B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

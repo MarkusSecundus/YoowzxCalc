@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MarkusSecundus.Util\MarkusSecundus.Util.csproj" />
-    <ProjectReference Include="..\MarkusSecundus.YoowzxCalc.Compilation\MarkusSecundus.YoowzxCalc.Compilation.csproj" />
-    <ProjectReference Include="..\MarkusSecundus.YoowzxCalc.DSL.AST\MarkusSecundus.YoowzxCalc.DSL.AST.csproj" />
+    <ProjectReference Include="..\..\MarkusSecundus.Util\MarkusSecundus.Util.csproj" />
+    <ProjectReference Include="..\..\MarkusSecundus.YoowzxCalc.Compilation\MarkusSecundus.YoowzxCalc.Compilation.csproj" />
+    <ProjectReference Include="..\..\MarkusSecundus.YoowzxCalc.DSL.AST\MarkusSecundus.YoowzxCalc.DSL.AST.csproj" />
   </ItemGroup>
 
 </Project>
