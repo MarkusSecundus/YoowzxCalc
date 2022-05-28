@@ -24,12 +24,12 @@ jobs:
       uses: papeloto/action-zip@v1
       with:
         files: ./nugets/core
-        dest: zips/core.zip
+        dest: zips/nugets-core.zip
     - name: Zip all nugets
       uses: papeloto/action-zip@v1
       with:
         files: ./nugets/all
-        dest: zips/all.zip
+        dest: zips/nugets-all.zip
         
     - id: version_name
       uses: QwerMike/xpath-action@v1
@@ -44,8 +44,8 @@ jobs:
         automatic_release_tag: "v${{ steps.version_name.outputs.result }}"
         prerelease: false
         files: |
-          zips/core.zip
-          zips/all.zip
+          zips/nugets-core.zip
+          zips/nugets-all.zip
           
     - name: Publish to Nuget
       run: dotnet nuget push "./nugets/core/*.nupkg" -s "nuget.org" -k "${{ secrets.NUGET_TOKEN }}"
