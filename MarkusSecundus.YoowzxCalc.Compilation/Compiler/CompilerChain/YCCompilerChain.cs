@@ -14,20 +14,41 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class YCCompilerChain
     {
-        private static List<Assembly> _assembliesToSearch = new() { typeof(YCCompilerChain).Assembly };
-        public static IReadOnlyList<Assembly> AssembliesToSearch => _assembliesToSearch;
+        /// <summary>
+        /// Set of assemblies to be searched for compiler chain segments
+        /// </summary>
+        public static IReadOnlyCollection<Assembly> AssembliesToSearch => _assembliesToSearch;
+        private static HashSet<Assembly> _assembliesToSearch = new() { typeof(YCCompilerChain).Assembly };
 
+        /// <summary>
+        /// Whether the chain still accepts registering new assemblies to the <see cref="AssembliesToSearch"/> list
+        /// </summary>
         public static bool IsFrozen { get; private set; } = false;
         internal static void Freeze() => IsFrozen = true;
 
-        public static void AddAssembly(Assembly a)
+        /// <summary>
+        /// Register an assembly to the <see cref="AssembliesToSearch"/> set.
+        /// </summary>
+        /// <param name="toRegister">Assembly to be added</param>
+        /// <exception cref="InvalidOperationException">If the chain is frozen (<see cref="IsFrozen"/> is set to <c>true</c>)</exception>
+        public static void AddAssembly(Assembly toRegister)
         {
             if (IsFrozen) throw new InvalidOperationException("Compiler Chain is already frozen!");
-            _assembliesToSearch.Add(a);
+            _assembliesToSearch.Add(toRegister);
         }
 
+        /// <summary>
+        /// Creates a compiler instance comprising of the chain elements.
+        /// Freezes the chain.
+        /// </summary>
+        /// <typeparam name="TNumber">Number type to be operated on</typeparam>
+        /// <param name="op">Number operator to be used</param>
+        /// <returns>New compiler instance</returns>
         public static IYCCompiler<TNumber> Make<TNumber>(IYCNumberOperator<TNumber> op) => YCCompilerChain<TNumber>.InstanceLazyInitializer.Instance.Make(op);
     }
 
