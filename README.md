@@ -230,13 +230,14 @@ annotation: LITERAL | LITERAL ':' LITERAL ;
   
   
 #### ***Examples***  
-A valid definition that gets accepted by the compiler can look e.g. this:  
+A valid definition that gets accepted by the parser can look e.g. like this:  
   - `f(x) := x*x + 1`  
   - `Func1(arg1, arg2, arg3, arg4, arg5) := arg1==1? (arg1 + arg2 - (30 - arg1)*arg4)**((arg4)**2.14e-3) : Func1(1,1,1,1,arg3)`  
-  - `f(a, b, a) := a*b*a` //the compiler doesn't test for duplicities within function parameters  
+  - `f(a, b, a) := a*b*a` //the parser doesn't test for duplicities within function parameters  
   - `[annotation1, annotation2: something] f() := 1`    
   - `[annotation1, annotation2: something] f := 1`  
   - `[annotation1, annotation2: something] 1`  
+  - `[cached] ackermann(m,n) := m == 0 ? n + 1 : n == 0 ? ackermann(m - 1, 1) : ackermann(m-1, ackermann(m, n-1))`  
 
 
 &nbsp;  

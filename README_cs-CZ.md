@@ -58,7 +58,7 @@ Rovněž zahrnuje programovatelný kalkulátor pro příkazovou řádku slouží
 ### ***NuGet balík***
 Aktuální sestavení je dostupné jak v místních [Github Releases](https://github.com/MarkusSecundus/YoowzxCalc/releases), tak na [nuget.org](https://www.nuget.org/packages/MarkusSecundus.YoowzxCalc/):  
 ```powershell
-Install-Package MarkusSecundus.YoowzxCalc
+PM> Install-Package MarkusSecundus.YoowzxCalc
 ```
 
 ### ***Jak zkompilovat***
@@ -227,13 +227,14 @@ anotace: LITERÁL | LITERÁL ':' LITERÁL ;
 
 
 #### ***Příklady***
-Validní definice která projde kompilátorem může vypadat např. takto:
+Validní definice která projde parserem může vypadat např. takto:
   - `f(x) := x*x + 1`
   - `Funkce1(arg1, arg2, arg3, arg4, arg5) := arg1==1? (arg1 + arg2 - (30 - arg1)*arg4)**((arg4)**2.14e-3) : Funkce1(1,1,1,1,arg3)`
-  - `f(a, b, a) := a*b*a` //kompilátor netestuje duplicitu funkčních argumentů
+  - `f(a, b, a) := a*b*a` //parser netestuje duplicitu funkčních argumentů
   - `[anotace1, anotace2: něco] f() := 1`  
   - `[anotace1, anotace2: něco] f := 1`
   - `[anotace1, anotace2: něco] 1`
+  - `[cached] ackermann(m,n) := m == 0 ? n + 1 : n == 0 ? ackermann(m - 1, 1) : ackermann(m-1, ackermann(m, n-1))`  
 
 
 &nbsp;
