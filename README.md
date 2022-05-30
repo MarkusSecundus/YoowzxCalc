@@ -1,5 +1,5 @@
 # ***YoowzxCalc***
-[![.NET](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/.github/workflows/publish_release.yml/badge.svg)](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/.github/workflows/publish_release.yml)
+[![.NET](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/actions/workflows/publish_release.yml/badge.svg)](https://github.com/MarkusSecundus/YoowzxCalc/blob/master/actions/workflows/publish_release.yml)
 [![NuGet](https://img.shields.io/nuget/vpre/MarkusSecundus.YoowzxCalc.svg)](https://www.nuget.org/packages/MarkusSecundus.YoowzxCalc)
 [![NuGet](https://img.shields.io/nuget/dt/MarkusSecundus.YoowzxCalc.svg)](https://www.nuget.org/packages/MarkusSecundus.YoowzxCalc) 
 
