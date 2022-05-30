@@ -23,6 +23,15 @@ jobs:
       run: dotnet publish MarkusSecundus.YoowzxCalc.Cmd -o ./publishes/demo-calculator
     - name: Publish demo calculator (self contained win86)
       run: dotnet publish MarkusSecundus.YoowzxCalc.Cmd -o ./publishes/demo-calculator-sc-win86 -r win-x86 --self-contained
+    - name: Publish demo calculator (self contained win64)
+      run: dotnet publish MarkusSecundus.YoowzxCalc.Cmd -o ./publishes/demo-calculator-sc-win64 -r win-x64 --self-contained
+    - name: Publish demo calculator (self contained linux64)
+      run: dotnet publish MarkusSecundus.YoowzxCalc.Cmd -o ./publishes/demo-calculator-sc-linux64 -r linux-x64 --self-contained
+    - name: Publish demo calculator (self contained linux-arm)
+      run: dotnet publish MarkusSecundus.YoowzxCalc.Cmd -o ./publishes/demo-calculator-sc-linux-arm -r linux-arm --self-contained
+    - name: Publish demo calculator (self contained linux-arm64)
+      run: dotnet publish MarkusSecundus.YoowzxCalc.Cmd -o ./publishes/demo-calculator-sc-linux-arm64 -r linux-arm64 --self-contained
+      
       
     - name: Zip core nugets
       uses: papeloto/action-zip@v1
@@ -39,11 +48,32 @@ jobs:
       with:
         files: ./publishes/demo-calculator
         dest: zips/demo-calculator.zip
-    - name: Zip calc demo sc
+    - name: Zip calc demo sc win86
       uses: papeloto/action-zip@v1
       with:
         files: ./publishes/demo-calculator-sc-win86
-        dest: zips/demo-calculator--self-contained-win86.zip
+        dest: zips/demo-calculator--self-contained-win-x86.zip
+    - name: Zip calc demo sc win64
+      uses: papeloto/action-zip@v1
+      with:
+        files: ./publishes/demo-calculator-sc-win64
+        dest: zips/demo-calculator--self-contained-win-x64.zip
+    - name: Zip calc demo sc linux64
+      uses: papeloto/action-zip@v1
+      with:
+        files: ./publishes/demo-calculator-sc-linux64
+        dest: zips/demo-calculator--self-contained-linux-x64.zip
+    - name: Zip calc demo sc linux-arm
+      uses: papeloto/action-zip@v1
+      with:
+        files: ./publishes/demo-calculator-sc-linux-arm
+        dest: zips/demo-calculator--self-contained-linux-arm.zip
+    - name: Zip calc demo sc linux-arm
+      uses: papeloto/action-zip@v1
+      with:
+        files: ./publishes/demo-calculator-sc-linux-arm64
+        dest: zips/demo-calculator--self-contained-linux-arm64.zip
+        
         
     - id: version_name
       uses: QwerMike/xpath-action@v1
@@ -61,7 +91,11 @@ jobs:
           zips/nugets-core.zip
           zips/nugets-all.zip
           zips/demo-calculator.zip
-          zips/demo-calculator--self-contained-win86.zip
+          zips/demo-calculator--self-contained-win-x86.zip
+          zips/demo-calculator--self-contained-win-x64.zip
+          zips/demo-calculator--self-contained-linux-x64.zip
+          zips/demo-calculator--self-contained-linux-arm.zip
+          zips/demo-calculator--self-contained-linux-arm64.zip
           
     - name: Publish to Nuget
       run: dotnet nuget push "./nugets/core/*.nupkg" -s "nuget.org" -k "${{ secrets.NUGET_TOKEN }}" --skip-duplicate
