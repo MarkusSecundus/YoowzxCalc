@@ -79,7 +79,7 @@ IYoowzxCalc<double> calc = IYoowzxCalc<double>.Make();
 ***Jakmile máme instanci kalkulátoru, můžeme vesele kompilovat výrazy:***
 ```c#
 Func<double> f1 = calc.Compile<Func<double>>("1 + 1");
-Console.WriteLine(f1()); //vypíše 3
+Console.WriteLine(f1()); //vypíše 2
 
 Func<double, double> f2 = calc.Compile<Func<double, double>>("f(číslo) := číslo * (3 + 4 ** 5e-1)");
 Console.WriteLine(f2(0)); //vypíše 0

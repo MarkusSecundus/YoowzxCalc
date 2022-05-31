@@ -81,7 +81,7 @@ IYoowzxCalc<double> calc = IYoowzxCalc<double>.Make();
 ***Nothing now stays in our way to compile some expressions:***
 ```c#
 Func<double> f1 = calc.Compile<Func<double>>("1 + 1");
-Console.WriteLine(f1()); //prints 3
+Console.WriteLine(f1()); //prints 2
 
 Func<double, double> f2 = calc.Compile<Func<double, double>>("f(some_number) := some_number * (3 + 4 ** 5e-1)");
 Console.WriteLine(f2(0)); //prints 0
