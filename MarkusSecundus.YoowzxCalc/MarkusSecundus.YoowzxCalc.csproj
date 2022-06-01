@@ -8,7 +8,7 @@
     <Description>Easy to use and customisable library for evaluating mathematical expressions from strings. 
 Compiles expressions to IL for good performance. Supports custom functions, definitions, recursion, call caching and other goodness.</Description>
     <PackageProjectUrl>https://github.com/MarkusSecundus/YoowzxCalc</PackageProjectUrl>
-    <PackageReleaseNotes>initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>added basic IYCNumberOperator&lt;dynamic&gt; implementation</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>calc;Calculator;ExpressionTrees;ANTLR;Expression;Expressions;MathematicalExpression;parser;functional;recursion;evaluatormath;library;customisable;number;.net50</PackageTags>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
