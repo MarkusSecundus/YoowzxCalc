@@ -79,7 +79,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             public static CompilerVisitor Instance { get; } = new();
 
             private Expression v(YCExpression e, VisitContext ctx)
-                => e.Accept(this, ctx);
+                => Expression.Convert(e.Accept(this, ctx), typeof(TNumber));
 
             private static Expression _DefaultExpression = Expression.Default(typeof(TNumber));
 
