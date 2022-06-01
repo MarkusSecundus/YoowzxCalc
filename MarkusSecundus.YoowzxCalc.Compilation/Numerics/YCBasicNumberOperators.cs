@@ -47,6 +47,7 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             Register(() => new Double());
             Register(() => new Decimal());
             Register(() => new Long());
+            Register(() => new Dynamic());
         }
 
         /// <summary>
@@ -83,6 +84,26 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
 
 
         /// <summary>
+        /// Helper function for parsing string literals. 
+        /// Checks if the input represents a string literal (is enclosed in quotes), trims the enclosing quotes and then resolves escape sequences that are inside according to the same specification C# language uses.
+        /// </summary>
+        /// <param name="repr">Raw literal</param>
+        /// <param name="value">Parsed result value</param>
+        /// <param name="quoteType">The type of quotes the string is enclosed in - either <c>'</c> or <c>"</c></param>
+        /// <returns>If the parse was successful</returns>
+        public static bool TryParseQuotedString(string repr, out string value, char quoteType)
+        {
+            if(repr.Length >= 2 && repr[0] == quoteType && repr[^1] == quoteType)
+            {
+                value = repr.Substring(1, repr.Length - 2).Replace($"\\{quoteType}", $"{quoteType}").Replace($"{quoteType}{quoteType}", $"{quoteType}");
+                return true;
+            }
+            value = null;
+            return false;
+        }
+
+
+        /// <summary>
         /// Basic implementation for calculating on type <see cref="System.Double"/>.
         /// <para/>
         /// Standard library includes all functions and constants from <see cref="System.Math"/>.
@@ -94,30 +115,47 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             /// </summary>
             public static Double Instance { get; } = new();
 
+            /// <inheritdoc/>
             public bool TryParseConstant(string repr, out double value) => double.TryParse(repr, Const.NonintegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
+            /// <inheritdoc/>
             public FormatException ValidateIdentifier(string identifier) => ValidateIdentifierFormat(identifier);
 
             private static double toBool(bool d) => d ? 1d : 0d;
 
+            /// <inheritdoc/>
             public double Add(double a, double b) => a + b;
+            /// <inheritdoc/>
             public double Subtract(double a, double b) => a - b;
+            /// <inheritdoc/>
             public double Multiply(double a, double b) => a * b;
+            /// <inheritdoc/>
             public double Divide(double a, double b) => a / b;
+            /// <inheritdoc/>
             public double Modulo(double a, double b) => a % b;
+            /// <inheritdoc/>
             public double Power(double a, double b) => Math.Pow(a, b);
 
+            /// <inheritdoc/>
             public double IsEqual(double a, double b) => toBool(a == b);
+            /// <inheritdoc/>
             public double IsNotEqual(double a, double b) => toBool(a != b);
 
+            /// <inheritdoc/>
             public double IsLessOrEqual(double a, double b) => toBool(a <= b);
+            /// <inheritdoc/>
             public double IsLess(double a, double b) => toBool(a < b);
+            /// <inheritdoc/>
             public double IsGreaterOrEqual(double a, double b) => toBool(a >= b);
+            /// <inheritdoc/>
             public double IsGreater(double a, double b) => toBool(a > b);
 
+            /// <inheritdoc/>
             public bool IsTrue(double a) => a != 0;
 
+            /// <inheritdoc/>
             public double UnaryMinus(double a) => -a;
+            /// <inheritdoc/>
             public double NegateLogical(double a) => toBool(a == 0);
 
 
@@ -184,24 +222,39 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
 
             private static decimal toBool(bool d) => d ? 1 : 0;
 
+            /// <inheritdoc/>
             public decimal Add(decimal a, decimal b) => a + b;
+            /// <inheritdoc/>
             public decimal Subtract(decimal a, decimal b) => a - b;
+            /// <inheritdoc/>
             public decimal Multiply(decimal a, decimal b) => a * b;
+            /// <inheritdoc/>
             public decimal Divide(decimal a, decimal b) => a / b;
+            /// <inheritdoc/>
             public decimal Modulo(decimal a, decimal b) => a % b;
+            /// <inheritdoc/>
             public decimal Power(decimal a, decimal b) => (decimal)Math.Pow((double)a, (double)b);
 
+            /// <inheritdoc/>
             public decimal IsEqual(decimal a, decimal b) => toBool(a == b);
+            /// <inheritdoc/>
             public decimal IsNotEqual(decimal a, decimal b) => toBool(a != b);
 
+            /// <inheritdoc/>
             public decimal IsLessOrEqual(decimal a, decimal b) => toBool(a <= b);
+            /// <inheritdoc/>
             public decimal IsLess(decimal a, decimal b) => toBool(a < b);
+            /// <inheritdoc/>
             public decimal IsGreaterOrEqual(decimal a, decimal b) => toBool(a >= b);
+            /// <inheritdoc/>
             public decimal IsGreater(decimal a, decimal b) => toBool(a > b);
 
+            /// <inheritdoc/>
             public bool IsTrue(decimal a) => a != 0;
 
+            /// <inheritdoc/>
             public decimal UnaryMinus(decimal a) => -a;
+            /// <inheritdoc/>
             public decimal NegateLogical(decimal a) => toBool(a == 0);
         }
 
@@ -215,31 +268,126 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             /// </summary>
             public static Long Instance { get; } = new();
 
+            /// <inheritdoc/>
             public bool TryParseConstant(string repr, out long value) => long.TryParse(repr, Const.IntegerNumberStyle, CultureInfo.InvariantCulture, out value);
 
+            /// <inheritdoc/>
             public FormatException ValidateIdentifier(string identifier) => ValidateIdentifierFormat(identifier);
 
+            
             private static long toBool(bool d) => d ? 1 : 0;
 
+            /// <inheritdoc/>
             public long Add(long a, long b) => a + b;
+            /// <inheritdoc/>
             public long Subtract(long a, long b) => a - b;
+            /// <inheritdoc/>
             public long Multiply(long a, long b) => a * b;
+            /// <inheritdoc/>
             public long Divide(long a, long b) => a / b;
+            /// <inheritdoc/>
             public long Modulo(long a, long b) => a % b;
+            /// <inheritdoc/>
             public long Power(long a, long b) => (long)Math.Pow(a, b);
 
+            /// <inheritdoc/>
             public long IsEqual(long a, long b) => toBool(a == b);
+            /// <inheritdoc/>
             public long IsNotEqual(long a, long b) => toBool(a != b);
 
+            /// <inheritdoc/>
             public long IsLessOrEqual(long a, long b) => toBool(a <= b);
+            /// <inheritdoc/>
             public long IsLess(long a, long b) => toBool(a < b);
+            /// <inheritdoc/>
             public long IsGreaterOrEqual(long a, long b) => toBool(a >= b);
+            /// <inheritdoc/>
             public long IsGreater(long a, long b) => toBool(a > b);
 
+            /// <inheritdoc/>
             public bool IsTrue(long a) => a != 0;
 
+            /// <inheritdoc/>
             public long UnaryMinus(long a) => -a;
+            /// <inheritdoc/>
             public long NegateLogical(long a) => toBool(a == 0);
+        }
+
+
+        /// <summary>
+        /// Basic implementation that allows operating on multiple arbitrary types by exploiting the Dynamic Language Runtime.
+        /// This comes at the cost of more memory allocations and overall hindered performance.
+        /// </summary>
+        public class Dynamic : IYCNumberOperator<object>
+        {
+            /// <summary>
+            /// Instance of the singleton.
+            /// </summary>
+            public static Dynamic Instance { get; } = new();
+
+
+            /// <summary>
+            /// Tries to parse the literal (in this order) as type <see cref="System.Boolean"/>, <see cref="System.Int64"/>, <see cref="System.Double"/> and <see cref="System.String"/> 
+            /// (both single- and double-quoted, while resolving escape sequences similarly as C# does)
+            /// </summary>
+            /// <param name="repr"><inheritdoc/></param>
+            /// <param name="value"><inheritdoc/></param>
+            /// <returns><inheritdoc/></returns>
+            public bool TryParseConstant(string repr, out dynamic value)
+            {
+                value = null;
+                if (bool.TryParse(repr, out var boolValue))
+                    value = boolValue;
+                else if (Long.Instance.TryParseConstant(repr, out var longValue))
+                    value = longValue;
+                else if (Double.Instance.TryParseConstant(repr, out var doubleValue))
+                    value = doubleValue;
+                else if (YCBasicNumberOperators.TryParseQuotedString(repr, out var singleQuoteStringValue, '\''))
+                    value = singleQuoteStringValue;
+                else if (YCBasicNumberOperators.TryParseQuotedString(repr, out var doubleQuoteStringValue, '"'))
+                    value = doubleQuoteStringValue;
+                else return false;
+                return true;
+            }
+
+            /// <inheritdoc/>
+            public FormatException ValidateIdentifier(string identifier)
+                => YCBasicNumberOperators.ValidateIdentifierFormat(identifier);
+
+            /// <inheritdoc/>
+            public dynamic Add(dynamic a, dynamic b) => a + b;
+            /// <inheritdoc/>
+            public dynamic Subtract(dynamic a, dynamic b) => a - b;
+            /// <inheritdoc/>
+            public dynamic Multiply(dynamic a, dynamic b) => a * b;
+            /// <inheritdoc/>
+            public dynamic Divide(dynamic a, dynamic b) => a / b;
+            /// <inheritdoc/>
+            public dynamic Modulo(dynamic a, dynamic b) => a % b;
+            /// <inheritdoc/>
+            public dynamic Power(dynamic a, dynamic b) => Math.Pow(a, b);
+
+            /// <inheritdoc/>
+            public dynamic IsEqual(dynamic a, dynamic b) => a.Equals(b);
+            /// <inheritdoc/>
+            public dynamic IsNotEqual(dynamic a, dynamic b) => !a.Equals(b);
+
+            /// <inheritdoc/>
+            public dynamic IsLessOrEqual(dynamic a, dynamic b) => a <= b;
+            /// <inheritdoc/>
+            public dynamic IsLess(dynamic a, dynamic b) => a < b;
+            /// <inheritdoc/>
+            public dynamic IsGreaterOrEqual(dynamic a, dynamic b) => a >= b;
+            /// <inheritdoc/>
+            public dynamic IsGreater(dynamic a, dynamic b) => a > b;
+
+            /// <inheritdoc/>
+            public bool IsTrue(dynamic a) => a;
+
+            /// <inheritdoc/>
+            public dynamic UnaryMinus(dynamic a) => -a;
+            /// <inheritdoc/>
+            public dynamic NegateLogical(dynamic a) => a == 0;
         }
     }
 }

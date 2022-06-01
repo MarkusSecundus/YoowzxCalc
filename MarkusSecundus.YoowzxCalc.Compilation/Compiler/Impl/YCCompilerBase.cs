@@ -44,7 +44,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
 
 
             var ret = Expression.Lambda(
-                toCompile.Body.Accept(CompilerVisitor.Instance, compilationContext),
+                CompilerVisitor.Instance.v(toCompile.Body, compilationContext),
                 tailCall : true,
                 args.Select(a => a.Value).ToArray()
             );
@@ -78,7 +78,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
             private CompilerVisitor() { }
             public static CompilerVisitor Instance { get; } = new();
 
-            private Expression v(YCExpression e, VisitContext ctx)
+            internal Expression v(YCExpression e, VisitContext ctx)
                 => Expression.Convert(e.Accept(this, ctx), typeof(TNumber));
 
             private static Expression _DefaultExpression = Expression.Default(typeof(TNumber));
