@@ -382,7 +382,7 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
             public dynamic IsGreater(dynamic a, dynamic b) => a > b;
 
             /// <inheritdoc/>
-            public bool IsTrue(dynamic a) => a;
+            public bool IsTrue(dynamic a) => (bool)a;
 
             /// <inheritdoc/>
             public dynamic UnaryMinus(dynamic a) => -a;
