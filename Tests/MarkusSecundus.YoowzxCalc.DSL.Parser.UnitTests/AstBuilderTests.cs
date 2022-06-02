@@ -409,5 +409,23 @@ namespace MarkusSecundus.YoowzxCalc.DSL.Parser.UnitTests
 
 
         #endregion
+
+        #region STRESS_TEST
+
+        [Test]
+        public void StressTest()
+        {
+            var l = lit("Afdsjhfjhdsoiofurhfiudjshfihgdsuifgdufsdžýčíášěžčríýáščgrfháčěšýtgfífrěžíčhggžfrzgíčěágfýžgžáěfgžáíěfgíáýržfgěžáýfggžěčýáfgážígfáírgfáíwgfír16516".Repeat(5));
+            var e = l;
+
+            for (int t = 0; t < 100; ++t)
+                e = bin<YCAddExpression>(e, l);
+
+            var f = def(e, name: "f".Repeat(514));
+
+            Assert.AreEqual(f, bld(f.ToString()));
+        }
+
+        #endregion
     }
 }

@@ -35,6 +35,17 @@ namespace MarkusSecundus.Util
         }
 
 
+        public static string Repeat(this string self, int times)
+        {
+            var bld = new StringBuilder(self.Length * times + 1);
+
+            while (--times >= 0)
+                bld.Append(self);
+
+            return bld.ToString();
+        }
+
+
         /// <summary>
         /// Splits a string in two parts by the first occurence of specified symbol
         /// </summary>
