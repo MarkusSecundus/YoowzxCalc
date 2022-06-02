@@ -34,7 +34,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
 
         public static YCFunctionSignature<TNumber> GetDelegateTypeSignature<TNumber, TDelegate>(string name) where TDelegate: Delegate
         {
-            var header = FunctionUtil.GetDelegateTypeParameters<TDelegate>();
+            var header = FunctionUtils.GetDelegateTypeParameters<TDelegate>();
             return new YCFunctionSignature<TNumber>(name, header.Count);
         } 
 

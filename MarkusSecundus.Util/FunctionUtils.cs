@@ -11,7 +11,7 @@ namespace MarkusSecundus.Util
     /// <summary>
     /// Static class with utility functions that should have been in standard library.
     /// </summary>
-    public static class FunctionUtil
+    public static class FunctionUtils
     {
         private static bool IsExpressionClosureType(this Type self) => self.FullName == "System.Runtime.CompilerServices.Closure";
 
