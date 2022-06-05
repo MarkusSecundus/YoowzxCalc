@@ -6,6 +6,7 @@
     /// </summary>
     public sealed record YCConditionalExpression : YCExpression
     {
+        /// <inheritdoc/>
         public override T Accept<T, TContext>(IYCVisitor<T, TContext> visitor, TContext ctx) => visitor.Visit(this, ctx);
 
         /// <summary>
@@ -23,13 +24,17 @@
         public YCExpression IfFalse { get; init; }
 
 
+        /// <inheritdoc/>
         public override YCExpression this[int childIndex] => new[] { Condition, IfTrue, IfFalse }[childIndex];
 
+        /// <inheritdoc/>
         public override int Arity => 3;
 
 
+        /// <inheritdoc/>
         public override string ToString() => $"({Condition} ? {IfTrue} : {IfFalse})";
 
+        /// <inheritdoc/>
         protected override int ComputeHashCode() => (Condition, IfTrue, IfFalse).GetHashCode();
     }
 }

@@ -48,6 +48,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
 
         //private int? _hashCode;
 
+        /// <inheritdoc/>
         public override int GetHashCode() => ComputeHashCode();//_hashCode ??= ComputeHashCode();
         /// <summary>
         /// Perform computation of this's hashcode. 

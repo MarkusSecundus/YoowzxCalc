@@ -17,8 +17,10 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression
         public string Value { get; init; }
 
 
+        /// <inheritdoc/>
         public override string ToString() => $"{Value}";
 
+        /// <inheritdoc/>
         protected override int ComputeHashCode() => Value?.GetHashCode()??0;
     }
 }

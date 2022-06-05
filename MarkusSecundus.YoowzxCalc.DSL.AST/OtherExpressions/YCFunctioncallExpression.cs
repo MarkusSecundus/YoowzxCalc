@@ -11,6 +11,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions
     /// </summary>
     public sealed record YCFunctioncallExpression : YCExpression
     {
+        /// <inheritdoc/>
         public override T Accept<T, TContext>(IYCVisitor<T, TContext> visitor, TContext ctx) => visitor.Visit(this, ctx);
 
         /// <summary>
@@ -31,15 +32,19 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions
                 : new ListComparedByContents<YCExpression>(value);
         }
         private ListComparedByContents<YCExpression> _arguments = EmptyArguments;
-        
 
+
+        /// <inheritdoc/>
         public override YCExpression this[int childIndex] => Arguments[childIndex];
 
+        /// <inheritdoc/>
         public override int Arity => Arguments.Count;
 
 
+        /// <inheritdoc/>
         public override string ToString() => $"{Name}({Arguments.MakeString()})";
 
+        /// <inheritdoc/>
         protected override int ComputeHashCode() => (Name, Arguments.SequenceHashCode()).GetHashCode();
 
 

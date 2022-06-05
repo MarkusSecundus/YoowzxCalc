@@ -19,58 +19,78 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
     /// <typeparam name="TContext">Type for carrying additional data needed during the visit.</typeparam>
     public abstract class YCVisitorBase<TRet, TContext> : IYCVisitor<TRet, TContext>
     {
+        /// <inheritdoc/>
         public virtual TRet Visit(YCLiteralExpression expr, TContext ctx) => Visit((YCPrimaryExpression)expr, ctx);
 
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCUnaryMinusExpression expr, TContext ctx) => Visit((YCUnaryExpression)expr, ctx);
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCUnaryPlusExpression expr, TContext ctx) => Visit((YCUnaryExpression)expr, ctx);
 
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCAddExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCSubtractExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCMultiplyExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCDivideExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCModuloExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCExponentialExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
 
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCFunctioncallExpression expr, TContext ctx) => Visit((YCExpression)expr, ctx);
 
 
 
 
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCUnaryLogicalNotExpression expr, TContext ctx) => Visit((YCUnaryExpression)expr, ctx);
 
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCCompareGreaterOrEqualExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCCompareGreaterThanExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCCompareLessOrEqualExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCCompareLessThanExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCCompareIsEqualExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCCompareIsNotEqualExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
 
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCLogicalAndExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCLogicalOrExpression expr, TContext ctx) => Visit((YCBinaryExpression)expr, ctx);
 
 
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCConditionalExpression expr, TContext ctx) => Visit((YCExpression)expr, ctx);
 
 
@@ -83,14 +103,18 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
 
 
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCPrimaryExpression expr, TContext ctx) => Visit((YCExpression)expr, ctx);
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCUnaryExpression expr, TContext ctx) => Visit((YCExpression)expr, ctx);
 
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCBinaryExpression expr, TContext ctx) => Visit((YCExpression)expr, ctx);
 
 
+        /// <inheritdoc/>
         public virtual TRet Visit(YCExpression expr, TContext ctx) => throw new NotImplementedException();
     }
 }

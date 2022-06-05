@@ -23,6 +23,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
     /// Contains additional Visit methods for abstract expression supertypes - every Visit method by default redirects to Visit method of supertype, Visit(<see cref="YCExpression"/>) throws a <see cref="NotImplementedException"/>.
     /// </summary>
     /// <typeparam name="TRet">Result type of the visit.</typeparam>
+    /// <typeparam name="TContext">Context type to be considered for the implemented visitor interface signature</typeparam>
     public abstract class YCVisitorBaseNoContext<TRet, TContext> : IYCVisitor<TRet, TContext>
     {
         public virtual TRet Visit(YCLiteralExpression expr) => Visit((YCPrimaryExpression)expr);

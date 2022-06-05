@@ -26,8 +26,10 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         /// </summary>
         public YCExpression RightChild { get; init; }
 
+        /// <inheritdoc/>
         public sealed override int Arity => 2;
 
+        /// <inheritdoc/>
         public sealed override YCExpression this[int childIndex]
             => childIndex == 0 ? LeftChild :
                childIndex == 1 ? RightChild :
@@ -40,10 +42,13 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         /// </summary>
         internal abstract string Symbol { get; }
 
+        /// <inheritdoc/>
         protected string ToString_canonicalImpl() => $"({LeftChild} {Symbol} {RightChild})";
 
+        /// <inheritdoc/>
         public override string ToString() => ToString_canonicalImpl();
 
+        /// <inheritdoc/>
         protected override int ComputeHashCode() => (LeftChild, RightChild).GetHashCode();
     }
 }
