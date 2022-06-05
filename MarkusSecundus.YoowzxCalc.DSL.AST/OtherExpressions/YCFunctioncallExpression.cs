@@ -30,7 +30,8 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions
                 ? e
                 : new ListComparedByContents<YCExpression>(value);
         }
-        private ListComparedByContents<YCExpression> _arguments;
+        private ListComparedByContents<YCExpression> _arguments = EmptyArguments;
+        
 
         public override YCExpression this[int childIndex] => Arguments[childIndex];
 
@@ -40,5 +41,9 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions
         public override string ToString() => $"{Name}({Arguments.MakeString()})";
 
         protected override int ComputeHashCode() => (Name, Arguments.SequenceHashCode()).GetHashCode();
+
+
+
+        private static readonly ListComparedByContents<YCExpression> EmptyArguments = new ListComparedByContents<YCExpression>(CollectionsUtils.EmptyList<YCExpression>());
     }
 }

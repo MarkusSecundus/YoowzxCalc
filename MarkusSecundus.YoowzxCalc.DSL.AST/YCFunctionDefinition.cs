@@ -21,7 +21,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         /// <summary>
         /// Name of the function
         /// </summary>
-        public string Name { get; init; }
+        public string Name { get; init; } = AnonymousFunctionName;
 
         /// <summary>
         /// Names of all the arguments in order from left to right
@@ -33,7 +33,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
                 ? e
                 : new ListComparedByContents<string>(value); 
         }
-        private ListComparedByContents<string> _arguments;
+        private ListComparedByContents<string> _arguments = EmptyArguments;
 
         /// <summary>
         /// Annotations applied to the function.
@@ -46,8 +46,6 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
                 : new DictionaryComparedByContents<string, string>(value); 
         }
         private DictionaryComparedByContents<string, string> _annotations = EmptyAnnotations;
-
-        private static DictionaryComparedByContents<string, string> EmptyAnnotations = new DictionaryComparedByContents<string, string>(CollectionsUtils.EmptyDictionary<string, string>());
 
 
         /// <summary>
@@ -94,5 +92,10 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
 
 
         public override int GetHashCode() => (Name, Arguments.SequenceHashCode(), Body).GetHashCode();
+
+
+
+        private static readonly ListComparedByContents<string> EmptyArguments = new ListComparedByContents<string>(CollectionsUtils.EmptyList<string>());
+        private static readonly DictionaryComparedByContents<string, string> EmptyAnnotations = new DictionaryComparedByContents<string, string>(CollectionsUtils.EmptyDictionary<string, string>());
     }
 }
