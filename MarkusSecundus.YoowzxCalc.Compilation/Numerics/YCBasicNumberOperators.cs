@@ -95,7 +95,7 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
         {
             if(repr.Length >= 2 && repr[0] == quoteType && repr[^1] == quoteType)
             {
-                value = repr.Substring(1, repr.Length - 2).Replace($"\\{quoteType}", $"{quoteType}").Replace($"{quoteType}{quoteType}", $"{quoteType}");
+                value = repr.Substring(1, repr.Length - 2).Replace($"\\{quoteType}", $"{quoteType}").Replace($"{quoteType}{quoteType}", $"{quoteType}").ResolveEscapeSequences();
                 return true;
             }
             value = null;
