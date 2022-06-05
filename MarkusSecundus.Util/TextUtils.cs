@@ -63,44 +63,15 @@ namespace MarkusSecundus.Util
         }
 
 
+        /// <summary>
+        /// Clamps the string to specified length, cutting the left part if necessary.
+        /// </summary>
+        /// <param name="self">String to clamp</param>
+        /// <param name="maxLength">Max length of the clamped string</param>
+        /// <returns>String clamped to specified length</returns>
+        public static string ClampToLength(this string self, int maxLength)
+            => self.Length <= maxLength ? self : self.Substring(0,maxLength);
 
-
-
-        private delegate (int, char) EscapeResolver(ReadOnlySpan<char> substring);
-        private static Dictionary<char, EscapeResolver> Escapers = new()
-        {
-            ['a'] = s => (0, '\a'),
-            ['b'] = s => (0, '\b'),
-            ['f'] = s => (0, '\f'),
-            ['n'] = s => (0, '\n'),
-            ['r'] = s => (0, '\r'),
-            ['t'] = s => (0, '\t'),
-            ['v'] = s => (0, '\v'),
-            ['\\'] = s => (0, '\\'),
-            ['o'] = s => (2, convertOctal(s)),
-            ['O'] = s => (2, convertOctal(s)),
-            ['x'] = s => convertHex(s),
-            ['X'] = s => convertHex(s)
-        };
-
-        private static char convertOctal(ReadOnlySpan<char> substring)
-        {
-            if (substring.Length < 3) throw new FormatException($"Invalid escape sequence: '\\{new string(substring)}'");
-            return (char)Convert.ToInt16(new string(substring.Slice(1, 2)), 8);
-        }
-        private static (int, char) convertHex(ReadOnlySpan<char> substring)
-        {
-            if(substring.Length < 3) throw new FormatException($"Invalid escape sequence: '\\{new string(substring)}'");
-            for(int t = 5; t >= 1; --t)
-            {
-                try 
-                {
-                    return (t, (char)Convert.ToInt32(new string(substring.Slice(1, t)), 16));
-                }
-                catch { }
-            }
-            throw new FormatException($"Invalid escape sequence: '\\{new string(substring.Slice(0, 3))}'");
-        }
 
         //TODO: desperately needs a refactor!
         /// <summary>
@@ -117,24 +88,50 @@ namespace MarkusSecundus.Util
 
             for(int i =0; i< self.Length; ++i)
             {
-                char c = self[i];
-                if (c != '\\')
-                    bld.Append(c);
+                char c() => self[i];
+                if (c() != '\\')
+                    bld.Append(c());
                 else
                 {
                     ++i;
-                    if (i >= self.Length) throw new FormatException($"Invalid escape sequence: '{self.Substring(i-1)}'");
-                    try
+                    if (i >= self.Length) throw invalid();
+
+                    var toAppend =  c() switch
                     {
-                        var toAppend = Escapers[self[i]](self.AsSpan(i));
-                        bld.Append(toAppend.Item2);
-                        i += toAppend.Item1;
-                    }
-                    catch
-                    {
-                        throw new FormatException($"Invalid escape sequence: '\\{self[i]}'");
-                    }
+                        'a' => '\a',
+                        'b' => '\b',
+                        'f' => '\f',
+                        'n' => '\n',
+                        'r' => '\r',
+                        't' => '\t',
+                        'v' => '\v',
+                        '\\' => '\\',
+                        'o' => convertNum(8, 2),
+                        'O' => convertNum(8, 2),
+                        'x' => convertNum(16, 5),
+                        'X' => convertNum(16, 5),
+                        _ => throw invalid(2)
+                    };
+
+                    bld.Append(toAppend);
                 }
+
+                char convertNum(int numericBase, int maxLength, int minLength=1)
+                {
+                    for (int t = maxLength; t >= minLength; --t)
+                    {
+                        try
+                        {
+                            var ret = (char)Convert.ToInt64(substr(1, t), numericBase);
+                            i += t;
+                            return ret;
+                        }
+                        catch { }
+                    }
+                    throw invalid(4);
+                }
+                string substr(int begin, int len) => self.Substring(i+begin, len);
+                FormatException invalid(int maxLength=int.MaxValue) => new FormatException($"Invalid escape sequence: '{self.Substring(i - 1).ClampToLength(maxLength)}'");
             }
 
             return bld.ToString();
