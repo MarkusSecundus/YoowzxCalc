@@ -113,7 +113,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
                 => visitUnary(expr, ctx, ctx.Op.UnaryMinus);
 
             public override Expression Visit(YCUnaryPlusExpression expr, VisitContext ctx)
-                => v(expr.Child, ctx);
+                => visitUnary(expr, ctx, ctx.Op.UnaryPlus);
 
 
 
