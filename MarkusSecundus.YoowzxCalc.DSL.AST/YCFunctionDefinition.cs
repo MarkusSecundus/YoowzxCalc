@@ -33,7 +33,14 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
                 ? e
                 : new ListComparedByContents<string>(value); 
         }
-        private ListComparedByContents<string> _arguments;
+        private ListComparedByContents<string> _arguments = EmptyArguments_impl;
+
+        private static ListComparedByContents<string> EmptyArguments_impl = new ListComparedByContents<string>(CollectionsUtils.EmptyList<string>());
+
+        /// <summary>
+        /// Empty list instance that will be used for Arguments when they aren't explicitly set by the user
+        /// </summary>
+        public static IReadOnlyList<string> EmptyArguments => EmptyArguments_impl;
 
         /// <summary>
         /// Annotations applied to the function.
@@ -45,10 +52,14 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
                 ? d
                 : new DictionaryComparedByContents<string, string>(value); 
         }
-        private DictionaryComparedByContents<string, string> _annotations = EmptyAnnotations;
+        private DictionaryComparedByContents<string, string> _annotations = EmptyAnnotations_impl;
 
-        private static DictionaryComparedByContents<string, string> EmptyAnnotations = new DictionaryComparedByContents<string, string>(CollectionsUtils.EmptyDictionary<string, string>());
+        private static DictionaryComparedByContents<string, string> EmptyAnnotations_impl = new DictionaryComparedByContents<string, string>(CollectionsUtils.EmptyDictionary<string, string>());
 
+        /// <summary>
+        /// Empty dictionary instance that will be used for Annotations when they aren't explicitly set by the user
+        /// </summary>
+        public static IReadOnlyDictionary<string, string> EmptyAnnotations => EmptyAnnotations_impl;
 
         /// <summary>
         /// Expression representing the actual function body.
