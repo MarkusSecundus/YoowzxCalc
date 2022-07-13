@@ -13,32 +13,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using num = System.Double;
 
 namespace MarkusSecundus.YoowzxCalc.Compilation.UnitTests
 {
     internal class IdentifierValidatorTests
     {
+        class num { }
+
         private static readonly string MockConstant = "__CONST", MockIdentifier = "__IDENTIFIER";
         private static string MockId(object rest) => MockIdentifier + rest;
         private class MockOperator : IYCNumberOperator<num>
         {
             public static readonly MockOperator Instance = new MockOperator();
 
-            public double Add(double a, double b) => throw new NotImplementedException();
-            public double Divide(double a, double b) => throw new NotImplementedException();
-            public double IsEqual(double a, double b) => throw new NotImplementedException();
-            public double IsLess(double a, double b) => throw new NotImplementedException();
-            public double IsLessOrEqual(double a, double b) => throw new NotImplementedException();
-            public bool IsTrue(double a) => throw new NotImplementedException();
-            public double Modulo(double a, double b) => throw new NotImplementedException();
-            public double Multiply(double a, double b) => throw new NotImplementedException();
-            public double NegateLogical(double a) => throw new NotImplementedException();
-            public double Power(double a, double power) => throw new NotImplementedException();
-            public double Subtract(double a, double b) => throw new NotImplementedException();
-            public double UnaryMinus(double a) => throw new NotImplementedException();
+            public num Add(num a, num b) => throw new NotImplementedException();
+            public num Divide(num a, num b) => throw new NotImplementedException();
+            public num IsEqual(num a, num b) => throw new NotImplementedException();
+            public num IsLess(num a, num b) => throw new NotImplementedException();
+            public num IsLessOrEqual(num a, num b) => throw new NotImplementedException();
+            public bool IsTrue(num a) => throw new NotImplementedException();
+            public num Modulo(num a, num b) => throw new NotImplementedException();
+            public num Multiply(num a, num b) => throw new NotImplementedException();
+            public num NegateLogical(num a) => throw new NotImplementedException();
+            public num Power(num a, num power) => throw new NotImplementedException();
+            public num Subtract(num a, num b) => throw new NotImplementedException();
+            public num UnaryMinus(num a) => throw new NotImplementedException();
 
-            public bool TryParseConstant(string repr, out double value) { value = 9d; return repr == MockConstant; }
+            public bool TryParseConstant(string repr, out num value) { value = new(); return repr == MockConstant; }
 
             public FormatException ValidateIdentifier(string identifier)
                 => identifier.StartsWith(MockIdentifier) ? null : new FormatException(InvalidIdentifierMessage(identifier));

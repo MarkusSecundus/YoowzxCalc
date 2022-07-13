@@ -7,15 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using num = System.Double;
+
 
 namespace MarkusSecundus.YoowzxCalc.Compilation.UnitTests
 {
+
     /// <summary>
     /// TODO: Write some actual tests
     /// </summary>
     internal class FunctionSignatureTests
     {
+        struct num { }
+
         private static readonly Random Random = new Random();
 
         private static string RandomString(int count) => CollectionsUtils.Repeat(() => (char)Random.Next(' ', char.MaxValue), count).MakeString("");

@@ -8,5 +8,6 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.UnitTests
 {
     internal class CompilerBaseTests
     {
+        struct num { }
     }
 }
