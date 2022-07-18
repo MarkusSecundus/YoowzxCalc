@@ -130,7 +130,7 @@ namespace MarkusSecundus.YooxzcCalc.UnitTests
             AssertEqual(12586269025D, c.Compile<Func<dynamic, dynamic>>("[cached] fib(x) := x <= 1 ? x : fib(x-1.0) + fib(x-2.0)")(50));
 
             AssertEqual("321309999", c.Compile<Func<dynamic, dynamic>>("f(x) :=  '' + 32130 + x")(9999));
-            AssertEqual("321300000.::.", c.Compile<Func<dynamic, dynamic>>("f(x) :=  '' + 32130 * x + '.::.'")(10000));
+            AssertEqual("321300000.'.", c.Compile<Func<dynamic, dynamic>>("f(x) :=  '' + 32130 * x + '.''.'")(10000));
 
             counter = 0;
             AssertEqual(106L, c.Compile<Func<dynamic>>("IncrementCounter(1)*100 + IncrementCounter(5)")());
