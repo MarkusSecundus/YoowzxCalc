@@ -13,23 +13,65 @@ using System.Threading.Tasks;
 
 namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
 {
-    class YCFunctionAndIdentifierExistenceValidatedCompiler<TNumber> : IYCCompiler<TNumber>
+    /// <summary>
+    /// Compiler decorator that takes care of simple rigid compile-time validation of whether all identifiers used in the expression are defined.
+    /// </summary>
+    /// <typeparam name="TNumber">Number type being operated on</typeparam>
+    [Obsolete("Experimental preview feature - subject to change")]
+    public class YCFunctionAndIdentifierExistenceValidatedCompiler<TNumber> : IYCCompiler<TNumber>
     {
+        /// <summary>
+        /// Name of the annotation used to switch this validator on/of.
+        /// </summary>
+        public const string SwitchAnnotation = "validate_identifiers";
+
+        /// <summary>
+        /// Inner compiler implementation
+        /// </summary>
         public IYCCompiler<TNumber> Base { get; }
 
+        /// <summary>
+        /// If <c>false</c>, the identifier checking will always be performed.
+        /// If <c>true</c>, the compiler will first check whether the `validate_identifiers` annotation is present and use its value as bool to determine whether the validation shall be done.
+        /// E.g. [validate_identifiers: true] f(x) := ...
+        /// E.g. [validate_identifiers: false] f(x) := ...
+        /// </summary>
+        public bool IsAnnotationSwitchable { get; init; } = true;
+
+        /// <summary>
+        /// Default value for being switched on/off used if not overriden by the `validate_identifiers` annotation
+        /// </summary>
+        public bool DefaultTurnedOnOffState { get; init; } = true;
+
+        /// <summary>
+        /// Constructs the instance using supplied base compiler
+        /// </summary>
+        /// <param name="baseCompiler">Inner compiler implementation</param>
         public YCFunctionAndIdentifierExistenceValidatedCompiler(IYCCompiler<TNumber> baseCompiler) => Base = baseCompiler;
 
+        /// <inheritdoc/>
         public IYCNumberOperator<TNumber> NumberOperator => Base.NumberOperator;
 
+        /// <inheritdoc/>
         public YCCompilationResult<TNumber> Compile(IYCReadOnlyCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
         {
-            var exceptions = toCompile.Body.Accept(Visitor.Instance, CreateContext(ctx, toCompile)).ToList();
-            if (exceptions.Count > 0)
-                throw new FormatException("", new AggregateException(exceptions));
+            if (ShouldDoValidation(toCompile))
+            {
+                var exceptions = toCompile.Body.Accept(Visitor.Instance, CreateContext(ctx, toCompile)).ToList();
+                if (exceptions.Count > 0)
+                    throw new FormatException("", new AggregateException(exceptions));
+            }
 
             return Base.Compile(ctx, toCompile);
         }
 
+        private bool ShouldDoValidation(YCFunctionDefinition def)
+        {
+            if (!IsAnnotationSwitchable) return true;
+            if (!def.Annotations.TryGetValue(SwitchAnnotation, out var stringRepr) || !bool.TryParse(stringRepr, out var result))
+                return DefaultTurnedOnOffState;
+            return result;
+        }
 
         private VisitorContext CreateContext(IYCReadOnlyCompilationContext<TNumber> ctx, YCFunctionDefinition def)
         {
