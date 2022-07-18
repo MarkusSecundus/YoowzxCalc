@@ -36,6 +36,11 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
         /// <returns>New instance of a compiler for the requested number type</returns>
         public static IYCCompiler<TNumber> MakeBase(IYCNumberOperator<TNumber> op) => new YCCompilerBase<TNumber>(op);
 
+        /// <summary>
+        /// Number operator used by the inner compiler implementation.
+        /// </summary>
+        public IYCNumberOperator<TNumber> NumberOperator { get; }
+
 
         /// <summary>
         /// Name of the annotation that specifies given function should have results cached.
