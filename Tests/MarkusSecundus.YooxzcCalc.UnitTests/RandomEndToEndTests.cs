@@ -28,7 +28,11 @@ namespace MarkusSecundus.YooxzcCalc.UnitTests
             }
         }
 
-
+        private static void AssertEqual(object a, object b, [CallerLineNumber] int lineNumber = -1)
+        {
+            Assert.AreEqual(a, b, $"(line n. {lineNumber})");
+            Assert.AreEqual(a?.GetType(), b?.GetType(), $"(line n. {lineNumber}) - value: {a}");
+        }
 
 
 
@@ -103,6 +107,33 @@ namespace MarkusSecundus.YooxzcCalc.UnitTests
 
             counter = 0;
             Assert.AreEqual(106, c.Compile<Func<double>>("IncrementCounter(1)*100 + IncrementCounter(5)")());
+        }
+
+        [Test]
+        public void CalculationsOnDynamic()
+        {
+            var c = IYoowzxCalculator<dynamic>.Make();
+
+            long counter = 0;
+
+            c.AddFunction<Func<dynamic>>("PI", () => 4);
+            c.AddFunction<Func<dynamic, dynamic>>("Sqr", a => a * a);
+            c.AddFunction<Func<dynamic, dynamic, dynamic>>("Add", (a, b) => a + b);
+            c.AddFunction<Func<dynamic, dynamic>>("IncrementCounter", a => counter += a);
+
+            AssertEqual(5L, c.Compile<Func<dynamic>>("PI + 1")());
+            AssertEqual(5L, c.Compile<Func<dynamic>>("func_1() := PI + 1")());
+            AssertEqual(1258626902578654D * 1132.2D, c.Compile<Func<dynamic>>("1258626902578654 * 1132.2")());
+            AssertEqual(5, c.Compile<Func<dynamic, dynamic>>("f(x) := x")(5));
+            AssertEqual(120L, c.Compile<Func<dynamic, dynamic>>("fact(x) := x <= 1 ? 1 : x * fact(x-1)")(5));
+            AssertEqual(610L, c.Compile<Func<dynamic, dynamic>>("fib(x) := x <= 1 ? x : fib(x-1) + fib(x-2)")(15));
+            AssertEqual(12586269025D, c.Compile<Func<dynamic, dynamic>>("[cached] fib(x) := x <= 1 ? x : fib(x-1.0) + fib(x-2.0)")(50));
+
+            AssertEqual("321309999", c.Compile<Func<dynamic, dynamic>>("f(x) :=  '' + 32130 + x")(9999));
+            AssertEqual("321300000.::.", c.Compile<Func<dynamic, dynamic>>("f(x) :=  '' + 32130 * x + '.::.'")(10000));
+
+            counter = 0;
+            AssertEqual(106L, c.Compile<Func<dynamic>>("IncrementCounter(1)*100 + IncrementCounter(5)")());
         }
     }
 }
