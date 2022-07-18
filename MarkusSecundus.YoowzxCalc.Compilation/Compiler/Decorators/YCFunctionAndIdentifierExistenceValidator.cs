@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
+namespace MarkusSecundus.YoowzxCalc.Compiler.Decorators
 {
     /// <summary>
     /// Compiler decorator that takes care of simple rigid compile-time validation of whether all identifiers used in the expression are defined.
@@ -75,7 +75,7 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
 
         private VisitorContext CreateContext(IYCReadOnlyCompilationContext<TNumber> ctx, YCFunctionDefinition def)
         {
-            var ret = new VisitorContext { Signatures = new(), IsConstant = s=> NumberOperator.TryParseConstant(s, out _)};
+            var ret = new VisitorContext { Signatures = new(), IsConstant = s => NumberOperator.TryParseConstant(s, out _) };
 
             if (!def.IsAnonymous)
                 ret.Signatures.Add(def.GetSignature<TNumber>());
@@ -104,7 +104,7 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
             public override IEnumerable<Exception> Visit(YCExpression expr, VisitorContext ctx)
             {
                 foreach (var child in expr)
-                    foreach(var e in child.Accept(this, ctx)) yield return e;
+                    foreach (var e in child.Accept(this, ctx)) yield return e;
             }
 
             public override IEnumerable<Exception> Visit(YCLiteralExpression expr, VisitorContext ctx)

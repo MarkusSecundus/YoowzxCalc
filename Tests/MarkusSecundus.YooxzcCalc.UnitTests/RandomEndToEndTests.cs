@@ -1,7 +1,7 @@
 ﻿using MarkusSecundus.Util;
 using MarkusSecundus.YoowzxCalc;
-using MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl;
 using MarkusSecundus.YoowzxCalc.Compiler;
+using MarkusSecundus.YoowzxCalc.Compiler.Decorators;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
