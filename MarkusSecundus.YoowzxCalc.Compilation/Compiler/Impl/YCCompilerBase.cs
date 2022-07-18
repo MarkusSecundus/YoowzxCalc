@@ -20,10 +20,10 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
     [YCCompilerChainBase]
     class YCCompilerBase<TNumber> : IYCCompiler<TNumber>
     {
-        private readonly IYCNumberOperator<TNumber> Op;
+        public IYCNumberOperator<TNumber> NumberOperator { get;}
 
         public YCCompilerBase(IYCNumberOperator<TNumber> numberOperator)
-            => Op = numberOperator;
+            => NumberOperator = numberOperator;
 
 
         [YCCompilerChainFactory] private static YCCompilerBase<TNumber> __factory(IYCNumberOperator<TNumber> numberOperator) => new(numberOperator);
@@ -32,7 +32,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
         {
             var args = toCompile.Arguments.Select(name => (name, Expression.Parameter(typeof(TNumber), name)).AsKV()).ToArray();
 
-            YCIdentifierValidator<TNumber>.Instance.Validate(toCompile, Op);
+            YCIdentifierValidator<TNumber>.Instance.Validate(toCompile, NumberOperator);
 
             var compilationContext = new VisitContext
             (
@@ -65,9 +65,9 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
         {
             public readonly SettableOnce<Delegate> ThisFunctionWrapper = new();
 
-            public Expression OpE { get; } = Expression.Constant(Father.Op);
+            public Expression OpE { get; } = Expression.Constant(Father.NumberOperator);
 
-            public IYCNumberOperator<TNumber> Op => Father.Op;
+            public IYCNumberOperator<TNumber> Op => Father.NumberOperator;
         }
 
 
@@ -113,7 +113,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
                 => visitUnary(expr, ctx, ctx.Op.UnaryMinus);
 
             public override Expression Visit(YCUnaryPlusExpression expr, VisitContext ctx)
-                => v(expr.Child, ctx);
+                => visitUnary(expr, ctx, ctx.Op.UnaryPlus);
 
 
 

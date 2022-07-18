@@ -17,6 +17,7 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
     /// <summary>
     /// 
     /// </summary>
+    [Obsolete("Experimental preview feature - subject to change")]
     public static class YCCompilerChain
     {
         /// <summary>

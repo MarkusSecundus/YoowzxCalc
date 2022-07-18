@@ -30,6 +30,8 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
 
         public static FunctionsAdder<TNumber> MakeFunctionsAdder<TNumber>(this Dictionary<YCFunctionSignature<TNumber>, Delegate> self)
             => new() { Value = self };
+        public static FunctionsAdder<TNumber> MakeFunctionsAdder<TNumber>()
+            => new Dictionary<YCFunctionSignature<TNumber>, Delegate>().MakeFunctionsAdder();
 
 
         public static YCFunctionSignature<TNumber> GetDelegateTypeSignature<TNumber, TDelegate>(string name) where TDelegate: Delegate

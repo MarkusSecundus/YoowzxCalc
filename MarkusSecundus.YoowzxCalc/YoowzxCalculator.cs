@@ -18,7 +18,7 @@ namespace MarkusSecundus.YoowzxCalc
     class YoowzxCalculator<TNumber> : IYoowzxCalculator<TNumber>
     {
         private static IYCAstBuilder DefaultAstBuilder => IYCAstBuilder.Instance;
-        private static IYCCompiler<TNumber> DefaultCompiler => IYCCompiler<TNumber>.Make(YCBasicNumberOperators.Get<TNumber>());
+        private static IYCCompiler<TNumber> DefaultCompiler => IYCCompiler<TNumber>.Make();
         private static IYCCompilationContext<TNumber> DefaultContext => IYCCompilationContext<TNumber>.Make();
 
         private IYCAstBuilder _astBuilder;

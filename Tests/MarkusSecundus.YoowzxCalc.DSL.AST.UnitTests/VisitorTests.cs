@@ -351,18 +351,5 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests
             var ret = e.Accept(v, c);
             Assert.AreEqual(c, ret);
         }
-
-
-
-
-        public class TestVisitor6 : YCVisitorBaseNoContext<VisitorStates>
-        {
-
-        }
-
-        public void VisitorNoContext_SameBehaviorAsWithContext()
-        {
-
-        }
     }
 }
