@@ -41,7 +41,7 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
         /// <summary>
         /// Default value for being switched on/off used if not overriden by the `validate_identifiers` annotation
         /// </summary>
-        public bool DefaultTurnedOnOffState { get; init; } = true;
+        public bool DefaultTurnedOnOffState { get; init; } = false;
 
         /// <summary>
         /// Constructs the instance using supplied base compiler
@@ -59,7 +59,7 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
             {
                 var exceptions = toCompile.Body.Accept(Visitor.Instance, CreateContext(ctx, toCompile)).ToList();
                 if (exceptions.Count > 0)
-                    throw new FormatException("", new AggregateException(exceptions));
+                    throw new FormatException("Undef", new AggregateException(exceptions));
             }
 
             return Base.Compile(ctx, toCompile);
@@ -118,6 +118,9 @@ namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
                 var signature = expr.GetSignature<TNumber>();
                 if (!ctx.Signatures.Contains(signature))
                     yield return new FormatException($"Undefined function: '{signature.ToStringTypeless()}'");
+
+                foreach (var e in Visit((YCExpression)expr, ctx))
+                    yield return e;
             }
         }
     }
