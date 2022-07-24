@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 using static MarkusSecundus.YoowzxCalc.Compilation.UnitTests.Utils.AstConstructionUtils;
 
+#pragma warning disable CS0618
+
 namespace MarkusSecundus.YoowzxCalc.Compilation.UnitTests
 {
     internal class YCFunctionAndIdentifierExistenceValidatedCompiler_Tests

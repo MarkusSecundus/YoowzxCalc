@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+#pragma warning disable CS0618
 
 namespace MarkusSecundus.YoowzxCalc.Compilation.Compiler.Impl
 {

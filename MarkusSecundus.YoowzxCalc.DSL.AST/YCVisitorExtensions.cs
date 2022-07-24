@@ -30,7 +30,6 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         /// <typeparam name="TContext">Context type of the visit.</typeparam>
         /// <param name="self">The expression node being visited.</param>
         /// <param name="visitor">The visitor.</param>
-        /// <param name="ctx">Context for the visit.</param>
         /// <returns>Result of the visit.</returns>
         public static TRet Accept<TRet, TContext>(this YCExpression self, YCVisitorBaseNoContext<TRet, TContext> visitor)
             => self.Accept(visitor, default);
@@ -42,7 +41,6 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         /// <typeparam name="TContext">Context type of the visit.</typeparam>
         /// <param name="self">The expression node being visited.</param>
         /// <param name="visitor">The visitor.</param>
-        /// <param name="ctx">Context for the visit.</param>
         /// <returns>Result of the visit.</returns>
         public static void Accept<TRet, TContext>(this YCExpression self, YCVisitorBaseNoReturnNoContext<TRet, TContext> visitor)
             => self.Accept(visitor, default);

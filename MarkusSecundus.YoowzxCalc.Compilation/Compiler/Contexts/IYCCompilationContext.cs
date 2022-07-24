@@ -45,6 +45,7 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Contexts
         /// <summary>
         /// Resolves provided symbols and returns a new instance where those symbols are available from the <c>Functions</c> property.
         /// </summary>
+        /// <param name="self">This</param>
         /// <param name="symbolDefinitions">List of symbols and their definitions</param>
         /// <returns>New instance with newly resolved symbols added to functions list</returns>
         public static IYCCompilationContext<TNumber> ResolveSymbols<TNumber>(this IYCCompilationContext<TNumber> self, params (YCFunctionSignature<TNumber>, Delegate)[] symbolDefinitions)

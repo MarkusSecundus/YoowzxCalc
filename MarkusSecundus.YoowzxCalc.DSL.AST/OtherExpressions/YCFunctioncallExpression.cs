@@ -11,6 +11,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions
     /// </summary>
     public sealed record YCFunctioncallExpression : YCExpression
     {
+        /// <inheritdoc/>
         public override T Accept<T, TContext>(IYCVisitor<T, TContext> visitor, TContext ctx) => visitor.Visit(this, ctx);
 
         /// <summary>

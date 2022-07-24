@@ -29,6 +29,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         /// <inheritdoc/>
         public sealed override int Arity => 2;
 
+        /// <inheritdoc/>
         public sealed override YCExpression this[int childIndex]
             => childIndex == 0 ? LeftChild :
                childIndex == 1 ? RightChild :

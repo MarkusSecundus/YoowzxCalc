@@ -200,12 +200,17 @@ namespace MarkusSecundus.YoowzxCalc.Cmd
 
 
 
-        
+        /// <summary>
+        /// Command line calculator entry point
+        /// </summary>
+        /// <param name="args">List of command line args</param>
         public static void Main(string[] args) => Parser.Default.ParseArguments<CmdOptions>(args).WithParsed(new CmdMain().Main);
 
 
 
-
+        /// <summary>
+        /// String to be printed on help request
+        /// </summary>
         public static string HelpString =>
 @"Yoowzx Calc v0.1
 

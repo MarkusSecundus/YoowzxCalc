@@ -10,6 +10,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+#pragma warning disable CS0618
+
 namespace MarkusSecundus.YooxzcCalc.UnitTests
 {
     internal class RandomEndToEndTests

@@ -17,19 +17,6 @@ using static MarkusSecundus.Util.ActionOnDisposeHelper;
 namespace MarkusSecundus.YoowzxCalc.DSL.Parser
 {
     
-
-    public partial class CalculatorDSLParser
-    {
-        public partial class Add_expressionContext
-        {
-            public YCExpression Value;
-        }
-        public partial class Mult_expressionContext
-        {
-            public YCExpression Value;
-        }
-    }
-
     /// <summary>
     /// Canonical implementation of <see cref="IYCAstBuilder"/>
     /// </summary>

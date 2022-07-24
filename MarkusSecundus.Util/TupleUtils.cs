@@ -13,7 +13,7 @@ namespace MarkusSecundus.Util
     public static class TupleUtils
     {
         /// <summary>
-        /// Array of all <typeparamref name="ValueTuple"/> types ordered by count of their generic parameters, beginning with the zero parametered one
+        /// Array of all <see cref="ValueTuple"/> types ordered by count of their generic parameters, beginning with the zero parametered one
         /// </summary>
         public static readonly Type[] TupleTypesByArgsCount = 
              typeof(ValueTuple<>).Assembly.GetTypes()
@@ -22,7 +22,7 @@ namespace MarkusSecundus.Util
             .ToArray();
 
         /// <summary>
-        /// Type of the largest <typeparamref name="ValueTuple"/>
+        /// Type of the largest <see cref="ValueTuple"/>
         /// </summary>
         public static Type LargestTupleType => TupleTypesByArgsCount[^1];
 
@@ -43,10 +43,10 @@ namespace MarkusSecundus.Util
         }
 
         /// <summary>
-        /// Checks if the provided Type is any kind of <typeparamref name="ValueTuple"/> (with any number of type parameters)
+        /// Checks if the provided Type is any kind of <see cref="ValueTuple"/> (with any number of type parameters)
         /// </summary>
         /// <param name="self">Type to be checked</param>
-        /// <returns>True if the provided type is <typeparamref name="ValueTuple"/></returns>
+        /// <returns>True if the provided type is <see cref="ValueTuple"/></returns>
         public static bool IsValueTupleType(this Type self) => self.Assembly == typeof(ValueTuple).Assembly && self.FullName.StartsWith("System.ValueTuple");
 
 

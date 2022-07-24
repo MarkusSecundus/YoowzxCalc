@@ -238,6 +238,13 @@ namespace MarkusSecundus.Util
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
+        /// <summary>
+        /// Call the specified function repeatedly and yield its outputs.
+        /// </summary>
+        /// <typeparam name="T">Value of elements to be yielded</typeparam>
+        /// <param name="f">Function to be called repeatedly</param>
+        /// <param name="count">How many times the function should be called</param>
+        /// <returns>Functioncall outputs</returns>
         public static IEnumerable<T> Repeat<T>(Func<T> f, int count)
         {
             for (; --count >= 0;)

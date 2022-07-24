@@ -23,7 +23,7 @@ namespace MarkusSecundus.Util
         /// <summary>
         /// Constructs an instance using provided dictionary as base
         /// </summary>
-        /// <param name="baseList">Base dictionary to wrap</param>
+        /// <param name="baseDictionary">Base dictionary to wrap</param>
         public DictionaryComparedByContents(IReadOnlyDictionary<TKey, TValue> baseDictionary) => Base = baseDictionary;
 
         /// <inheritdoc/>

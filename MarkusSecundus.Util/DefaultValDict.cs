@@ -26,7 +26,7 @@ namespace MarkusSecundus.Util
         /// Supplier of default values. Gets passed the key for which the value is being asked.
         /// </param>
         /// <param name="baseDict">
-        /// Object, to whom the new instance of <see cref="DefaultValDict{K, V}"/> will serve as decorator (by default <see cref="new Dictionary{K,V}()"/>)
+        /// Object, to whom the new instance of <see cref="DefaultValDict{K, V}"/> will serve as decorator (by default <c>new <see cref="Dictionary{K,V}()"/></c> )
         /// </param>
         public DefaultValDict(Func<K, V> supplier, IDictionary<K, V> baseDict = null)
         {
@@ -36,6 +36,7 @@ namespace MarkusSecundus.Util
 
 
         /*  The only really important piece of code in the whole of this class xD */
+        /// <inheritdoc/>
         public V this[K key]
         {
             get
@@ -61,45 +62,62 @@ namespace MarkusSecundus.Util
 
         //odsud níže je vše jenom boilerplate, přesměrovávající na _base
 
+        /// <inheritdoc/>
         public ICollection<K> Keys => Base.Keys;
 
+        /// <inheritdoc/>
         public ICollection<V> Values => Base.Values;
 
+        /// <inheritdoc/>
         public int Count => Base.Count;
 
+        /// <inheritdoc/>
         public bool IsReadOnly => Base.IsReadOnly;
 
         IEnumerable<K> IReadOnlyDictionary<K, V>.Keys => Keys;
 
         IEnumerable<V> IReadOnlyDictionary<K, V>.Values => Values;
 
+        /// <inheritdoc/>
         public void Add(K key, V value) => Base.Add(key, value);
 
+        /// <inheritdoc/>
         public void Add(KeyValuePair<K, V> item) => Base.Add(item);
 
+        /// <inheritdoc/>
         public void Clear() => Base.Clear();
 
+        /// <inheritdoc/>
         public bool Contains(KeyValuePair<K, V> item) => Base.Contains(item);
 
+        /// <inheritdoc/>
         public bool ContainsKey(K key) => Base.ContainsKey(key);
 
+        /// <inheritdoc/>
         public void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex) => Base.CopyTo(array, arrayIndex);
 
+        /// <inheritdoc/>
         public IEnumerator<KeyValuePair<K, V>> GetEnumerator() => Base.GetEnumerator();
 
+        /// <inheritdoc/>
         public bool Remove(K key) => Base.Remove(key);
 
+        /// <inheritdoc/>
         public bool Remove(KeyValuePair<K, V> item) => Base.Remove(item);
 
+        /// <inheritdoc/>
         public bool TryGetValue(K key, [MaybeNullWhen(false)] out V value) => Base.TryGetValue(key, out value);
 
         IEnumerator IEnumerable.GetEnumerator() => Base.GetEnumerator();
 
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) => Base.Equals(obj);
 
+        /// <inheritdoc/>
         public override int GetHashCode() => Base.GetHashCode();
 
+        /// <inheritdoc/>
         public override string ToString() => "default_dict.." + Base.ToString();
 
     }
