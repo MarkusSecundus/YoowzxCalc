@@ -9,6 +9,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression
     /// </summary>
     public sealed record YCLiteralExpression : YCPrimaryExpression
     {
+        /// <inheritdoc/>
         public override T Accept<T, TContext>(IYCVisitor<T, TContext> visitor, TContext ctx) => visitor.Visit(this, ctx);
 
         /// <summary>
@@ -17,8 +18,10 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.PrimaryExpression
         public string Value { get; init; }
 
 
+        /// <inheritdoc/>
         public override string ToString() => $"{Value}";
 
+        /// <inheritdoc/>
         protected override int ComputeHashCode() => Value?.GetHashCode()??0;
     }
 }

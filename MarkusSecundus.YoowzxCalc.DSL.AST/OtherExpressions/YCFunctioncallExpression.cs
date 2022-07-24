@@ -32,13 +32,17 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST.OtherExpressions
         }
         private ListComparedByContents<YCExpression> _arguments;
 
+        /// <inheritdoc/>
         public override YCExpression this[int childIndex] => Arguments[childIndex];
 
+        /// <inheritdoc/>
         public override int Arity => Arguments.Count;
 
 
+        /// <inheritdoc/>
         public override string ToString() => $"{Name}({Arguments.MakeString()})";
 
+        /// <inheritdoc/>
         protected override int ComputeHashCode() => (Name, Arguments.SequenceHashCode()).GetHashCode();
     }
 }

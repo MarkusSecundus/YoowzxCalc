@@ -38,10 +38,13 @@ namespace MarkusSecundus.Util
 
 
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) => obj is SettableOnce<T> w && IsSet == w.IsSet && (!IsSet || Equals(Value, w.Value));
 
+        /// <inheritdoc/>
         public override int GetHashCode() => IsSet ? Value.GetHashCode() : 0;
 
+        /// <inheritdoc/>
         public override string ToString() => IsSet ? "<nil>" : ""+Value;
     }
 }

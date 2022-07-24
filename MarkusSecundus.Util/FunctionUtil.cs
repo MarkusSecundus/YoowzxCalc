@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+#pragma warning disable CS1591
+
 namespace MarkusSecundus.Util
 {
     /// <summary>

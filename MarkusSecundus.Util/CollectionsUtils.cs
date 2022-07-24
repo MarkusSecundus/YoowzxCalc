@@ -175,6 +175,7 @@ namespace MarkusSecundus.Util
         /// </summary>
         /// <typeparam name="T">Type of the provided sequence elements</typeparam>
         /// <param name="self">Seqence to compute hash code of</param>
+        /// <param name="hashCombine">Function to perform the hashcode combination - by default <c>HashCode.Combine</c></param>
         /// <returns>Good position sensitive hash code for the sequence</returns>
         public static int SequenceHashCode<T>(this IEnumerable<T> self, Func<int,int, int> hashCombine=null)
         {

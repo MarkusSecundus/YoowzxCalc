@@ -23,6 +23,7 @@ namespace MarkusSecundus.Util
         /// <param name="toPerform">Action to be performed on <c>Dispose()</c> call</param>
         public ActionOnDispose(Action toPerform) => ToPerform = toPerform;
 
+        /// <inheritdoc/>
         public void Dispose() => ToPerform?.Invoke();
     }
 

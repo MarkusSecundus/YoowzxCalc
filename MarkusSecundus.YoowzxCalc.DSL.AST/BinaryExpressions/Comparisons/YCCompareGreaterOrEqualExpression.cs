@@ -6,10 +6,12 @@
     /// </summary>
     public sealed record YCCompareGreaterOrEqualExpression : YCBinaryExpression
     {
+        /// <inheritdoc/>
         public override T Accept<T, TContext>(IYCVisitor<T, TContext> visitor, TContext ctx) => visitor.Visit(this, ctx);
 
         internal override string Symbol => ">=";
 
+        /// <inheritdoc/>
         public override string ToString() => ToString_canonicalImpl();
     }
 }

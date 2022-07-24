@@ -26,6 +26,7 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         /// </summary>
         public YCExpression RightChild { get; init; }
 
+        /// <inheritdoc/>
         public sealed override int Arity => 2;
 
         public sealed override YCExpression this[int childIndex]
@@ -40,10 +41,17 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         /// </summary>
         internal abstract string Symbol { get; }
 
+        /// <summary>
+        /// Canonical implementation to which all subclasse's <c>ToString()</c> should redirect.  
+        /// (Records for some reason always require explicit override of <c>ToString()</c> for subclasses)
+        /// </summary>
+        /// <returns>Binary expression's string representation</returns>
         protected string ToString_canonicalImpl() => $"({LeftChild} {Symbol} {RightChild})";
 
+        /// <inheritdoc/>
         public override string ToString() => ToString_canonicalImpl();
 
+        /// <inheritdoc/>
         protected override int ComputeHashCode() => (LeftChild, RightChild).GetHashCode();
     }
 }

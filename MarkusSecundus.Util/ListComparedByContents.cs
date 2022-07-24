@@ -24,18 +24,24 @@ namespace MarkusSecundus.Util
         /// <param name="baseList">Base list to wrap</param>
         public ListComparedByContents(IReadOnlyList<T> baseList) => Base = baseList;
 
+        /// <inheritdoc/>
         public T this[int index] => Base[index];
 
+        /// <inheritdoc/>
         public int Count => Base.Count;
 
+        /// <inheritdoc/>
         public IEnumerator<T> GetEnumerator() => Base.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) => obj is ListComparedByContents<T> l && Enumerable.SequenceEqual(Base, l.Base);
 
+        /// <inheritdoc/>
         public override int GetHashCode() => CollectionsUtils.SequenceHashCode(Base);
 
+        /// <inheritdoc/>
         public override string ToString() => Base.ToString();
     }
 }

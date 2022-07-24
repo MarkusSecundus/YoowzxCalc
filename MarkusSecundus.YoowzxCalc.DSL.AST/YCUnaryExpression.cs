@@ -21,8 +21,10 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         /// </summary>
         public YCExpression Child { get; init; }
 
+        /// <inheritdoc/>
         public sealed override int Arity => 1;
 
+        /// <inheritdoc/>
         public sealed override YCExpression this[int childIndex]
             => childIndex == 0 ? Child :
                 throw new IndexOutOfRangeException($"Index {childIndex} not in range <0;{Arity})");
@@ -33,10 +35,17 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         /// </summary>
         internal abstract string Symbol { get; }
 
+        /// <summary>
+        /// Canonical implementation to which all subclasse's <c>ToString()</c> should redirect.  
+        /// (Records for some reason always require explicit override of <c>ToString()</c> for subclasses)
+        /// </summary>
+        /// <returns>Unary expression's string representation</returns>
         protected string ToString_canonicalImpl() => $"({Symbol}{Child})";
 
+        /// <inheritdoc/>
         public override string ToString() => ToString_canonicalImpl();
 
+        /// <inheritdoc/>
         protected override int ComputeHashCode() => Child?.GetHashCode()??0;
     }
 }

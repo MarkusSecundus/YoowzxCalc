@@ -26,27 +26,37 @@ namespace MarkusSecundus.Util
         /// <param name="baseList">Base dictionary to wrap</param>
         public DictionaryComparedByContents(IReadOnlyDictionary<TKey, TValue> baseDictionary) => Base = baseDictionary;
 
+        /// <inheritdoc/>
         public TValue this[TKey key] => Base[key];
 
+        /// <inheritdoc/>
         public IEnumerable<TKey> Keys => Base.Keys;
 
+        /// <inheritdoc/>
         public IEnumerable<TValue> Values => Base.Values;
 
+        /// <inheritdoc/>
         public int Count => Base.Count;
 
+        /// <inheritdoc/>
         public bool ContainsKey(TKey key) => Base.ContainsKey(key);
 
+        /// <inheritdoc/>
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => Base.GetEnumerator();
 
+        /// <inheritdoc/>
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) => Base.TryGetValue(key, out value);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) => obj is DictionaryComparedByContents<TKey, TValue> other && Base.UnorderedSequenceEqual(other.Base);
 
+        /// <inheritdoc/>
         public override int GetHashCode() => Base.SequenceHashCode(CollectionsUtils.CombineHashCodeCommutative);
 
+        /// <inheritdoc/>
         public override string ToString() => Base.ToString();
     }
 }

@@ -101,9 +101,11 @@ namespace MarkusSecundus.YoowzxCalc.DSL.AST
         public static string HeadRepr(YCFunctionDefinition self) => $"{self.Name}({self.Arguments.MakeString()})";
 
 
+        /// <inheritdoc/>
         public override string ToString() => $"{HeadRepr(this)} := {Body}";
 
 
+        /// <inheritdoc/>
         public override int GetHashCode() => (Name, Arguments.SequenceHashCode(), Body).GetHashCode();
     }
 }
