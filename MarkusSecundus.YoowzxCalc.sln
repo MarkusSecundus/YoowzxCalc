@@ -15,10 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.Cmd", "MarkusSecundus.YoowzxCalc.Cmd\MarkusSecundus.YoowzxCalc.Cmd.csproj", "{63B111FD-9F3A-4A9F-98E6-E4AAF956EE55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.ReadLine", "ThirdPartyLibraries\MarkusSecundus.ReadLine\MarkusSecundus.ReadLine.csproj", "{9774CE97-D1BE-4106-9C82-17BC5BA11C82}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdPartyLibraries", "ThirdPartyLibraries", "{C6FCC85B-C50D-4261-B6E5-C80F66662E31}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.Benchmarks", "MarkusSecundus.YoowzxCalc.Benchmarks\MarkusSecundus.YoowzxCalc.Benchmarks.csproj", "{F25777BF-5883-4C50-A30F-A008CF3DDB07}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests", "Tests\MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests\MarkusSecundus.YoowzxCalc.DSL.AST.UnitTests.csproj", "{95A6AAB8-183A-4BE4-A8F1-5BF064570984}"
@@ -34,9 +30,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5409495C-D378-4A01-9F75-A328588A1F65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkusSecundus.YoowzxCalc.Compilation.UnitTests", "Tests\MarkusSecundus.YoowzxCalc.Compilation.UnitTests\MarkusSecundus.YoowzxCalc.Compilation.UnitTests.csproj", "{BF05176A-2823-4765-8661-B59C00E5E628}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YoowzxCalc.Compilation.UnitTests", "Tests\MarkusSecundus.YoowzxCalc.Compilation.UnitTests\MarkusSecundus.YoowzxCalc.Compilation.UnitTests.csproj", "{BF05176A-2823-4765-8661-B59C00E5E628}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkusSecundus.YooxzcCalc.UnitTests", "Tests\MarkusSecundus.YooxzcCalc.UnitTests\MarkusSecundus.YooxzcCalc.UnitTests.csproj", "{2AE9A0A3-4317-4FC6-A1A8-7EC22834A9B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkusSecundus.YooxzcCalc.UnitTests", "Tests\MarkusSecundus.YooxzcCalc.UnitTests\MarkusSecundus.YooxzcCalc.UnitTests.csproj", "{2AE9A0A3-4317-4FC6-A1A8-7EC22834A9B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,10 +64,6 @@ Global
 		{63B111FD-9F3A-4A9F-98E6-E4AAF956EE55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63B111FD-9F3A-4A9F-98E6-E4AAF956EE55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63B111FD-9F3A-4A9F-98E6-E4AAF956EE55}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9774CE97-D1BE-4106-9C82-17BC5BA11C82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9774CE97-D1BE-4106-9C82-17BC5BA11C82}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9774CE97-D1BE-4106-9C82-17BC5BA11C82}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9774CE97-D1BE-4106-9C82-17BC5BA11C82}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F25777BF-5883-4C50-A30F-A008CF3DDB07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F25777BF-5883-4C50-A30F-A008CF3DDB07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F25777BF-5883-4C50-A30F-A008CF3DDB07}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -97,7 +89,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{9774CE97-D1BE-4106-9C82-17BC5BA11C82} = {C6FCC85B-C50D-4261-B6E5-C80F66662E31}
 		{95A6AAB8-183A-4BE4-A8F1-5BF064570984} = {5409495C-D378-4A01-9F75-A328588A1F65}
 		{91097259-17B9-44C4-9484-1474AEAAD7C3} = {5409495C-D378-4A01-9F75-A328588A1F65}
 		{BF05176A-2823-4765-8661-B59C00E5E628} = {5409495C-D378-4A01-9F75-A328588A1F65}

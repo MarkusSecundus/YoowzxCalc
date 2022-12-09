@@ -236,5 +236,11 @@ namespace MarkusSecundus.Util
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
+
+        public static IEnumerable<T> Repeat<T>(Func<T> f, int count)
+        {
+            for (; --count >= 0;)
+                yield return f();
+        }
     }
 }

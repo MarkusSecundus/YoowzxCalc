@@ -16,12 +16,14 @@ namespace MarkusSecundus.YoowzxCalc.Compiler.Impl
         private readonly YCCompilerBase<TNumber> Base;
 
         private readonly IYCCompiler<TNumber> Decorated;
+        public IYCNumberOperator<TNumber> NumberOperator => Base.NumberOperator;
 
         public YCCompiler(IYCNumberOperator<TNumber> numberOperator)
         {
             Base = new(numberOperator);
             Decorated = new YCCompilerWithCaching<TNumber>(Base);
         }
+
 
         public YCCompilationResult<TNumber> Compile(IYCReadOnlyCompilationContext<TNumber> ctx, YCFunctionDefinition toCompile)
         {

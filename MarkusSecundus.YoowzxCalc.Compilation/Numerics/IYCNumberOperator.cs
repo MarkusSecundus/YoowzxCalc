@@ -102,6 +102,14 @@ namespace MarkusSecundus.YoowzxCalc.Numerics
         /// <returns>Result of the negation</returns>
         public TNumber UnaryMinus(TNumber a);
 
+        /// <summary>
+        /// The unary plus operator (<c>'+x'</c> in C-like languages).  
+        /// Generally expected to do nothing and just pass the operand over.
+        /// </summary>
+        /// <param name="a">The operand</param>
+        /// <returns>Result of the operator</returns>
+        public TNumber UnaryPlus(TNumber a) => a;
+
 
 
         /// <summary>

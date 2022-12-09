@@ -25,9 +25,9 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
         /// <summary>
         /// Create a new instance of cannonical implementation of <see cref="IYCCompiler{TNumber}"/>
         /// </summary>
-        /// <param name="op">Number operator to be used</param>
+        /// <param name="op">Number operator to be used. <c>YCBasicNumberOperators.Get<typeparamref name="TNumber"/>() if none provided</c></param>
         /// <returns>New instance of a compiler for the requested number type</returns>
-        public static IYCCompiler<TNumber> Make(IYCNumberOperator<TNumber> op) => YCCompilerChain.Make(op);
+        public static IYCCompiler<TNumber> Make(IYCNumberOperator<TNumber> op=null) => YCCompilerChain.Make(op?? YCBasicNumberOperators.Get<TNumber>());
 
         /// <summary>
         /// Create a new instance of basic <see cref="IYCCompiler{TNumber}"/> implementation that does not care about function metadata or anything like that and just does the bare compilation.
@@ -35,6 +35,11 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
         /// <param name="op">Number operator to be used</param>
         /// <returns>New instance of a compiler for the requested number type</returns>
         public static IYCCompiler<TNumber> MakeBase(IYCNumberOperator<TNumber> op) => new YCCompilerBase<TNumber>(op);
+
+        /// <summary>
+        /// Number operator used by the inner compiler implementation.
+        /// </summary>
+        public IYCNumberOperator<TNumber> NumberOperator { get; }
 
 
         /// <summary>

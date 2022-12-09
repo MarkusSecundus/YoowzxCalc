@@ -5,6 +5,7 @@ using MarkusSecundus.YoowzxCalc.Compiler;
 using MarkusSecundus.YoowzxCalc.Compiler.Contexts;
 using MarkusSecundus.YoowzxCalc.DSL.AST;
 using MarkusSecundus.YoowzxCalc.DSL.Parser;
+using MarkusSecundus.YoowzxCalc.Numerics;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using System;
@@ -36,6 +37,8 @@ namespace MarkusSecundus.YooxzcCalc.UnitTests
         public class MockCompiler : IYCCompiler<num>
         {
             public Delegate Value;
+
+            public IYCNumberOperator<int> NumberOperator => throw new NotImplementedException();
 
             public YCCompilationResult<int> Compile(IYCReadOnlyCompilationContext<int> ctx, YCFunctionDefinition toCompile)
                 => new YCCompilationResult<num>(Value, new SettableOnce<Delegate>());
