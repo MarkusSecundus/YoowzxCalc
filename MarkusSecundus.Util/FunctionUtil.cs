@@ -62,11 +62,8 @@ namespace MarkusSecundus.Util
         public static MethodInfo GetMethodInfo<TDelegate>() where TDelegate : Delegate
             => GetMethodInfo(typeof(TDelegate));
 
-        public static MethodInfo GetMethodInfo(Type delegateType)
-        {
-            Func<object> f = default;
-            return delegateType.GetMethod(nameof(f.Invoke));
-        }
+        public static MethodInfo GetMethodInfo(Type delegateType) 
+            => delegateType.GetMethod(nameof(Func<object>.Invoke));
 
 
         internal static FunctionParametersInfo GetFunctionParameters(this Delegate self)

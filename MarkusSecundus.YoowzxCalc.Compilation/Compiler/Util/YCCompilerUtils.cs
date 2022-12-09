@@ -35,6 +35,8 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
         public static YCFunctionSignature<TNumber> GetDelegateTypeSignature<TNumber, TDelegate>(string name) where TDelegate: Delegate
         {
             var header = FunctionUtil.GetDelegateTypeParameters<TDelegate>();
+            if (!header.All(p=>p.ParameterType.IsAssignableFrom(typeof(TNumber)))) 
+                throw new ArgumentException($"{typeof(TDelegate)} doesn't have valid signature");
             return new YCFunctionSignature<TNumber>(name, header.Count);
         } 
 
@@ -57,8 +59,8 @@ namespace MarkusSecundus.YoowzxCalc.Compiler
 
         public static YCFunctionSignature<TNumber> GetSignature<TNumber, TDelegate>(this TDelegate self, string name) where TDelegate : Delegate
         {
-            //if (FunctionUtil.IsConcreteDelegateType<TDelegate>())
-            //    return GetDelegateTypeSignature<TNumber, TDelegate>(name);
+            if (self != null && FunctionUtil.IsConcreteDelegateType<TDelegate>())
+                return GetDelegateTypeSignature<TNumber, TDelegate>(name);
 
             var parameters = self.GetParameters();
             if (!typeof(TNumber).IsAssignableFrom(self.Method.ReturnType) 
